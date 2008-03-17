@@ -20,5 +20,5 @@ object NoPosition extends Position {
   def column = 0
   override def toString = "<undefined position>"
   override def longString = toString
-  def lineContents(lnum: Int) = ""
+  def lineContents = ""
 }
