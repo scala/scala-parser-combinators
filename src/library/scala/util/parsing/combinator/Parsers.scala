@@ -11,9 +11,9 @@ package scala.util.parsing.combinator
 import scala.util.parsing.input._
 import scala.collection.mutable.ListBuffer
 import scala.annotation.tailrec
-import annotation.migration
+import scala.annotation.migration
+import scala.language.implicitConversions
 import scala.util.DynamicVariable
-import language.implicitConversions
 
 // TODO: better error handling (labelling like parsec's <?>)
 
