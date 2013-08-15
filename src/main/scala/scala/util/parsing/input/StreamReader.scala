@@ -17,7 +17,7 @@ import scala.collection.immutable.PagedSeq
  * @author Miles Sabin
  */
 object StreamReader {
-  final val EofCh = '\032'
+  final val EofCh = '\u001a'
 
   /** Create a `StreamReader` from a `java.io.Reader`.
    *

@@ -16,7 +16,7 @@ package util.parsing.input
  * @author Adriaan Moors
  */
 object CharArrayReader {
-  final val EofCh = '\032'
+  final val EofCh = '\u001a'
 }
 
 /** A character array reader reads a stream of characters (keeping track of their positions)
