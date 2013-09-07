@@ -2,14 +2,14 @@ organization := "org.scala-lang.modules"
 
 name := "scala-parser-combinators"
 
-version := "1.0-RC1"
+version := "1.0-RC2"
 
-scalaVersion := "2.11.0-M4"
+scalaVersion := "2.11.0-M5"
 
 // NOTE: not necessarily equal to scalaVersion
 // (e.g., during PR validation, we override scalaVersion to validate,
 // but don't rebuild scalacheck, so we don't want to rewire that dependency)
-scalaBinaryVersion := "2.11.0-M4"
+scalaBinaryVersion := "2.11.0-M5"
 
 // don't use for doc scope, scaladoc warnings are not to be reckoned with
 scalacOptions in compile ++= Seq("-optimize", "-Xfatal-warnings", "-feature", "-deprecation", "-unchecked", "-Xlint")
@@ -81,7 +81,10 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-partest-interface" % "
 
 // the actual partest the interface calls into -- must be binary version close enough to ours
 // so that it can link to the compiler/lib we're using (testing)
-libraryDependencies += "org.scala-lang.modules" %% "scala-partest" % "1.0-RC2" % "test"
+libraryDependencies += "org.scala-lang.modules" %% "scala-partest" % "1.0-RC5" % "test"
+
+// necessary for partest -- see comments in its build.sbt
+conflictWarning ~= { _.copy(failOnConflict = false) }
 
 fork in Test := true
 
