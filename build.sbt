@@ -76,12 +76,18 @@ pomExtra := (
   </developers>
 )
 
-// for testing with partest
-libraryDependencies += "org.scala-lang.modules" %% "scala-partest-interface" % "0.2" % "test"
+// default value must be set here
+TestKeys.includeTestDependencies := true
 
 // the actual partest the interface calls into -- must be binary version close enough to ours
 // so that it can link to the compiler/lib we're using (testing)
-libraryDependencies += "org.scala-lang.modules" %% "scala-partest" % "1.0-RC5" % "test"
+libraryDependencies ++= (
+  if (TestKeys.includeTestDependencies.value)
+    Seq("org.scala-lang.modules" %% "scala-partest"           % "1.0-RC5" % "test",
+        "org.scala-lang.modules" %% "scala-partest-interface" % "0.2"     % "test")
+  else Seq.empty
+)
+
 
 // necessary for partest -- see comments in its build.sbt
 conflictWarning ~= { _.copy(failOnConflict = false) }
