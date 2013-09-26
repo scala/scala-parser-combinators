@@ -2,7 +2,7 @@ organization := "org.scala-lang.modules"
 
 name := "scala-parser-combinators"
 
-version := "1.0.0-RC2"
+version := "1.0.0-SNAPSHOT"
 
 scalaVersion := "2.11.0-M5"
 
