@@ -2,7 +2,7 @@ organization := "org.scala-lang.modules"
 
 name := "scala-parser-combinators"
 
-version := "1.0-RC2"
+version := "1.0.0-RC2"
 
 scalaVersion := "2.11.0-M5"
 
@@ -108,6 +108,24 @@ definedTests in Test += (
       def annotationName = "partest"
     }, true, Array())
   )
+
+osgiSettings
+
+val osgiVersion = version(_.replace('-', '.'))
+
+OsgiKeys.bundleSymbolicName := s"${organization.value}.${name.value}"
+
+OsgiKeys.bundleVersion := osgiVersion.value
+
+OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
+
+// Sources should also have a nice MANIFEST file
+packageOptions in packageSrc := Seq(Package.ManifestAttributes(
+                      ("Bundle-SymbolicName", s"${organization.value}.${name.value}.source"),
+                      ("Bundle-Name", s"${name.value} sources"),
+                      ("Bundle-Version", osgiVersion.value),
+                      ("Eclipse-SourceBundle", s"""${organization.value}.${name.value};version="${osgiVersion.value}";roots:="."""")
+                  ))
 
 
 // TODO: mima
