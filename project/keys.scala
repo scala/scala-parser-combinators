@@ -3,4 +3,6 @@ object TestKeys {
 
   // for testing with partest
   val includeTestDependencies = settingKey[Boolean]("Doesn't declare test dependencies.")
+
+  val partestVersion = settingKey[String]("Partest version.")
 }

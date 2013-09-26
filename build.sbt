@@ -79,12 +79,16 @@ pomExtra := (
 // default value must be set here
 TestKeys.includeTestDependencies := true
 
+// default
+TestKeys.partestVersion := "1.0.0-RC6"
+
 // the actual partest the interface calls into -- must be binary version close enough to ours
 // so that it can link to the compiler/lib we're using (testing)
+// NOTE: not sure why, but the order matters (maybe due to the binary version conflicts for xml/parser combinators pulled in for scaladoc?)
 libraryDependencies ++= (
   if (TestKeys.includeTestDependencies.value)
-    Seq("org.scala-lang.modules" %% "scala-partest"           % "1.0-RC5" % "test",
-        "org.scala-lang.modules" %% "scala-partest-interface" % "0.2"     % "test")
+    Seq("org.scala-lang.modules" %% "scala-partest-interface" % "0.2"                         % "test",
+        "org.scala-lang.modules" %% "scala-partest"           % TestKeys.partestVersion.value % "test")
   else Seq.empty
 )
 
