@@ -49,7 +49,7 @@ trait JavaTokenParsers extends RegexParsers {
    */
   @migration("`stringLiteral` allows escaping single and double quotes, but not forward slashes any longer.", "2.10.0")
   def stringLiteral: Parser[String] =
-    ("\""+"""([^"\p{Cntrl}\\]|\\[\\'"bfnrt]|\\u[a-fA-F0-9]{4})*"""+"\"").r
+    ("\""+"""([^"\p{Cntrl}\\]|\\[\\'"bfnrt]|\\u[a-fA-F0-9]{4})*+"""+"\"").r
   /** A number following the rules of `decimalNumber`, with the following
    *  optional additions:
    *
