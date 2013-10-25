@@ -4,12 +4,12 @@ name := "scala-parser-combinators"
 
 version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.11.0-M5"
+scalaVersion := "2.11.0-M6"
 
 // NOTE: not necessarily equal to scalaVersion
 // (e.g., during PR validation, we override scalaVersion to validate,
 // but don't rebuild scalacheck, so we don't want to rewire that dependency)
-scalaBinaryVersion := "2.11.0-M5"
+scalaBinaryVersion := "2.11.0-M6"
 
 // don't use for doc scope, scaladoc warnings are not to be reckoned with
 scalacOptions in compile ++= Seq("-optimize", "-Xfatal-warnings", "-feature", "-deprecation", "-unchecked", "-Xlint")
@@ -86,15 +86,35 @@ TestKeys.partestVersion := "1.0.0-RC6"
 // so that it can link to the compiler/lib we're using (testing)
 // NOTE: not sure why, but the order matters (maybe due to the binary version conflicts for xml/parser combinators pulled in for scaladoc?)
 libraryDependencies ++= (
-  if (TestKeys.includeTestDependencies.value)
-    Seq("org.scala-lang.modules" %% "scala-partest-interface" % "0.2"                         % "test",
-        "org.scala-lang.modules" %% "scala-partest"           % TestKeys.partestVersion.value % "test")
+  if (TestKeys.includeTestDependencies.value) {
+    /**
+     * Exclude all transitive dependencies of partest that include scala-parser-combinators.
+     * This way we avoid having two (or more) versions of scala-parser-combinators on a classpath.
+     * See this comment which describes the same issue for scala-xml
+     * https://github.com/scala/scala-xml/pull/6#issuecomment-26614894
+     *
+     * Note that we are using ModuleID.exclude instead of more flexible ModuleID.excludeAll
+     * (describe here: http://www.scala-sbt.org/release/docs/Detailed-Topics/Library-Management#exclude-transitive-dependencies)
+     * because only plain excludes are incorporated in generated pom.xml. There are two ways
+     * to address this problem:
+     *
+     *   1. Figure out how to depend on partest in non-transitive way: not include that dependency
+     *      in generated pom.xml for scala-parser-combinators.
+     *   2. Declare dependencies in partest as provided so they are not includeded transitively.
+     */
+    def excludeScalaXml(dep: ModuleID): ModuleID =
+      dep.exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M4").
+      exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M5").
+      exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M6")
+    Seq("org.scala-lang.modules" % "scala-partest-interface_2.11.0-M5" % "0.2"                         % "test" intransitive,
+        "org.scala-lang.modules" % "scala-partest_2.11.0-M5"           % TestKeys.partestVersion.value % "test" intransitive,
+        // diffutils is needed by partest
+        "com.googlecode.java-diff-utils" % "diffutils"      % "1.3.0" % "test",
+        "org.scala-lang" % "scala-compiler" % scalaVersion.value % "test").
+      map(excludeScalaXml)
+  }
   else Seq.empty
 )
-
-
-// necessary for partest -- see comments in its build.sbt
-conflictWarning ~= { _.copy(failOnConflict = false) }
 
 fork in Test := true
 
