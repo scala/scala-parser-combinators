@@ -76,6 +76,8 @@ pomExtra := (
   </developers>
 )
 
+libraryDependencies ++= Seq("junit" % "junit" % "4.11" % "test", "com.novocode" % "junit-interface" % "0.10" % "test")
+
 // default value must be set here
 TestKeys.includeTestDependencies := true
 
