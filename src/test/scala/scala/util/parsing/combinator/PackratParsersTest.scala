@@ -2,6 +2,7 @@ package scala.util.parsing.combinator
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
@@ -16,14 +17,19 @@ class PackratParsersTest {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
     }
+    def check(expected: Int, expr: String): Unit = {
+      val parseResult = head(new lexical.Scanner(expr))
+      val result = extractResult(parseResult)
+      assertEquals(expected, result)
+    }
 
-    assertEquals(1,extractResult(head(new lexical.Scanner("1"))))
-    assertEquals(3, extractResult(head(new lexical.Scanner("1+2"))))
-    assertEquals(5, extractResult(head(new lexical.Scanner("9-4"))))
-    assertEquals(81, extractResult(head(new lexical.Scanner("9*9"))))
-    assertEquals(4, extractResult(head(new lexical.Scanner("8/2"))))
-    assertEquals(37, extractResult(head(new lexical.Scanner("4*9-0/7+9-8*1"))))
-    assertEquals(9, extractResult(head(new lexical.Scanner("(1+2)*3"))))
+    check(1, "1")
+    check(3, "1+2")
+    check(5, "9-4")
+    check(81, "9*9")
+    check(4, "8/2")
+    check(37, "4*9-0/7+9-8*1")
+    check(9, "(1+2)*3")
   }
 
   @Test
@@ -35,14 +41,19 @@ class PackratParsersTest {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
     }
+    def check(expected: Int, expr: String): Unit = {
+      val parseResult = head(new lexical.Scanner(expr))
+      val result = extractResult(parseResult)
+      assertEquals(expected, result)
+    }
 
-    assertEquals(1, extractResult(head(new lexical.Scanner("1"))))
-    assertEquals(3, extractResult(head(new lexical.Scanner("1+2"))))
-    assertEquals(81, extractResult(head(new lexical.Scanner("9*9"))))
-    assertEquals(43, extractResult(head(new lexical.Scanner("4*9+7"))))
-    assertEquals(59, extractResult(head(new lexical.Scanner("4*9+7*2+3*3"))))
-    assertEquals(188, extractResult(head(new lexical.Scanner("4*9+7*2+3*3+9*5+7*6*2"))))
-    assertEquals(960, extractResult(head(new lexical.Scanner("4*(9+7)*(2+3)*3"))))
+    check(1, "1")
+    check(3, "1+2")
+    check(81, "9*9")
+    check(43, "4*9+7")
+    check(59, "4*9+7*2+3*3")
+    check(188, "4*9+7*2+3*3+9*5+7*6*2")
+    check(960, "4*(9+7)*(2+3)*3")
   }
 
   @Test
@@ -59,21 +70,30 @@ class PackratParsersTest {
       val cs1 = cs.map(_.name)
       new ~(new ~(as1, bs1), cs1)
     }
+    def assertSuccess(expected1: List[Symbol], expected2: List[Symbol], expected3: List[Symbol],
+        input: String): Unit = {
+      val expected = threeLists(expected1, expected2, expected3)
+      val parseResult = head(new lexical.Scanner(input))
+      val result = extractResult(parseResult)
+      assertEquals(expected, result)
+    }
 
-    val expected1 = threeLists(List('a, 'b), List('a), List('b, 'c))
-    assertEquals(expected1, extractResult(head(new lexical.Scanner("a b c"))))
-    val expected2 = threeLists(List('a, 'a, 'b, 'b), List('a, 'a), List('b, 'b, 'c, 'c))
-    assertEquals(expected2, extractResult(head(new lexical.Scanner("a a b b c c"))))
-    val expected3 = threeLists(List('a, 'a, 'a, 'b, 'b, 'b), List('a, 'a, 'a), List('b, 'b, 'b, 'c, 'c, 'c))
-    assertEquals(expected3, extractResult(head(new lexical.Scanner("a a a b b b c c c"))))
-    val expected4 = threeLists(List('a, 'a, 'a, 'a, 'b, 'b, 'b, 'b), List('a, 'a, 'a, 'a), List('b, 'b, 'b, 'b, 'c, 'c, 'c, 'c))
-    assertEquals(expected4, extractResult(head(new lexical.Scanner("a a a a b b b b c c c c"))))
-    val failure1 = AnBnCn(new PackratReader(new lexical.Scanner("a a a b b b b c c c c"))).asInstanceOf[Failure]
-    assertEquals("Expected failure", failure1.msg)
-    val failure2 = AnBnCn(new PackratReader(new lexical.Scanner("a a a a b b b c c c c"))).asInstanceOf[Failure]
-    assertEquals("``b'' expected but `c' found", failure2.msg)
-    val failure3 = AnBnCn(new PackratReader(new lexical.Scanner("a a a a b b b b c c c"))).asInstanceOf[Failure]
-    assertEquals("end of input", failure3.msg)
+    assertSuccess(List('a, 'b), List('a), List('b, 'c), "a b c")
+    assertSuccess(List('a, 'a, 'b, 'b), List('a, 'a), List('b, 'b, 'c, 'c), "a a b b c c")
+    assertSuccess(List('a, 'a, 'a, 'b, 'b, 'b), List('a, 'a, 'a), List('b, 'b, 'b, 'c, 'c, 'c),
+      "a a a b b b c c c")
+    assertSuccess(List('a, 'a, 'a, 'a, 'b, 'b, 'b, 'b), List('a, 'a, 'a, 'a), List('b, 'b, 'b, 'b, 'c, 'c, 'c, 'c),
+      "a a a a b b b b c c c c")
+
+    def assertFailure(expectedFailureMsg: String, input: String): Unit = {
+      val packratReader = new PackratReader(new lexical.Scanner(input))
+      val parseResult = AnBnCn(packratReader)
+      assertTrue(s"Not an instance of Failure: ${parseResult.toString()}", parseResult.isInstanceOf[Failure])
+      val failure = parseResult.asInstanceOf[Failure]
+      assertEquals(expectedFailureMsg, failure.msg)
+    }
+    assertFailure("``b'' expected but `c' found", "a a a a b b b c c c c")
+    assertFailure("end of input", "a a a a b b b b c c c")
   }
 
 }
