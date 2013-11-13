@@ -84,7 +84,7 @@ libraryDependencies ++= Seq("junit" % "junit" % "4.11" % "test", "com.novocode" 
 TestKeys.includeTestDependencies := true
 
 // default
-TestKeys.partestVersion := "1.0.0-RC6"
+TestKeys.partestVersion := "1.0.0-RC7"
 
 // the actual partest the interface calls into -- must be binary version close enough to ours
 // so that it can link to the compiler/lib we're using (testing)
@@ -107,15 +107,14 @@ libraryDependencies ++= (
      *   2. Declare dependencies in partest as provided so they are not includeded transitively.
      */
     def excludeScalaXml(dep: ModuleID): ModuleID =
-      dep.exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M4").
-      exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M5").
-      exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M6")
-    Seq("org.scala-lang.modules" % "scala-partest-interface_2.11.0-M5" % "0.2"                         % "test" intransitive,
-        "org.scala-lang.modules" % "scala-partest_2.11.0-M5"           % TestKeys.partestVersion.value % "test" intransitive,
-        // diffutils is needed by partest
-        "com.googlecode.java-diff-utils" % "diffutils"      % "1.3.0" % "test",
-        "org.scala-lang" % "scala-compiler" % scalaVersion.value % "test").
-      map(excludeScalaXml)
+      (dep exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M4")
+           exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M5")
+           exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M6"))
+// (this space intentionally not left blank)
+    Seq("org.scala-lang.modules" % s"scala-partest-interface_${scalaBinaryVersion.value}" % "0.2"                         % "test" intransitive,
+        "org.scala-lang.modules" % s"scala-partest_${scalaBinaryVersion.value}"           % TestKeys.partestVersion.value % "test" intransitive,
+        "com.googlecode.java-diff-utils" % "diffutils"      % "1.3.0" % "test", // diffutils is needed by partest
+        "org.scala-lang" % "scala-compiler" % scalaVersion.value % "test").map(excludeScalaXml)
   }
   else Seq.empty
 )
