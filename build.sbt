@@ -11,6 +11,9 @@ scalaVersion := "2.11.0-M6"
 // but don't rebuild scalacheck, so we don't want to rewire that dependency)
 scalaBinaryVersion := "2.11.0-M6"
 
+// to allow compiling against snapshot versions of Scala
+resolvers += Resolver.sonatypeRepo("snapshots")
+
 // don't use for doc scope, scaladoc warnings are not to be reckoned with
 scalacOptions in compile ++= Seq("-optimize", "-Xfatal-warnings", "-feature", "-deprecation", "-unchecked", "-Xlint")
 

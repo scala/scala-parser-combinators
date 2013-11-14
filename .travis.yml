@@ -4,7 +4,7 @@ script:
   - sbt ++$TRAVIS_SCALA_VERSION 'set concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)' test
 scala:
   - 2.10.3
-  - 2.11.0-M6
+  - 2.11.0-SNAPSHOT
 jdk:
   - oraclejdk6
   - openjdk7
