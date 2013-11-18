@@ -83,62 +83,6 @@ pomExtra := (
 
 libraryDependencies ++= Seq("junit" % "junit" % "4.11" % "test", "com.novocode" % "junit-interface" % "0.10" % "test")
 
-// default value must be set here
-TestKeys.includeTestDependencies := true
-
-// default
-TestKeys.partestVersion := "1.0.0-RC7"
-
-// the actual partest the interface calls into -- must be binary version close enough to ours
-// so that it can link to the compiler/lib we're using (testing)
-// NOTE: not sure why, but the order matters (maybe due to the binary version conflicts for xml/parser combinators pulled in for scaladoc?)
-libraryDependencies ++= (
-  if (TestKeys.includeTestDependencies.value) {
-    /**
-     * Exclude all transitive dependencies of partest that include scala-parser-combinators.
-     * This way we avoid having two (or more) versions of scala-parser-combinators on a classpath.
-     * See this comment which describes the same issue for scala-xml
-     * https://github.com/scala/scala-xml/pull/6#issuecomment-26614894
-     *
-     * Note that we are using ModuleID.exclude instead of more flexible ModuleID.excludeAll
-     * (describe here: http://www.scala-sbt.org/release/docs/Detailed-Topics/Library-Management#exclude-transitive-dependencies)
-     * because only plain excludes are incorporated in generated pom.xml. There are two ways
-     * to address this problem:
-     *
-     *   1. Figure out how to depend on partest in non-transitive way: not include that dependency
-     *      in generated pom.xml for scala-parser-combinators.
-     *   2. Declare dependencies in partest as provided so they are not includeded transitively.
-     */
-    def excludeScalaXml(dep: ModuleID): ModuleID =
-      (dep exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M4")
-           exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M5")
-           exclude("org.scala-lang.modules", "scala-parser-combinators_2.11.0-M6"))
-// (this space intentionally not left blank)
-    Seq("org.scala-lang.modules" % s"scala-partest-interface_${scalaBinaryVersion.value}" % "0.2"                         % "test" intransitive,
-        "org.scala-lang.modules" % s"scala-partest_${scalaBinaryVersion.value}"           % TestKeys.partestVersion.value % "test" intransitive,
-        "com.googlecode.java-diff-utils" % "diffutils"      % "1.3.0" % "test", // diffutils is needed by partest
-        "org.scala-lang" % "scala-compiler" % scalaVersion.value % "test").map(excludeScalaXml)
-  }
-  else Seq.empty
-)
-
-fork in Test := true
-
-javaOptions in Test += "-Xmx1G"
-
-testFrameworks += new TestFramework("scala.tools.partest.Framework")
-
-definedTests in Test += (
-  new sbt.TestDefinition(
-    "partest",
-    // marker fingerprint since there are no test classes
-    // to be discovered by sbt:
-    new sbt.testing.AnnotatedFingerprint {
-      def isModule = true
-      def annotationName = "partest"
-    }, true, Array())
-  )
-
 osgiSettings
 
 val osgiVersion = version(_.replace('-', '.'))
