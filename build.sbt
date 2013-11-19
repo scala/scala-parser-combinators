@@ -4,18 +4,18 @@ name := "scala-parser-combinators"
 
 version := "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.11.0-M6"
-
-// NOTE: not necessarily equal to scalaVersion
-// (e.g., during PR validation, we override scalaVersion to validate,
-// but don't rebuild scalacheck, so we don't want to rewire that dependency)
-scalaBinaryVersion := "2.11.0-M6"
+scalaVersion := "2.11.0-M7"
 
 // to allow compiling against snapshot versions of Scala
 resolvers += Resolver.sonatypeRepo("snapshots")
 
+libraryDependencies ++= Seq(
+  "junit" % "junit" % "4.11" % "test",
+  "com.novocode" % "junit-interface" % "0.10" % "test")
+
 // don't use for doc scope, scaladoc warnings are not to be reckoned with
-scalacOptions in compile ++= Seq("-optimize", "-Xfatal-warnings", "-feature", "-deprecation", "-unchecked", "-Xlint")
+// TODO: turn on for nightlies, but don't enable for PR validation... "-Xfatal-warnings"
+scalacOptions in compile ++= Seq("-optimize", "-feature", "-deprecation", "-unchecked", "-Xlint")
 
 
 // Generate $name.properties to store our version as well as the scala version used to build
@@ -80,8 +80,6 @@ pomExtra := (
     </developer>
   </developers>
 )
-
-libraryDependencies ++= Seq("junit" % "junit" % "4.11" % "test", "com.novocode" % "junit-interface" % "0.10" % "test")
 
 osgiSettings
 
