@@ -1,9 +1,7 @@
 language: scala
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION 'set concurrentRestrictions in Global += Tags.limit(Tags.Compile, 2)' compile test:compile
-  - sbt ++$TRAVIS_SCALA_VERSION 'set concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)' test
+  - sbt ++$TRAVIS_SCALA_VERSION clean update compile test
 scala:
-  - 2.10.3
   - 2.11.0-SNAPSHOT
 jdk:
   - oraclejdk6
@@ -11,3 +9,6 @@ jdk:
 notifications:
   email:
     - adriaan.moors@typesafe.com
+
+# if we get weird timeouts, see https://github.com/spray/spray/pull/233
+# 'set concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)'

@@ -1,8 +1,11 @@
-object TestKeys {
+object VersionKeys {
   import sbt.settingKey
 
-  // for testing with partest
-  val includeTestDependencies = settingKey[Boolean]("Doesn't declare test dependencies.")
+  val snapshotScalaBinaryVersion = settingKey[String]("The Scala binary version to use when building against Scala SNAPSHOT.")
 
-  val partestVersion = settingKey[String]("Partest version.")
+  def deriveBinaryVersion(sv: String, snapshotScalaBinaryVersion: String) = sv match {
+    case snap_211 if snap_211.startsWith("2.11") &&
+                     snap_211.contains("-SNAPSHOT") => snapshotScalaBinaryVersion
+    case sv => sbt.CrossVersion.binaryScalaVersion(sv)
+  }
 }
