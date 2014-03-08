@@ -13,6 +13,9 @@ scalaModuleOsgiSettings
 
 OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
 
+// needed to fix classloader issues (see scala-xml#20)
+fork in Test := true
+
 libraryDependencies += "junit" % "junit" % "4.11" % "test"
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
