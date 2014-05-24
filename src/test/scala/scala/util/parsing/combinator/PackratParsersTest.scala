@@ -30,6 +30,36 @@ class PackratParsersTest {
     check(4, "8/2")
     check(37, "4*9-0/7+9-8*1")
     check(9, "(1+2)*3")
+    check(3, """/* This is a
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   long long long long long 
+                   long long long long long
+                   long long long long long
+                   comment */
+                1+2""")
   }
 
   @Test

@@ -59,9 +59,9 @@ class StdLexical extends Lexical with StdTokens {
     )
 
   protected def comment: Parser[Any] = (
-      '*' ~ '/'  ^^ { case _ => ' '  }
-    | chrExcept(EofCh) ~ comment
-    )
+    rep (chrExcept (EofCh, '*')) ~ '*' ~ '/'     ^^ { case _ => ' ' }
+  | rep (chrExcept (EofCh, '*')) ~ '*' ~ comment ^^ { case _ => ' ' }
+  )
 
   /** The set of reserved identifiers: these will be returned as `Keyword`s. */
   val reserved = new mutable.HashSet[String]
