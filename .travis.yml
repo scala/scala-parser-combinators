@@ -2,13 +2,14 @@ language: scala
 script:
   - sbt ++$TRAVIS_SCALA_VERSION clean update compile test
 scala:
-  - 2.11.0
+  - 2.11.1
 jdk:
   - openjdk6
   - openjdk7
 notifications:
   email:
     - adriaan.moors@typesafe.com
+    - antoine@gourlay.fr
 
 # if we get weird timeouts, see https://github.com/spray/spray/pull/233
 # 'set concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)'
