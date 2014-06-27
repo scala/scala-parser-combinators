@@ -6,7 +6,7 @@ name                       := "scala-parser-combinators"
 
 version                    := "1.0.2-SNAPSHOT"
 
-scalaVersion               := "2.11.0"
+scalaVersion               := "2.11.1"
 
 snapshotScalaBinaryVersion := "2.11"
 
