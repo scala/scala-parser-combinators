@@ -4,7 +4,7 @@ scalaModuleSettings
 
 name                       := "scala-parser-combinators"
 
-version                    := "1.0.2-SNAPSHOT"
+version                    := "1.0.3-SNAPSHOT"
 
 scalaVersion               := "2.11.1"
 
