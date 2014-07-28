@@ -6,7 +6,7 @@ name                       := "scala-parser-combinators"
 
 version                    := "1.0.3-SNAPSHOT"
 
-scalaVersion               := "2.11.1"
+scalaVersion               := "2.11.2"
 
 snapshotScalaBinaryVersion := "2.11"
 
@@ -24,7 +24,7 @@ libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
 
 MimaPlugin.mimaDefaultSettings
 
-MimaKeys.previousArtifact := Some(organization.value % s"${name.value}_2.11" % "1.0.1")
+MimaKeys.previousArtifact := Some(organization.value % s"${name.value}_2.11" % "1.0.2")
 
 // run mima during tests
 test in Test := {
