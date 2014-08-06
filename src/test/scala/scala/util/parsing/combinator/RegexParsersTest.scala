@@ -1,7 +1,7 @@
 package scala.util.parsing.combinator
 
 import org.junit.Test
-import org.junit.Assert.assertEquals
+import org.junit.Assert.{assertEquals,assertTrue}
 
 class RegexParsersTest {
   @Test
@@ -72,5 +72,20 @@ class RegexParsersTest {
 
     val success = parseAll(twoWords, "first second").asInstanceOf[Success[(String, String)]]
     assertEquals(("second", "first"), success.get)
+  }
+
+  @Test
+  def errorConsumesWhitespace: Unit = {
+    object parser extends RegexParsers {
+      def num = "\\d+".r
+
+      def twoNums =  num ~ (num | err("error!"))
+    }
+    import parser._
+
+    // this used to return a Failure (for the second num)
+    val error = parseAll(twoNums, "458   bar")
+    assertTrue(s"expected an Error but got: ${error.getClass.getName}", error.isInstanceOf[Error])
+    assertEquals("error!", error.asInstanceOf[Error].msg)
   }
 }
