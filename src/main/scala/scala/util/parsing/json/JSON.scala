@@ -28,12 +28,10 @@ package util.parsing.json
  *
  * @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
-@deprecated("This object will be removed.", "2.11.0")
 object JSON extends Parser {
 
   /**
-   * This method converts ''raw'' results back into the original, deprecated
-   * form.
+   * This method converts ''raw'' results back into the original form.
    */
   private def unRaw (in : Any) : Any = in match {
     case JSONObject(obj) => obj.map({ case (k,v) => (k,unRaw(v))}).toList
