@@ -45,27 +45,29 @@ object StreamReader {
  *  @author Miles Sabin
  *  @author Martin Odersky
  */
-sealed class StreamReader(seq: PagedSeq[Char], off: Int, lnum: Int) extends PagedSeqReader(seq, off) {
-  import StreamReader._
+sealed class StreamReader private (seq: PagedSeq[Char], off: Int, lnum: Int, nextEol0: Int) extends PagedSeqReader(seq, off) {
+  def this(seq: PagedSeq[Char], off: Int, lnum: Int) = this(seq, off, lnum, -1)
+
+  import StreamReader.EofCh
 
   override def rest: StreamReader =
-    if (off == seq.length) this
+    if (!seq.isDefinedAt(off)) this
     else if (seq(off) == '\n')
-      new StreamReader(seq.slice(off + 1), 0, lnum + 1)
-    else new StreamReader(seq, off + 1, lnum)
+      new StreamReader(seq.slice(off + 1), 0, lnum + 1, -1)
+    else new StreamReader(seq, off + 1, lnum, nextEol0)
 
-  private def nextEol = {
+  private def nextEol = if (nextEol0 == -1) {
     var i = off
-    while (i < seq.length && seq(i) != '\n' && seq(i) != EofCh) i += 1
+    while (seq.isDefinedAt(i) && seq(i) != '\n' && seq(i) != EofCh) i += 1
     i
-  }
+  } else nextEol0
 
   override def drop(n: Int): StreamReader = {
     val eolPos = nextEol
-    if (eolPos < off + n && eolPos < seq.length)
-      new StreamReader(seq.slice(eolPos + 1), 0, lnum + 1).drop(off + n - (eolPos + 1))
+    if (eolPos < off + n && seq.isDefinedAt(eolPos))
+      new StreamReader(seq.slice(eolPos + 1), 0, lnum + 1, -1).drop(off + n - (eolPos + 1))
     else
-      new StreamReader(seq, off + n, lnum)
+      new StreamReader(seq, off + n, lnum, eolPos)
   }
 
   override def pos: Position = new Position {
