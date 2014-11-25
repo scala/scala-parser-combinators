@@ -52,7 +52,39 @@ class JavaTokenParsersTest {
     parseFailure("with-s", 5)
     // we♥scala
     parseFailure("we\u2665scala", 3)
-    parseFailure("with space", 6)
+    parseFailure("with space", 5)
   }
+
+  @Test
+  def repeatedlyParsesTest: Unit = {
+    object TestTokenParser extends JavaTokenParsers
+    import TestTokenParser._
+    val p = ident ~ "(?i)AND".r.*
+
+    val parseResult = parseAll(p, "start")
+    parseResult match {
+      case Success(r, _) =>
+        assertEquals("start", r._1)
+        assertEquals(0, r._2.size)
+      case _ => sys.error(parseResult.toString)
+    }
+
+    val parseResult1 = parseAll(p, "start start")
+    parseResult1 match {
+      case e @ Failure(message, next) =>
+        assertEquals(next.pos.column, 7)
+        assert(message.endsWith("string matching regex `(?i)AND' expected but `s' found"))
+      case _ => sys.error(parseResult1.toString)
+    }
+
+    val parseResult2 = parseAll(p, "start AND AND")
+    parseResult2 match {
+      case Success(r, _) =>
+        assertEquals("start", r._1)
+        assertEquals("AND AND", r._2.mkString(" "))
+      case _ => sys.error(parseResult2.toString)
+    }
+  }
+
 
 }

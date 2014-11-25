@@ -154,7 +154,7 @@ trait RegexParsers extends Parsers {
   override def err(msg: String) = ws(super.err(msg))
 
   override def phrase[T](p: Parser[T]): Parser[T] =
-    super.phrase(p <~ opt("""\z""".r))
+    super.phrase(p)
 
   /** Parse some prefix of reader `in` with parser `p`. */
   def parse[T](p: Parser[T], in: Reader[Char]): ParseResult[T] =
