@@ -39,6 +39,33 @@ class RegexParsersTest {
   }
 
   @Test
+  def parserSkippingResult: Unit = {
+    object parser extends RegexParsers {
+      def quote = "\""
+      def string = """[a-zA-Z]*""".r
+      type ResultType = String
+      def p: Parser[ResultType] = quote ~> string <~ quote
+      def q: Parser[ResultType] = quote ~>! string <~! quote
+      def halfQuoted = quote ~ string ^^ { case q ~ s => q + s }
+    }
+    import parser._
+    val failureLq = parseAll(p, "\"asdf").asInstanceOf[Failure]
+    val failureRq = parseAll(p, "asdf\"").asInstanceOf[Failure]
+    val failureQBacktrackL = parseAll(q | quote, "\"").asInstanceOf[Error]
+    val failureQBacktrackR = parseAll(q | halfQuoted, "\"asdf").asInstanceOf[Error]
+
+    val successP = parseAll(p, "\"asdf\"").get
+    assertEquals(successP, "asdf")
+    val successPBacktrackL = parseAll(p | quote, "\"").get
+    assertEquals(successPBacktrackL, "\"")
+    val successPBacktrackR = parseAll(p | halfQuoted, "\"asdf").get
+    assertEquals(successPBacktrackR, "\"asdf")
+
+    val successQ = parseAll(q, "\"asdf\"").get
+    assertEquals(successQ, "asdf")
+  }
+
+  @Test
   def parserFilter: Unit = {
     object parser extends RegexParsers {
       val keywords = Set("if", "false")
