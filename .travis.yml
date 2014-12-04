@@ -1,6 +1,15 @@
 language: scala
+
+env:
+  global:
+    - PUBLISH_JDK=openjdk6 # admin/build.sh only publishes when running on this jdk
+# Don't commit sensitive files, instead commit a version encrypted with $SECRET,
+# this environment variable is encrypted with this repo's private key and stored below:
+# (See http://docs.travis-ci.com/user/environment-variables/#Secure-Variables.)
+    - secure: ZEAhn8ozGqcQxvJD7/G3ifou2Vl7OkNzUXM15aKy0FbqLMOzsx3hAKsWEM6e/6d/7phDkiZisers+HOlt3nLwu75M3QLGm5lo4moJJJyx17omlrBQ7+M/hu3ZxqNRCE8oNI41V3pc+ZJQsY1qA7at4NPJbnAXx9sUUO2lGmc4xI=
+
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean update compile test
+  - admin/build.sh
 scala:
   - 2.11.2
 jdk:
