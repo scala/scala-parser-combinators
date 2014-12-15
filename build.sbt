@@ -1,5 +1,4 @@
 import com.typesafe.tools.mima.plugin.{MimaPlugin, MimaKeys}
-import com.typesafe.tools.mima.core.{ProblemFilters, MissingMethodProblem}
 
 scalaModuleSettings
 
@@ -32,5 +31,3 @@ test in Test := {
         MimaKeys.reportBinaryIssues.value
         (test in Test).value
 }
-
-MimaKeys.binaryIssueFilters += ProblemFilters.exclude[MissingMethodProblem]("scala.util.parsing.combinator.RegexParsers.scala$util$parsing$combinator$RegexParsers$$super$err")
