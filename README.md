@@ -7,7 +7,7 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 
 ## Documentation
 
- * [Latest version](http://www.scala-lang.org/files/archive/api/2.11.5/scala-parser-combinators/)
+ * [Latest version](http://www.scala-lang.org/files/archive/api/2.11.x/scala-parser-combinators/)
  * [Previous versions](http://scala-lang.org/documentation/api.html) (included in the API docs for the Scala library until Scala 2.11)
 
 ## Adding an SBT dependency
