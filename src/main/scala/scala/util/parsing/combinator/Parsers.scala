@@ -314,6 +314,36 @@ trait Parsers {
     def ~! [U](p: => Parser[U]): Parser[~[T, U]]
       = OnceParser{ (for(a <- this; b <- commit(p)) yield new ~(a,b)).named("~!") }
 
+
+    /** A parser combinator for non-back-tracking sequential composition which only keeps the right result.
+     *
+     * `p ~>! q` succeeds if `p` succeds and `q` succeds on the input left over by `p`.
+     * In case of failure, no back-tracking is performed (in an earlier parser produced by the `|` combinator).
+     *
+     * @param q a parser that will be executed after `p` (this parser) succeeds -- evaluated at most once, and only when necessary
+     * @return a `Parser` that -- on success -- reutrns the result of `q`.
+     *         The resulting parser fails if either `p` or `q` fails, this failure is fatal.
+     */
+    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
+    def ~>! [U](q: => Parser[U]): Parser[U] = { lazy val p = q // lazy argument
+      OnceParser { (for(a <- this; b <- commit(p)) yield b).named("~>!") }
+    }
+
+    /** A parser combinator for non-back-tracking sequential composition which only keeps the left result.
+     *
+     * `p <~! q` succeeds if `p` succeds and `q` succeds on the input left over by `p`.
+     * In case of failure, no back-tracking is performed (in an earlier parser produced by the `|` combinator).
+     *
+     * @param q a parser that will be executed after `p` (this parser) succeeds -- evaluated at most once, and only when necessary
+     * @return a `Parser` that -- on success -- reutrns the result of `p`.
+     *         The resulting parser fails if either `p` or `q` fails, this failure is fatal.
+     */
+    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
+    def <~! [U](q: => Parser[U]): Parser[T] = { lazy val p = q // lazy argument
+      OnceParser { (for(a <- this; b <- commit(p)) yield a).named("<~!") }
+    }
+
+
     /** A parser combinator for alternative composition.
      *
      *  `p | q` succeeds if `p` succeeds or `q` succeeds.
