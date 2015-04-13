@@ -137,8 +137,19 @@ trait RegexParsers extends Parsers {
     }
   }
 
+  /**
+   * A parser generator delimiting whole phrases (i.e. programs).
+   *
+   * `phrase(p)` succeeds if `p` succeeds and no input is left over after `p`.
+   *
+   * @param p the parser that must consume all input for the resulting parser
+   *          to succeed.
+   *
+   * @return  a parser that has the same result as `p`, but that only succeeds
+   *          if `p` consumed all the input.
+   */
   override def phrase[T](p: Parser[T]): Parser[T] =
-    super.phrase(p <~ opt("""\z""".r))
+    super.phrase(p <~ "".r)
 
   /** Parse some prefix of reader `in` with parser `p`. */
   def parse[T](p: Parser[T], in: Reader[Char]): ParseResult[T] =
