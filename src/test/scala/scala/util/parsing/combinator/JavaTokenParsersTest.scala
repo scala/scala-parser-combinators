@@ -55,4 +55,67 @@ class JavaTokenParsersTest {
     parseFailure("with space", 6)
   }
 
+  @Test
+  def repeatedlyParsesTest: Unit = {
+    object TestTokenParser extends JavaTokenParsers
+    import TestTokenParser._
+    val p = ident ~ "(?i)AND".r.*
+
+    val parseResult = parseAll(p, "start")
+    parseResult match {
+      case Success(r, _) =>
+        assertEquals("start", r._1)
+        assertEquals(0, r._2.size)
+      case _ => sys.error(parseResult.toString)
+    }
+
+    val parseResult1 = parseAll(p, "start start")
+    parseResult1 match {
+      case e @ Failure(message, next) =>
+        assertEquals(next.pos.column, 7)
+        assert(message.endsWith("string matching regex `(?i)AND' expected but `s' found"))
+      case _ => sys.error(parseResult1.toString)
+    }
+
+    val parseResult2 = parseAll(p, "start AND AND")
+    parseResult2 match {
+      case Success(r, _) =>
+        assertEquals("start", r._1)
+        assertEquals("AND AND", r._2.mkString(" "))
+      case _ => sys.error(parseResult2.toString)
+    }
+  }
+
+  @Test
+  def optionParserTest: Unit = {
+    object TestTokenParser extends JavaTokenParsers
+    import TestTokenParser._
+    val p = opt(ident)
+
+    val parseResult = parseAll(p, "-start")
+    parseResult match {
+      case Failure(message, next) =>
+        assertEquals(next.pos.line, 1)
+        assertEquals(next.pos.column, 1)
+        assert(message.endsWith(s"regex `\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*' expected but `-' found"))
+      case _ => sys.error(parseResult.toString)
+    }
+
+    val parseResult2 = parseAll(p, "start ")
+    parseResult2 match {
+      case Success(r, _) =>
+        assertEquals(r, Some("start"))
+      case _ =>
+        sys.error(parseResult2.toString)
+    }
+
+    val parseResult3 = parseAll(p, "start")
+    parseResult3 match {
+      case Success(r, _) =>
+        assertEquals(r, Some("start"))
+      case _ => sys.error(parseResult3.toString)
+    }
+  }
+
+
 }
