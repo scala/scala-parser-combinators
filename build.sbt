@@ -4,11 +4,9 @@ scalaModuleSettings
 
 name                       := "scala-parser-combinators"
 
-version                    := "1.0.3-SNAPSHOT"
+version                    := "1.0.4-SNAPSHOT"
 
 scalaVersion               := "2.11.6"
-
-snapshotScalaBinaryVersion := "2.11"
 
 // important!! must come here (why?)
 scalaModuleOsgiSettings
@@ -22,12 +20,4 @@ libraryDependencies += "junit" % "junit" % "4.11" % "test"
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
 
-MimaPlugin.mimaDefaultSettings
-
-MimaKeys.previousArtifact := Some(organization.value % s"${name.value}_2.11" % "1.0.2")
-
-// run mima during tests
-test in Test := {
-        MimaKeys.reportBinaryIssues.value
-        (test in Test).value
-}
+mimaPreviousVersion := Some("1.0.2")
