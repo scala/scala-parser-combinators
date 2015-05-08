@@ -5,9 +5,7 @@ name                       := "scala-parser-combinators"
 
 version                    := "1.1.0-SNAPSHOT"
 
-scalaVersion               := "2.11.4"
-
-snapshotScalaBinaryVersion := "2.11"
+scalaVersion               := "2.11.6"
 
 // important!! must come here (why?)
 scalaModuleOsgiSettings
@@ -20,3 +18,5 @@ fork in Test := true
 libraryDependencies += "junit" % "junit" % "4.11" % "test"
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
+
+mimaPreviousVersion := None
