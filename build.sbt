@@ -5,7 +5,9 @@ name                       := "scala-parser-combinators"
 
 version                    := "1.1.0-SNAPSHOT"
 
-scalaVersion               := "2.11.6"
+scalaVersion               := crossScalaVersions.value.head
+
+crossScalaVersions         := Seq("2.11.6", "2.12.0-M1")
 
 // important!! must come here (why?)
 scalaModuleOsgiSettings
