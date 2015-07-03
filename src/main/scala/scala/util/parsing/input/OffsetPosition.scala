@@ -23,6 +23,16 @@ case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends P
 
   /** An index that contains all line starts, including first line, and eof. */
   private lazy val index: Array[Int] = {
+    Option(OffsetPosition.indexCache.get(source)) match {
+      case Some(index) => index
+      case None =>
+        val index = genIndex
+        OffsetPosition.indexCache.put(source, index)
+        index
+    }
+  }
+
+  private def genIndex: Array[Int] = {
     val lineStarts = new ArrayBuffer[Int]
     lineStarts += 0
     for (i <- 0 until source.length)
@@ -70,4 +80,13 @@ case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends P
       this.line < that.line ||
       this.line == that.line && this.column < that.column
   }
+}
+
+/** An object holding the index cache.
+ *
+ * @author Tomáš Janoušek
+ */
+object OffsetPosition {
+  private lazy val indexCache = java.util.Collections.synchronizedMap(
+    new java.util.WeakHashMap[java.lang.CharSequence, Array[Int]])
 }
