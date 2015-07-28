@@ -156,14 +156,13 @@ trait Parsers {
     val successful = true
   }
 
-  private lazy val lastNoSuccessVar = new DynamicVariable[Option[NoSuccess]](None)
 
   /** A common super-class for unsuccessful parse results. */
   sealed abstract class NoSuccess(val msg: String, override val next: Input) extends ParseResult[Nothing] { // when we don't care about the difference between Failure and Error
     val successful = false
 
-    if (lastNoSuccessVar.value forall (v => !(next.pos < v.next.pos)))
-      lastNoSuccessVar.value = Some(this)
+    if (LastNoSuccessHelper.isLastNoSuccessTrackingEnabled && (LastNoSuccessHelper.value forall (v => !(next.pos < v.next.pos))))
+      LastNoSuccessHelper.value = Some(this)
 
     def map[U](f: Nothing => U) = this
     def mapPartial[U](f: PartialFunction[Nothing, U], error: Nothing => String): ParseResult[U] = this
@@ -908,14 +907,14 @@ trait Parsers {
    *           if `p` consumed all the input.
    */
   def phrase[T](p: Parser[T]) = new Parser[T] {
-    def apply(in: Input) = lastNoSuccessVar.withValue(None) {
+    def apply(in: Input) = LastNoSuccessHelper.trackLastNoSuccessWithInitialValue(None) {
       p(in) match {
       case s @ Success(out, in1) =>
         if (in1.atEnd)
           s
         else
-          lastNoSuccessVar.value filterNot { _.next.pos < in1.pos } getOrElse Failure("end of input expected", in1)
-        case ns => lastNoSuccessVar.value.getOrElse(ns)
+          LastNoSuccessHelper.value filterNot { _.next.pos < in1.pos } getOrElse Failure("end of input expected", in1)
+        case ns => LastNoSuccessHelper.value.getOrElse(ns)
       }
     }
   }
@@ -945,5 +944,32 @@ trait Parsers {
   trait OnceParser[+T] extends Parser[T] {
     override def ~ [U](p: => Parser[U]): Parser[~[T, U]]
       = OnceParser{ (for(a <- this; b <- commit(p)) yield new ~(a,b)).named("~") }
+  }
+
+  /**
+   * Utility to handle thread-local binding of
+   * last NoSuccess.
+   */
+  object LastNoSuccessHelper {
+    lazy val context = new DynamicVariable[Option[NoSuccess]](null)
+
+    def value : Option[NoSuccess] = {
+      val threadValue = context.value
+      if (threadValue == null) None else threadValue
+    }
+
+    def value_= (newValue: Option[NoSuccess]) = {
+        context.value = newValue
+    }
+
+    def isLastNoSuccessTrackingEnabled = {
+       context.value != null
+    }
+
+    def trackLastNoSuccessWithInitialValue[S](initialValue: Option[NoSuccess])(body: => S): S = {
+      context.withValue(initialValue) {
+        body
+      }
+    }
   }
 }
