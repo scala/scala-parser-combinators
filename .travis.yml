@@ -1,3 +1,7 @@
+# disables sudo
+# this allows for faster builds, using  travis's docker-based build infra
+sudo: false
+
 language: scala
 
 env:
