@@ -10,6 +10,8 @@ package scala
 package util.parsing.input
 
 import scala.collection.mutable.ArrayBuffer
+import java.lang.{CharSequence, ThreadLocal}
+import java.util.WeakHashMap
 
 /** `OffsetPosition` is a standard class for positions
  *   represented as offsets into a source ``document''.
@@ -19,7 +21,7 @@ import scala.collection.mutable.ArrayBuffer
  *
  * @author Martin Odersky
  */
-case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends Position {
+case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
 
   /** An index that contains all line starts, including first line, and eof. */
   private lazy val index: Array[Int] = {
@@ -87,6 +89,11 @@ case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends P
  * @author Tomáš Janoušek
  */
 object OffsetPosition {
-  private lazy val indexCache = java.util.Collections.synchronizedMap(
-    new java.util.WeakHashMap[java.lang.CharSequence, Array[Int]])
+  private lazy val indexCacheTL =
+    // not DynamicVariable as that would share the map from parent to child :-(
+    new ThreadLocal[java.util.Map[CharSequence, Array[Int]]] {
+      override def initialValue = new WeakHashMap[CharSequence, Array[Int]]
+    }
+
+  private def indexCache = indexCacheTL.get
 }
