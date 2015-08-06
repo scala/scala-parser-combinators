@@ -10,6 +10,8 @@ package scala
 package util.parsing.input
 
 import scala.collection.mutable.ArrayBuffer
+import java.lang.{CharSequence, ThreadLocal}
+import java.util.WeakHashMap
 
 /** `OffsetPosition` is a standard class for positions
  *   represented as offsets into a source ``document''.
@@ -19,10 +21,20 @@ import scala.collection.mutable.ArrayBuffer
  *
  * @author Martin Odersky
  */
-case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends Position {
+case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
 
   /** An index that contains all line starts, including first line, and eof. */
   private lazy val index: Array[Int] = {
+    Option(OffsetPosition.indexCache.get(source)) match {
+      case Some(index) => index
+      case None =>
+        val index = genIndex
+        OffsetPosition.indexCache.put(source, index)
+        index
+    }
+  }
+
+  private def genIndex: Array[Int] = {
     val lineStarts = new ArrayBuffer[Int]
     lineStarts += 0
     for (i <- 0 until source.length)
@@ -70,4 +82,18 @@ case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends P
       this.line < that.line ||
       this.line == that.line && this.column < that.column
   }
+}
+
+/** An object holding the index cache.
+ *
+ * @author Tomáš Janoušek
+ */
+object OffsetPosition {
+  private lazy val indexCacheTL =
+    // not DynamicVariable as that would share the map from parent to child :-(
+    new ThreadLocal[java.util.Map[CharSequence, Array[Int]]] {
+      override def initialValue = new WeakHashMap[CharSequence, Array[Int]]
+    }
+
+  private def indexCache = indexCacheTL.get
 }
