@@ -30,10 +30,10 @@ object PagedSeqReader {
  * @author Martin Odersky
  */
 class PagedSeqReader(seq: PagedSeq[Char],
-                     override val offset: Int) extends Reader[Char] {
+                     override val offset: Int) extends Reader[Char] { outer =>
   import PagedSeqReader._
 
-  override lazy val source: java.lang.CharSequence = seq
+  override val source: java.lang.CharSequence = seq
 
   /** Construct a `PagedSeqReader` with its first element at
    *  `source(0)` and position `(1,1)`.
@@ -51,7 +51,9 @@ class PagedSeqReader(seq: PagedSeq[Char],
    *         otherwise, it's a `PagedSeqReader` containing the rest of input.
    */
   def rest: PagedSeqReader =
-    if (seq.isDefinedAt(offset)) new PagedSeqReader(seq, offset + 1)
+    if (seq.isDefinedAt(offset)) new PagedSeqReader(seq, offset + 1) {
+      override val source: java.lang.CharSequence = outer.source
+    }
     else this
 
   /** The position of the first element in the reader.
@@ -67,5 +69,7 @@ class PagedSeqReader(seq: PagedSeq[Char],
    *  `n` elements.
    */
   override def drop(n: Int): PagedSeqReader =
-    new PagedSeqReader(seq, offset + n)
+    new PagedSeqReader(seq, offset + n) {
+      override val source: java.lang.CharSequence = outer.source
+    }
 }
