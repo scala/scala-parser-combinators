@@ -88,7 +88,7 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
  *
  * @author Tomáš Janoušek
  */
-object OffsetPosition {
+object OffsetPosition extends scala.runtime.AbstractFunction2[CharSequence,Int,OffsetPosition] {
   private lazy val indexCacheTL =
     // not DynamicVariable as that would share the map from parent to child :-(
     new ThreadLocal[java.util.Map[CharSequence, Array[Int]]] {
