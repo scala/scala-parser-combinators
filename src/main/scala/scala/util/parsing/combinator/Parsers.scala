@@ -880,11 +880,11 @@ trait Parsers {
   def phrase[T](p: Parser[T]) = new Parser[T] {
     def apply(in: Input) = lastNoSuccessVar.withValue(None) {
       p(in) match {
-      case s @ Success(out, in1) =>
-        if (in1.atEnd)
-          s
-        else
-          lastNoSuccessVar.value filterNot { _.next.pos < in1.pos } getOrElse Failure("end of input expected", in1)
+        case s @ Success(out, in1) =>
+          if (in1.atEnd)
+            s
+          else
+            lastNoSuccessVar.value filterNot { _.next.pos < in1.pos } getOrElse Failure("end of input expected", in1)
         case ns => lastNoSuccessVar.value.getOrElse(ns)
       }
     }
