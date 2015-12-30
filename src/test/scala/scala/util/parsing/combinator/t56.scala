@@ -51,6 +51,7 @@ class t56 {
         |^""".stripMargin
 
     val parseResult = phrase(term)(new lexical.Scanner(expr))
+    
     assertTrue(parseResult.isInstanceOf[Failure])
     assertEquals(fail, parseResult.toString)
   }
