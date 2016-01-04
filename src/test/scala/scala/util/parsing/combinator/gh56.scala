@@ -11,7 +11,7 @@ import scala.util.parsing.combinator.syntactical.StandardTokenParsers
   * Makes sure that lineContents (and thus longString) in the Position trait doesn't
   * include a newline
   */
-class t56 {
+class gh56 {
   private object grammar extends StandardTokenParsers with PackratParsers {
     lazy val term = (numericLit | stringLit | ident)+
   }
