@@ -1,5 +1,8 @@
 language: scala
 
+before_install:
+  - sudo hostname "$(hostname | cut -c1-63)"
+
 env:
   global:
     - PUBLISH_JDK=openjdk6
