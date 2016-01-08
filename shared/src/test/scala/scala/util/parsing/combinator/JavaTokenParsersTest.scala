@@ -97,7 +97,7 @@ class JavaTokenParsersTest {
       case Failure(message, next) =>
         assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 1)
-        assert(message.endsWith(s"regex `\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*' expected but `-' found"))
+        assert(message.endsWith(s"identifier expected but `-' found"))
       case _ => sys.error(parseResult.toString)
     }
 
