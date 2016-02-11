@@ -1,3 +1,4 @@
+scalaVersion in ThisBuild := crossScalaVersions.value.head
 
 crossScalaVersions in ThisBuild := {
   val javaVersion = System.getProperty("java.version")
@@ -19,8 +20,7 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   ).
   settings(
     moduleName         := "scala-parser-combinators",
-    version            := "1.1.0-SNAPSHOT",
-    scalaVersion       := crossScalaVersions.value.head
+    version            := "1.1.0-SNAPSHOT"
   ).
   jvmSettings(
     // important!! must come here (why?)
