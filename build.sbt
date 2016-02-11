@@ -1,4 +1,4 @@
-import com.typesafe.tools.mima.plugin.{MimaPlugin, MimaKeys}
+scalaVersion in ThisBuild := crossScalaVersions.value.head
 
 crossScalaVersions in ThisBuild := {
   val javaVersion = System.getProperty("java.version")
@@ -20,8 +20,8 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   ).
   settings(
     moduleName         := "scala-parser-combinators",
+<<<<<<< HEAD
     version            := "1.0.5-SNAPSHOT",
-    scalaVersion       := crossScalaVersions.value.head
   ).
   jvmSettings(
     // important!! must come here (why?)
@@ -43,7 +43,7 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
   ).
   settings(
-    mimaPreviousVersion := None
+    mimaPreviousVersion := Some("1.0.2")
   )
 
 lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
