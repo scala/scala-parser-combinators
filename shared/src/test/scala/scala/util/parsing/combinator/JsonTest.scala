@@ -120,7 +120,10 @@ class JsonTest {
     assertEquals("{\"name\" : {\"name1\" : \"va1ue1\", \"name2\" : \"va1ue2\"}}",
                JSONObject(Map("name" -> JSONObject(TreeMap("name1" -> "va1ue1", "name2" -> "va1ue2")))).toString())
 
-    assertEquals("[4.0, 1.0, 3.0, 2.0, 6.0, 5.0, 8.0, 7.0]", JSONArray(List[Double](4,1,3,2,6,5,8,7)).toString())
+    val expected =
+      if (1.0.toString == "1") "[4, 1, 3, 2, 6, 5, 8, 7]"
+      else "[4.0, 1.0, 3.0, 2.0, 6.0, 5.0, 8.0, 7.0]"
+    assertEquals(expected, JSONArray(List[Double](4,1,3,2,6,5,8,7)).toString())
   }
 
   // A test method that escapes all characters in strings
