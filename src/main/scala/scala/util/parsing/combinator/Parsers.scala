@@ -565,7 +565,7 @@ trait Parsers {
    *  @return a `tParser` that succeeds if `e` is the next available input.
    */
 
-  implicit def accept(e: Elem): Parser[Elem] = acceptIf(_ == e)("`"+e+"' expected but " + _ + " found")
+  implicit def accept(e: Elem): Parser[Elem] = acceptIf(_ == e)("'"+e+"' expected but " + _ + " found")
 
   /** A parser that matches only the given list of element `es`.
    *
