@@ -122,7 +122,7 @@ class PackratParsersTest {
       val failure = parseResult.asInstanceOf[Failure]
       assertEquals(expectedFailureMsg, failure.msg)
     }
-    assertFailure("``b'' expected but `c' found", "a a a a b b b c c c c")
+    assertFailure("'`b'' expected but `c' found", "a a a a b b b c c c c")
     assertFailure("end of input", "a a a a b b b b c c c")
   }
 
