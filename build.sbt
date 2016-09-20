@@ -5,9 +5,9 @@ crossScalaVersions in ThisBuild := {
   val isJDK6Or7 =
     javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")
   if (isJDK6Or7)
-    Seq("2.11.7")
+    Seq("2.11.8")
   else
-    Seq("2.11.7", "2.12.0-M3")
+    Seq("2.11.8", "2.12.0-RC1")
 }
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
@@ -43,8 +43,8 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   ).
   jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
   jvmSettings(
-    libraryDependencies += "junit" % "junit" % "4.11" % "test",
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
+    libraryDependencies += "junit" % "junit" % "4.12" % "test",
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
   ).
   jvmSettings(
     mimaPreviousVersion := Some("1.0.4")
