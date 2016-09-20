@@ -91,15 +91,5 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
 }
 
 /** An object holding the index cache.
- *
- * @author Tomáš Janoušek
  */
-object OffsetPosition extends scala.runtime.AbstractFunction2[CharSequence,Int,OffsetPosition] {
-  private lazy val indexCacheTL =
-    // not DynamicVariable as that would share the map from parent to child :-(
-    new ThreadLocal[java.util.Map[CharSequence, Array[Int]]] {
-      override def initialValue = new WeakHashMap[CharSequence, Array[Int]]
-    }
-
-  private def indexCache = indexCacheTL.get
-}
+object OffsetPosition extends scala.runtime.AbstractFunction2[CharSequence,Int,OffsetPosition] with PositionCache
