@@ -26,8 +26,12 @@ trait JavaTokenParsers extends RegexParsers {
    * <a href="http://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.8">The Java Language Spec</a>.
    * Generally, this means a letter, followed by zero or more letters or numbers.
    */
-  def ident: Parser[String] =
-    """\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*""".r
+  def ident: Parser[String] = (
+      "" ~> // handle whitespace
+      rep1(acceptIf(Character.isJavaIdentifierStart)("identifier expected but `" + _ + "' found"),
+          elem("identifier part", Character.isJavaIdentifierPart(_: Char))) ^^ (_.mkString)
+  )
+
   /** An integer, without sign or with a negative sign. */
   def wholeNumber: Parser[String] =
     """-?\d+""".r
@@ -49,7 +53,7 @@ trait JavaTokenParsers extends RegexParsers {
    */
   @migration("`stringLiteral` allows escaping single and double quotes, but not forward slashes any longer.", "2.10.0")
   def stringLiteral: Parser[String] =
-    ("\""+"""([^"\p{Cntrl}\\]|\\[\\'"bfnrt]|\\u[a-fA-F0-9]{4})*+"""+"\"").r
+    ("\""+"""([^"\x00-\x1F\x7F\\]|\\[\\'"bfnrt]|\\u[a-fA-F0-9]{4})*"""+"\"").r
   /** A number following the rules of `decimalNumber`, with the following
    *  optional additions:
    *
