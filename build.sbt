@@ -1,13 +1,23 @@
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 
 crossScalaVersions in ThisBuild := {
+  val v211 = List("2.11.8")
+  val v212 = List("2.12.0-RC1")
+
   val javaVersion = System.getProperty("java.version")
-  val isJDK6Or7 =
-    javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")
-  if (isJDK6Or7)
-    Seq("2.11.8")
-  else
-    Seq("2.11.8", "2.12.0-RC1")
+  val isTravisPublishing = !util.Properties.envOrElse("TRAVIS_TAG", "").trim.isEmpty
+
+  if (isTravisPublishing) {
+    if (javaVersion.startsWith("1.6.")) v211
+    else if (javaVersion.startsWith("1.8.")) v212
+    else Nil
+  } else if (javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")) {
+    v211
+  } else if (javaVersion.startsWith("1.8.") || javaVersion.startsWith("9")) {
+    v211 ++ v212
+  } else {
+    sys.error(s"Unsupported java version: $javaVersion.")
+  }
 }
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
