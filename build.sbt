@@ -1,19 +1,34 @@
 scalaVersion in ThisBuild := crossScalaVersions.value.head
 
 crossScalaVersions in ThisBuild := {
+  val v211 = List("2.11.8")
+  val v212 = List("2.12.0-RC1")
+
   val javaVersion = System.getProperty("java.version")
-  val isJDK6Or7 =
-    javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")
-  if (isJDK6Or7)
-    Seq("2.11.7")
-  else
-    Seq("2.11.7", "2.12.0-M3")
+  val isTravisPublishing = !util.Properties.envOrElse("TRAVIS_TAG", "").trim.isEmpty
+
+  if (isTravisPublishing) {
+    if (javaVersion.startsWith("1.6.")) v211
+    else if (javaVersion.startsWith("1.8.")) v212
+    else Nil
+  } else if (javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")) {
+    v211
+  } else if (javaVersion.startsWith("1.8.") || javaVersion.startsWith("9")) {
+    v211 ++ v212
+  } else {
+    sys.error(s"Unsupported java version: $javaVersion.")
+  }
 }
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
+  settings(
+    name := "scala-parser-combinators-root"
+  ).
   jvmSettings(
-    name := "scala-parser-combinators-jvm"
+    // Mima uses the name of the jvm project in the artifactId
+    // when resolving previous versions (so no "-jvm" project)
+    name := "scala-parser-combinators"
   ).
   jsSettings(
     name := "scala-parser-combinators-js"
@@ -38,10 +53,10 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   ).
   jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
   jvmSettings(
-    libraryDependencies += "junit" % "junit" % "4.11" % "test",
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
+    libraryDependencies += "junit" % "junit" % "4.12" % "test",
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
   ).
-  settings(
+  jvmSettings(
     mimaPreviousVersion := None
   )
 
