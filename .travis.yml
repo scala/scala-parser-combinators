@@ -4,9 +4,13 @@ sudo: false
 
 language: scala
 
+addons:
+  hosts:
+    - myshorthost
+  hostname: myshorthost
+
 env:
   global:
-    - PUBLISH_JDK=openjdk6
     # PGP_PASSPHRASE
     - secure: "SkBtn/6OjEldoikn0MFuyeLT/pau27kwKSDYTVQeJ4BKDzdWLwLE5Q3RukLGttIfNdhOvRoocpQSW9GkZfibTHmwrRnAokucfZCqTsKbwoOp1xIoOh5GrrVrB6gcP7WBTKinqFdBgSvLOrP7GviImz4ZuB9wq1r+mToGG4pDrXc="
     # SONA_USER
@@ -18,7 +22,6 @@ script: admin/build.sh
 
 jdk:
   - openjdk6
-  - openjdk7
   - oraclejdk8
 
 notifications:

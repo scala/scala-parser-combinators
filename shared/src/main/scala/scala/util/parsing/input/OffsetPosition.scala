@@ -10,6 +10,8 @@ package scala
 package util.parsing.input
 
 import scala.collection.mutable.ArrayBuffer
+import java.lang.{CharSequence, ThreadLocal}
+import java.util.WeakHashMap
 
 /** `OffsetPosition` is a standard class for positions
  *   represented as offsets into a source ``document''.
@@ -19,10 +21,20 @@ import scala.collection.mutable.ArrayBuffer
  *
  * @author Martin Odersky
  */
-case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends Position {
+case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
 
   /** An index that contains all line starts, including first line, and eof. */
   private lazy val index: Array[Int] = {
+    Option(OffsetPosition.indexCache.get(source)) match {
+      case Some(index) => index
+      case None =>
+        val index = genIndex
+        OffsetPosition.indexCache.put(source, index)
+        index
+    }
+  }
+
+  private def genIndex: Array[Int] = {
     val lineStarts = new ArrayBuffer[Int]
     lineStarts += 0
     for (i <- 0 until source.length)
@@ -50,8 +62,14 @@ case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends P
    *
    * @return the line at `offset` (not including a newline)
    */
-  def lineContents: String =
-    source.subSequence(index(line - 1), index(line)).toString
+  def lineContents: String = {
+    val endIndex = if (source.charAt(index(line) - 1) == '\n') {
+      index(line) -  1
+    } else {
+      index(line)
+    }
+    source.subSequence(index(line - 1), endIndex).toString
+  }
 
   /** Returns a string representation of the `Position`, of the form `line.column`. */
   override def toString = line+"."+column
@@ -71,3 +89,7 @@ case class OffsetPosition(source: java.lang.CharSequence, offset: Int) extends P
       this.line == that.line && this.column < that.column
   }
 }
+
+/** An object holding the index cache.
+ */
+object OffsetPosition extends scala.runtime.AbstractFunction2[CharSequence,Int,OffsetPosition] with PositionCache
