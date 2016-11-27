@@ -12,7 +12,7 @@ class gh45 {
 
   @Test
   def test4: Unit = {
-    def check(rd: Reader[Char]): Unit = {
+    def check(rd: Reader[Char, Position]): Unit = {
       val g = new grammar
       val p = g.phrase(g.script)
       val parseResult = p(new g.lexical.Scanner(rd))

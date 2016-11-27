@@ -7,8 +7,9 @@ import org.junit.Test
 import org.junit.Assert.assertEquals
 
 class T5514 extends Parsers {
+  type Pos = Position
   var readerCount = 0
-  class DemoReader(n: Int) extends Reader[String] {
+  class DemoReader(n: Int) extends Reader[String, Position] {
     def atEnd = n == 0
     def first = if (n >= 0) "s" + n else throw new IllegalArgumentException("No more input.")
     def rest = new DemoReader(n - 1)

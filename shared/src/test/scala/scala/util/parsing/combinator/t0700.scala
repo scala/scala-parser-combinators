@@ -1,14 +1,14 @@
-import java.io.{File,StringReader}
+import java.io.{File, StringReader}
 
 import scala.util.parsing.combinator.Parsers
-import scala.util.parsing.input.{CharArrayReader, StreamReader}
-
+import scala.util.parsing.input.{CharArrayReader, Position, StreamReader}
 import org.junit.Test
 import org.junit.Assert.assertEquals
 
 class T0700 {
   class TestParsers extends Parsers {
     type Elem = Char
+    type Pos = Position
 
     def p: Parser[List[Int]] = rep(p1 | p2)
     def p1: Parser[Int] = 'a' ~ nl ~ 'b' ~ nl ^^^ 1
