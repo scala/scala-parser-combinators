@@ -2,7 +2,7 @@ scalaVersion in ThisBuild := crossScalaVersions.value.head
 
 crossScalaVersions in ThisBuild := {
   val v211 = List("2.11.8")
-  val v212 = List("2.12.0-RC1")
+  val v212 = List("2.12.1")
 
   val javaVersion = System.getProperty("java.version")
   val isTravisPublishing = !util.Properties.envOrElse("TRAVIS_TAG", "").trim.isEmpty
@@ -31,7 +31,8 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     name := "scala-parser-combinators"
   ).
   jsSettings(
-    name := "scala-parser-combinators-js"
+    name := "scala-parser-combinators-js",
+    scalaJSUseRhino := true
   ).
   settings(
     moduleName         := "scala-parser-combinators",
