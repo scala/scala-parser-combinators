@@ -9,8 +9,9 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 
 ## Documentation
 
- * [Latest version](http://www.scala-lang.org/files/archive/api/2.11.2/scala-parser-combinators/)
- * [Previous versions](http://scala-lang.org/documentation/api.html) (included in the API docs for the Scala library until Scala 2.11)
+ * A (perhaps somewhat outdated) [Getting Started](https://wiki.scala-lang.org/display/SW/Parser+Combinators--Getting+Started)
+ * A more complicated example, [Building a lexer and parser with Scala's Parser Combinators](https://enear.github.io/2016/03/31/parser-combinators/)
+ * [Current API](http://www.scala-lang.org/files/archive/api/current/scala-parser-combinators/scala/util/parsing/combinator)
 
 ## Adding an SBT dependency
 To depend on scala-parser-combinators in SBT, add something like this to your build.sbt:
