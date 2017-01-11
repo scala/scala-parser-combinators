@@ -25,6 +25,36 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % 
 
 To support multiple Scala versions, see the example in https://github.com/scala/scala-module-dependency-sample.
 
+## Example
+
+```
+import scala.util.parsing.combinator._
+
+case class WordFreq(word: String, count: Int) {
+    override def toString = "Word <" + word + "> " +
+                            "occurs with frequency " + count
+}
+
+class SimpleParser extends RegexParsers {
+    def word: Parser[String]   = """[a-z]+""".r       ^^ { _.toString }
+    def number: Parser[Int]    = """(0|[1-9]\d*)""".r ^^ { _.toInt }
+    def freq: Parser[WordFreq] = word ~ number        ^^ { case wd ~ fr => WordFreq(wd,fr) }
+}
+
+object TestSimpleParser extends SimpleParser {
+    def main(args: Array[String]) = {
+        parse(freq, "johnny 121") match {
+            case Success(matched,_) => println(matched)
+            case Failure(msg,_) => println("FAILURE: " + msg)
+            case Error(msg,_) => println("ERROR: " + msg)
+        }
+    }
+}
+```
+
+For a detailed unpacking of this example see
+[Getting Started](docs/Getting_Started.md).
+
 ## ScalaJS support
 
 Scala-parser-combinators directly supports scala-js 0.6+, starting with v1.0.5:
