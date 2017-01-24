@@ -10,7 +10,6 @@ package scala
 package util.parsing.input
 
 import java.io.BufferedReader
-import scala.collection.immutable.PagedSeq
 
 /** An object to create a `StreamReader` from a `java.io.Reader`.
  *

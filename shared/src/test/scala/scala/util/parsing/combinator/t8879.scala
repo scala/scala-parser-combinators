@@ -1,5 +1,4 @@
 import scala.util.parsing.input._
-import scala.collection.immutable.PagedSeq
 
 import org.junit.Test
 import org.junit.Assert.fail

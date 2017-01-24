@@ -10,8 +10,6 @@
 package scala
 package util.parsing.input
 
-import scala.collection.immutable.PagedSeq
-
 /** An object encapsulating basic character constants.
  *
  * @author Martin Odersky
