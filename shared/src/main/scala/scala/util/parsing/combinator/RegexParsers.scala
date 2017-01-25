@@ -13,7 +13,6 @@ package util.parsing.combinator
 import java.util.regex.Pattern
 import scala.util.matching.Regex
 import scala.util.parsing.input._
-import scala.collection.immutable.PagedSeq
 import scala.language.implicitConversions
 
 /** The ''most important'' differences between `RegexParsers` and
