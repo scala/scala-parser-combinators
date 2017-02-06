@@ -27,7 +27,7 @@ To support multiple Scala versions, see the example in https://github.com/scala/
 
 ## Example
 
-```
+```scala
 import scala.util.parsing.combinator._
 
 case class WordFreq(word: String, count: Int) {
