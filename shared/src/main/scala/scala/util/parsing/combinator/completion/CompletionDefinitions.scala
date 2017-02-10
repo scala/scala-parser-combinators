@@ -2,12 +2,33 @@ package scala.util.parsing.combinator.completion
 
 import scala.util.parsing.input.{NoPosition, Position}
 
+/** `CompletionDefinitions` provides types to specify structured completions for parsers.
+  *  A `Completions` instance can contain multiple `CompletionSet`s instances. A `CompletionSet` provides a set of
+  *  `Completion` entries and is tagged with a `CompletionTag`.
+  *
+  *  Sets allow structuring the completion entries into groups, each group tagged with a `label` (+ a `description` and
+  *  a `kind`, the latter allowing e.g. encoding visual attributes of the set).
+  *  Sets also feature a score, which defines the order between sets within the `Completions` instance.
+  *
+  *  Each `Completion` entry within a set has a `value`, a `score` and a `kind`:
+  *  the score allows ordering the entries within a set, and the kind can e.g. be used to assign a representation style
+  *  for a particular completion entry.
+  *
+  *  Note that specifying tags and sets is optional: if no tag is specified upon creation,
+  *  `Completions` instances create a unique default set with an empty tag
+  */
 trait CompletionDefinitions {
   type Elem
 
   val DefaultCompletionTag   = ""
   val DefaultCompletionScore = 0
 
+  /** Tag defining identification and attributes of a set of completion entries
+    * @param label tag label
+    * @param score tag score (the higher the better, 0 by default)
+    * @param description tag description (optional) - can be used for additional information e.g. for a tooltip
+    * @param kind tag kind (optional) - can be used e.g. to define visual style
+    */
   case class CompletionTag(label: String, score: Int, description: Option[String], kind: Option[String]) {
     def update(newTag: Option[String],
                newScore: Option[Int],
@@ -32,6 +53,10 @@ trait CompletionDefinitions {
       CompletionTag(label, score, None, None)
   }
 
+  /** Set of related completion entries
+    * @param tag set tag
+    * @param completions set of unique completion entries
+    */
   case class CompletionSet(tag: CompletionTag, completions: Set[Completion]) {
     require(completions.nonEmpty, "empty completions set")
     def label: String               = tag.label
@@ -69,8 +94,16 @@ trait CompletionDefinitions {
   }
 
   type Elems = Seq[Elem]
+
+  /** Completion entry
+    * @param value entry value (e.g. string literal)
+    * @param score entry score (defines the order of entries within a set, the higher the better)
+    * @param kind entry kind (e.g. visual style)
+    */
   case class Completion(value: Elems, score: Int = DefaultCompletionScore, kind: Option[String] = None) {
     require(value.nonEmpty, "empty completion")
+    def updateKind(newKind: Option[String]) =
+      copy(kind = newKind.map(Some(_)).getOrElse(kind))
   }
   case object Completion {
     def apply(el: Elem): Completion = Completion(Seq(el))
@@ -78,6 +111,10 @@ trait CompletionDefinitions {
       Ordering.by(c => (-c.score, c.value.toString))
   }
 
+  /** Result of parser completion, listing the possible entry alternatives at a certain input position
+    * @param position position in the input where completion entries apply
+    * @param sets completion entries, grouped per tag
+    */
   case class Completions(position: Position, sets: Map[String, CompletionSet]) {
     def isEmpty: Boolean                               = sets.isEmpty
     def nonEmpty: Boolean                              = !isEmpty
@@ -109,9 +146,9 @@ trait CompletionDefinitions {
       val rightExclusive =
         other.sets.keySet.diff(overlappingSetTags).map(other.sets(_))
       Completions(position,
-        (unions ++ leftExclusive ++ rightExclusive)
-          .map(s => s.tag.label -> s)
-          .toMap)
+                  (unions ++ leftExclusive ++ rightExclusive)
+                    .map(s => s.tag.label -> s)
+                    .toMap)
     }
 
     def |(other: Completions): Completions = {

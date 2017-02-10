@@ -1,5 +1,5 @@
 package scala.util.parsing.combinator.completion
-
+import scala.util.matching.Regex
 import scala.util.parsing.combinator.RegexParsers
 import scala.util.parsing.input.{CharSequenceReader, OffsetPosition, Positional, Reader}
 
@@ -31,7 +31,7 @@ trait RegexCompletionParsers extends RegexParsers with CompletionParsers {
     (literalPos, sourcePos)
   }
 
-  abstract override implicit def literal(s: String): Parser[String] =
+  abstract override implicit def literal(s: String): CompletionParser[String] =
     CompletionParser[String](
       super.literal(s),
       in => {
@@ -49,6 +49,9 @@ trait RegexCompletionParsers extends RegexParsers with CompletionParsers {
         }
       }
     )
+
+  abstract override implicit def regex(r: Regex): CompletionParser[String] =
+    CompletionParser(super.regex(r), _ => Completions.empty)
 
   override def positioned[T <: Positional](p: => CompletionParser[T]): CompletionParser[T] = {
     lazy val q = p
