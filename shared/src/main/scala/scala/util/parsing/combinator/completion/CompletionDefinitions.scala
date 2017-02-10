@@ -205,6 +205,8 @@ trait CompletionDefinitions {
       Completions(position, CompletionSet(completions))
     def apply(completionSet: CompletionSet): Completions =
       Completions(NoPosition, completionSet)
+    def apply(completionSets: Iterable[CompletionSet]): Completions =
+      Completions(NoPosition, completionSets.map(s => s.tag.label -> s).toMap)
 
     val empty = Completions(NoPosition, Map[String, CompletionSet]())
   }

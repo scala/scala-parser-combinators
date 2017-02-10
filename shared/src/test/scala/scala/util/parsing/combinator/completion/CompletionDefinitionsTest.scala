@@ -20,7 +20,7 @@ class CompletionDefinitionsTest extends CompletionDefinitions {
   @Test
   def completions_takeTop_works() = {
     // Arrange
-    val compl = Completions(NoPosition, Seq(setA, setB, setC).map(s => (s.tag.label, s)).toMap)
+    val compl = Completions(Seq(setA, setB, setC))
 
     // Act
     val lettersInOrder = Seq("a", "b", "c", "d", "e")
@@ -31,7 +31,7 @@ class CompletionDefinitionsTest extends CompletionDefinitions {
   @Test
   def completions_setsScoredWithMaxCompletion_works() = {
     // Arrange
-    val compl = Completions(NoPosition, Seq(setA, setB, setC).map(s => (s.tag.label, s)).toMap)
+    val compl = Completions(Seq(setA, setB, setC))
 
     // Act
     assertEquals(Seq("e", "c", "d", "a", "b"), compl.setsScoredWithMaxCompletion().completionStrings)
