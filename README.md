@@ -8,7 +8,14 @@ This library is now community-maintained. If you are interested in helping pleas
 As of Scala 2.11, this library is a separate jar that can be omitted from Scala projects that do not use Parser Combinators.
 
 #### New: completion parsers
-Deriving from the `CompletionParsers` trait enables completion support for a grammar, i.e. parsers are thus 'augmented' with a `completions` method which returns possible entry completions for a certain input. This can be used to elaborate as-you-type completions menus or tab-completion experiences, and is e.g. easy to plug with readline to implement a console application. 
+Mix-in the `CompletionSupport` trait enables completion support for a grammar (`RegexCompletionSupport` for `RegexParsers`), like so:
+
+```scala
+object MyParsers extends RegexParsers with RegexCompletionSupport
+```
+
+Parsers are thus 'augmented' with a `completions` method which returns possible entry completions for a certain input. This can be used to elaborate as-you-type completions menus or tab-completion experiences, and is e.g. easy to plug with readline to implement a console application. 
+A set of additional operators also allow overriding completions and specifying ordering and grouping properties for completions. 
 
 ## Documentation
 
