@@ -8,10 +8,12 @@ package scala.util.parsing.combinator.completion
 
 import org.junit.{Assert, Test}
 
+import scala.util.parsing.combinator.Parsers
+
 class CompletionOperatorsTest {
 
-  object TestParser extends RegexCompletionParsers {
-    val someParser: CompletionParser[String] = "parser"
+  object TestParser extends Parsers with RegexCompletionSupport {
+    val someParser: Parser[String] = "parser"
   }
 
   @Test
@@ -48,7 +50,7 @@ class CompletionOperatorsTest {
       Some(kind))
   }
 
-  def assertCompletionsMatch[T](sut: TestParser.CompletionParser[T],
+  def assertCompletionsMatch[T](sut: TestParser.Parser[T],
                                 completions: Seq[Seq[Char]],
                                 tag: Option[String],
                                 score: Option[Int],

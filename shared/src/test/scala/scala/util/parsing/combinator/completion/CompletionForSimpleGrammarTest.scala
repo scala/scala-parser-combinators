@@ -14,8 +14,8 @@ class CompletionForSimpleGrammarTest {
   object SimpleGrammar extends CompletionTestParser {
     val number = "[0-9]+".r %> ("1", "10", "99") % "number" %? "any number"
 
-    def expr: CompletionParser[Int] = term | "(" ~> term <~ ")"
-    def term: CompletionParser[Int] = number ^^ {
+    def expr: Parser[Int] = term | "(" ~> term <~ ")"
+    def term: Parser[Int] = number ^^ {
       _.toInt
     }
   }

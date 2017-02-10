@@ -8,6 +8,8 @@ package scala.util.parsing.combinator.completion
 
 import org.junit.{Assert, Test}
 
+import scala.util.parsing.combinator.Parsers
+
 class CompletionForSequenceTest {
   val left = "left"
   val foo = "foo"
@@ -15,7 +17,7 @@ class CompletionForSequenceTest {
   val as = "as"
   val df = "df"
 
-  object TestParser extends RegexCompletionParsers {
+  object TestParser extends Parsers with RegexCompletionSupport {
     val sequence = left ~> (foo | bar)
 
     val subSeqLeft = foo | foo ~ bar

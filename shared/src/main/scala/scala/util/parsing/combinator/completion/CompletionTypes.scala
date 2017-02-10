@@ -8,12 +8,12 @@ package scala.util.parsing.combinator.completion
 
 import scala.util.parsing.input.{NoPosition, Position}
 
-/** `CompletionDefinitions` provides types to define structured completions for parsers.
+/**  Collection of data types allowing definition of structured parser completions.
   *  A `Completions` instance can contain multiple `CompletionSet`s instances. A `CompletionSet` provides a set of
   *  `Completion` entries and is tagged with a `CompletionTag`.
   *
-  *  Sets allow structuring the completion entries into groups, each group tagged with a `label` (+ a `description` and
-  *  a `kind`, the latter allowing e.g. encoding visual attributes for the set).
+  *  Sets allow structuring the completion entries into groups, each group tagged with a `label` (plus optional
+  *  `description` and `kind`, the latter allowing e.g. encoding visual attributes for the set).
   *  Sets also feature a score, which defines the order between sets within the `Completions` instance.
   *
   *  Each `Completion` entry within a set has a `value`, a `score` and a `kind`:
@@ -21,11 +21,11 @@ import scala.util.parsing.input.{NoPosition, Position}
   *  for a particular completion entry.
   *
   *  Note that specifying tags and sets is optional: if no tag is specified upon creation,
-  *  `Completions` instances create a unique default set with an empty tag
+  *  `Completions` instances create a unique default set with an empty tag.
   *
   *  @author Jonas Chapuis
   */
-trait CompletionDefinitions {
+trait CompletionTypes {
   type Elem
 
   val DefaultCompletionTag   = ""

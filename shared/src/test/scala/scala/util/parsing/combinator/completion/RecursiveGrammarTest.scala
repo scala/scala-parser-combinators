@@ -14,13 +14,13 @@ class RecursiveGrammarTest {
 
   object ExprParser extends CompletionTestParser {
     val number = "[0-9]+".r %> ("1", "10", "99") % "number" %? "any number"
-    lazy val expr: CompletionParser[Int] = term ~ rep(
+    lazy val expr: Parser[Int] = term ~ rep(
         (("+" | "-") % "operators" %? "arithmetic operators" % 10) ~! term ^^ {
         case "+" ~ t => t
         case "-" ~ t => -t
       }) ^^ { case t ~ r => t + r.sum }
     lazy val multiplicationDivisionOperators = ("*" | "/") % "operators" %? "arithmetic operators" % 10
-    lazy val term: CompletionParser[Int] = factor ~ rep(multiplicationDivisionOperators ~! factor) ^^ {
+    lazy val term: Parser[Int] = factor ~ rep(multiplicationDivisionOperators ~! factor) ^^ {
       case f ~ Nil => f
       case f ~ r =>
         r.foldLeft(f) {
@@ -28,7 +28,7 @@ class RecursiveGrammarTest {
           case (prev, "/" ~ next) => prev / next
         }
     }
-    lazy val factor: CompletionParser[Int] = number ^^ { _.toInt } | "(" ~> expr <~ ")"
+    lazy val factor: Parser[Int] = number ^^ { _.toInt } | "(" ~> expr <~ ")"
   }
 
   @Test

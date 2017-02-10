@@ -11,7 +11,7 @@ import org.junit.Test
 
 import scala.util.parsing.input.NoPosition
 
-class CompletionDefinitionsTest extends CompletionDefinitions {
+class CompletionTypesTest extends CompletionTypes {
   override type Elem = Char
 
   val setA = CompletionSet(CompletionTag("A", 10), Set(Completion("a", 2), Completion("b", 1)))

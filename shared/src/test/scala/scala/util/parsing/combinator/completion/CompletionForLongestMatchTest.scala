@@ -8,11 +8,13 @@ package scala.util.parsing.combinator.completion
 import org.junit.Assert._
 import org.junit.Test
 
+import scala.util.parsing.combinator.Parsers
+
 class CompletionForLongestMatchTest {
   val foo = "foo"
   val bar = "bar"
 
-  object Parsers extends RegexCompletionParsers {
+  object Parsers extends Parsers with RegexCompletionSupport {
     val samePrefix = foo ||| foo ~ bar
     val constrainedAndOpenAlternatives =  foo ~ bar ||| (".{5,}".r %> Completion("sample string longer than 5 char"))
   }

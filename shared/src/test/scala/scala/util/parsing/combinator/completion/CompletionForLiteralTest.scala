@@ -9,13 +9,15 @@ package scala.util.parsing.combinator.completion
 import org.junit.Assert._
 import org.junit.Test
 
+import scala.util.parsing.combinator.Parsers
+
 class CompletionForLiteralTest {
   val someLiteral = "literal"
   val otherLiteralWithSamePrefix = "litOther"
   val someLiteralPrefix = "lit"
 
-  object Parser extends RegexCompletionParsers {
-    val literal: CompletionParser[String] = someLiteral
+  object Parser extends Parsers with RegexCompletionSupport {
+    val literal: Parser[String] = someLiteral
 
     val combination = someLiteral | otherLiteralWithSamePrefix
   }

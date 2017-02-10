@@ -11,12 +11,12 @@ import scala.util.parsing.input.{CharSequenceReader, OffsetPosition, Positional,
 
 /** This component extends `RegexParsers` with completion capability. In particular,
   * it provides completions for the `literal` parser.
-  * Note that completions for the `regex` parser are undefined and can be specified
+  * Note that completions for the `regex` parser are undefined by default and can be specified
   * with the `%>` operator.
   *
   * @author Jonas Chapuis
   */
-trait RegexCompletionParsers extends RegexParsers with CompletionParsers {
+trait RegexCompletionSupport extends RegexParsers with CompletionSupport {
   protected val areLiteralsCaseSensitive = false
 
   protected def dropWhiteSpace(input: Input): Input =
@@ -41,8 +41,8 @@ trait RegexCompletionParsers extends RegexParsers with CompletionParsers {
     (literalPos, sourcePos)
   }
 
-  abstract override implicit def literal(s: String): CompletionParser[String] =
-    CompletionParser[String](
+  abstract override implicit def literal(s: String): Parser[String] =
+    Parser[String](
       super.literal(s),
       in => {
         lazy val literalCompletion =
@@ -60,24 +60,24 @@ trait RegexCompletionParsers extends RegexParsers with CompletionParsers {
       }
     )
 
-  abstract override implicit def regex(r: Regex): CompletionParser[String] =
-    CompletionParser(super.regex(r), _ => Completions.empty)
+  abstract override implicit def regex(r: Regex): Parser[String] =
+    Parser(super.regex(r), _ => Completions.empty)
 
-  override def positioned[T <: Positional](p: => CompletionParser[T]): CompletionParser[T] = {
+  override def positioned[T <: Positional](p: => Parser[T]): Parser[T] = {
     lazy val q = p
-    CompletionParser[T](super.positioned(p), q.completions)
+    Parser[T](super.positioned(p), q.completions)
   }
 
   /** Returns completions for read `in` with parser `p`. */
-  def complete[T](p: CompletionParser[T], in: Reader[Char]): Completions =
+  def complete[T](p: Parser[T], in: Reader[Char]): Completions =
     p.completions(in)
 
   /** Returns completions for character sequence `in` with parser `p`. */
-  def complete[T](p: CompletionParser[T], in: CharSequence): Completions =
+  def complete[T](p: Parser[T], in: CharSequence): Completions =
     p.completions(new CharSequenceReader(in))
 
   /** Returns flattened string completions for character sequence `in` with parser `p`. */
-  def completeString[T](p: CompletionParser[T], input: String): Seq[String] =
+  def completeString[T](p: Parser[T], input: String): Seq[String] =
     complete(p, input).completionStrings
 
 }

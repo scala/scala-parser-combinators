@@ -8,12 +8,14 @@ package scala.util.parsing.combinator.completion
 
 import org.junit.{Assert, Test}
 
+import scala.util.parsing.combinator.Parsers
+
 class CompletionForAlternativesTest {
   val left = "left"
   val right = "right"
   val common = "common"
 
-  object TestParser extends RegexCompletionParsers {
+  object TestParser extends Parsers with RegexCompletionSupport {
     val alternativesWithCommonFirstParser = common ~ left | common ~! right
     val alternativesWithCommonPrefix = (common+left) | common ~ right
   }

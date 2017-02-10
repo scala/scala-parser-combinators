@@ -8,6 +8,8 @@ package scala.util.parsing.combinator.completion
 
 import org.junit.Assert._
 
+import scala.util.parsing.combinator.Parsers
+
 object CompletionTestDefinitions {
   trait AssertionSet{
     def tag: String
@@ -23,7 +25,7 @@ object CompletionTestDefinitions {
   }
 }
 
-trait CompletionTestParser extends RegexCompletionParsers {
+trait CompletionTestParser extends Parsers with RegexCompletionSupport {
   import CompletionTestDefinitions._
   def assertSetEquals(expected: AssertionSet, actual: CompletionSet): Unit =
     expected match {

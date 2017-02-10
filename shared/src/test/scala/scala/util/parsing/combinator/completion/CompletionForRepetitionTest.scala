@@ -8,12 +8,14 @@ package scala.util.parsing.combinator.completion
 
 import org.junit.{Assert, Test}
 
+import scala.util.parsing.combinator.Parsers
+
 class CompletionForRepetitionTest {
   val repeated = "repeated"
   val separator = "separator"
   val n = 5
 
-  object TestParser extends RegexCompletionParsers {
+  object TestParser extends Parsers with RegexCompletionSupport {
     val repSequence = rep(repeated)
     val repSepSequence = repsep(repeated, separator)
     val error = repsep(repeated, err("some error"))
