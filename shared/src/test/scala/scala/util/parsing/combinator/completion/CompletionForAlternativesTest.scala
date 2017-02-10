@@ -1,12 +1,13 @@
+/*                                                      *\
+**  scala-parser-combinators completion extensions      **
+**  Copyright (c) by Nexthink S.A.                      **
+**  Lausanne, Switzerland (http://www.nexthink.com)     **
+\*                                                      */
+
 package scala.util.parsing.combinator.completion
 
 import org.junit.{Assert, Test}
 
-/**
-  * Copyright (c) by Nexthink S.A.
-  * Lausanne, Switzerland (http://www.nexthink.com)                      
-  * Created by Jonas on 13.01.2017.
-  */
 class CompletionForAlternativesTest {
   val left = "left"
   val right = "right"

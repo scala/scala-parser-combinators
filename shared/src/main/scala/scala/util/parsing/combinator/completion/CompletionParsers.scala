@@ -1,3 +1,9 @@
+/*                                                      *\
+**  scala-parser-combinators completion extensions      **
+**  Copyright (c) by Nexthink S.A.                      **
+**  Lausanne, Switzerland (http://www.nexthink.com)     **
+\*                                                      */
+
 package scala.util.parsing.combinator.completion
 
 import scala.annotation.tailrec
@@ -25,6 +31,8 @@ import scala.util.parsing.input.Positional
   *
   *  A new set additional operators also allow overriding completions and specifying structural properties of completions
   *  (tag, score, kind, etc.) for a `CompletionParser`.
+  *
+  *  @author Jonas Chapuis
   */
 trait CompletionParsers extends Parsers with CompletionDefinitions {
   def CompletionParser[T](f: Input => ParseResult[T], c: Input => Completions) = new CompletionParser[T] {

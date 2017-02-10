@@ -1,10 +1,20 @@
+/*                                                      *\
+**  scala-parser-combinators completion extensions      **
+**  Copyright (c) by Nexthink S.A.                      **
+**  Lausanne, Switzerland (http://www.nexthink.com)     **
+\*                                                      */
+
 package scala.util.parsing.combinator.completion
 import scala.util.matching.Regex
 import scala.util.parsing.combinator.RegexParsers
 import scala.util.parsing.input.{CharSequenceReader, OffsetPosition, Positional, Reader}
 
-/**
-  * Created by jchapuis on 30.01.2017.
+/** This component extends `RegexParsers` with completion capability. In particular,
+  * it provides completions for the `literal` parser.
+  * Note that completions for the `regex` parser are undefined and can be specified
+  * with the `%>` operator.
+  *
+  * @author Jonas Chapuis
   */
 trait RegexCompletionParsers extends RegexParsers with CompletionParsers {
   protected val areLiteralsCaseSensitive = false

@@ -1,9 +1,9 @@
 /*                                                      *\
-**  scala-parser-combinators completion fork            **
+**  scala-parser-combinators completion extensions      **
 **  Copyright (c) by Nexthink S.A.                      **
 **  Lausanne, Switzerland (http://www.nexthink.com)     **
-**  Author: jonas.chapuis@nexthink.com                  **
 \*                                                      */
+
 package scala.util.parsing.combinator.completion
 
 import org.junit.Test

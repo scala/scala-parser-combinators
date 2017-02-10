@@ -1,3 +1,9 @@
+/*                                                      *\
+**  scala-parser-combinators completion extensions      **
+**  Copyright (c) by Nexthink S.A.                      **
+**  Lausanne, Switzerland (http://www.nexthink.com)     **
+\*                                                      */
+
 package scala.util.parsing.combinator.completion
 
 import org.junit.Assert._
@@ -5,11 +11,6 @@ import org.junit.Test
 
 import scala.util.parsing.input.NoPosition
 
-/**
-  * Copyright (c) by Nexthink S.A.
-  * Lausanne, Switzerland (http://www.nexthink.com)
-  * Created by Jonas on 09.01.2017.
-  */
 class CompletionDefinitionsTest extends CompletionDefinitions {
   override type Elem = Char
 

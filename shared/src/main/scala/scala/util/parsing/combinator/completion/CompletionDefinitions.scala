@@ -1,3 +1,9 @@
+/*                                                      *\
+**  scala-parser-combinators completion extensions      **
+**  Copyright (c) by Nexthink S.A.                      **
+**  Lausanne, Switzerland (http://www.nexthink.com)     **
+\*                                                      */
+
 package scala.util.parsing.combinator.completion
 
 import scala.util.parsing.input.{NoPosition, Position}
@@ -16,6 +22,8 @@ import scala.util.parsing.input.{NoPosition, Position}
   *
   *  Note that specifying tags and sets is optional: if no tag is specified upon creation,
   *  `Completions` instances create a unique default set with an empty tag
+  *
+  *  @author Jonas Chapuis
   */
 trait CompletionDefinitions {
   type Elem
