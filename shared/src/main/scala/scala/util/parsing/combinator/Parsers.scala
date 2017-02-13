@@ -218,7 +218,7 @@ trait Parsers {
     def append[U >: Nothing](a: => ParseResult[U]): ParseResult[U] = this
   }
 
-  def Parser[T, P >: Parser[T]](f: Input => ParseResult[T]): P
+  def Parser[T](f: Input => ParseResult[T]): Parser[T]
     = new Parser[T]{ def apply(in: Input) = f(in) }
 
   def OnceParser[T](f: Input => ParseResult[T]): Parser[T] with OnceParser[T]

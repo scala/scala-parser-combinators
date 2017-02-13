@@ -34,9 +34,6 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     def completions(in: Input) = c(in)
   }
 
-  override def Parser[T, P >: Parser[T]](f: (Input) => ParseResult[T]): P =
-    Parser(f, _ => Completions.empty)
-
   /** The root class of completion parsers, overloading the `Parser` class.
     * Completion parsers are functions from the Input type to ParseResult, with the
     * addition of a `completions` function from the Input type to an instance of `Completions`

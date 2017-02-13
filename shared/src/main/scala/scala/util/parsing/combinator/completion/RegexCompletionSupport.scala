@@ -44,7 +44,7 @@ trait RegexCompletionSupport extends RegexParsers with CompletionSupport {
   abstract override implicit def literal(s: String): Parser[String] =
     Parser[String](
       super.literal(s),
-      in => {
+      (in: Input) => {
         lazy val literalCompletion =
           Completions(OffsetPosition(in.source, handleWhiteSpace(in)), CompletionSet(Completion(s)))
         val (literalOffset, sourceOffset) = findMatchOffsets(s, in)
@@ -65,7 +65,7 @@ trait RegexCompletionSupport extends RegexParsers with CompletionSupport {
 
   override def positioned[T <: Positional](p: => Parser[T]): Parser[T] = {
     lazy val q = p
-    Parser[T](super.positioned(p), q.completions)
+    Parser[T](super.positioned(p), in => q.completions(in))
   }
 
   /** Returns completions for read `in` with parser `p`. */
