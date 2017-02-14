@@ -18,6 +18,7 @@ import scala.util.parsing.input.CharArrayReader.EofCh
 /**
  *  @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
+@deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 class Lexer extends StdLexical with ImplicitConversions {
 
   override def token: Parser[Token] =
