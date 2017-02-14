@@ -23,21 +23,21 @@ class CompletionForLiteralTest {
   }
 
   @Test
-  def prefix_completes_toLiteral = {
+  def prefixCompletesToLiteral = {
     val completion = Parser.complete(Parser.literal, " " + someLiteralPrefix)
     assertEquals(2, completion.position.column)
     assertEquals(Seq(someLiteral), completion.completionStrings)
   }
 
   @Test
-  def prefix_combinationCompletes_toBothAlternatives = {
+  def prefixCombinationCompletesToBothAlternatives = {
     val completion =
       Parser.completeString(Parser.combination, someLiteralPrefix)
     assertEquals(Seq(otherLiteralWithSamePrefix, someLiteral), completion)
   }
 
   @Test
-  def partialOther_completes_toOther = {
+  def partialOtherCompletesToOther = {
     val completion = Parser.completeString(
       Parser.combination,
       someLiteralPrefix + otherLiteralWithSamePrefix
@@ -47,7 +47,7 @@ class CompletionForLiteralTest {
   }
 
   @Test
-  def whitespace_completes_toLiteral = {
+  def whitespaceCompletesToLiteral = {
     val completion =
       Parser.complete(Parser.literal, List.fill(2)(" ").mkString)
     assertEquals(3, completion.position.column)
@@ -55,20 +55,20 @@ class CompletionForLiteralTest {
   }
 
   @Test
-  def empty_completes_toLiteral = {
+  def emptyCompletesToLiteral = {
     val completion = Parser.complete(Parser.literal, "")
     assertEquals(1, completion.position.column)
     assertEquals(Seq(someLiteral), completion.completionStrings)
   }
 
   @Test
-  def other_completes_toNothing =
+  def otherCompletesToNothing =
     assertEquals(
       Map(),
       Parser.complete(Parser.literal, otherLiteralWithSamePrefix).sets)
 
   @Test
-  def completeLiteral_completes_toEmpty =
+  def completeLiteralCompletesToEmpty =
     assertTrue(Parser.complete(Parser.literal, someLiteral).sets.isEmpty)
 
 }

@@ -360,7 +360,7 @@ trait CompletionSupport extends Parsers with CompletionTypes {
       *         transformed by `f`.
       */
     override def ^^[U](f: T => U): Parser[U] =
-      Parser(super.^^(f), completions)
+      Parser(super.^^(f), completions).named(toString + "^^")
 
     /** A parser combinator that changes a successful result into the specified value.
       *
@@ -427,6 +427,59 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     def into[U](fq: T => Parser[U]): Parser[U] =
       Parser(super.into(fq), completions)
 
+    /** Returns `into(fq)`. */
+    def >>[U](fq: T => Parser[U]) = into(fq)
+
+    /** Returns a parser that repeatedly parses what this parser parses.
+      *
+      *  @return rep(this)
+      */
+    override def * = rep(this)
+
+    /** Returns a parser that repeatedly parses what this parser parses,
+      *  interleaved with the `sep` parser. The `sep` parser specifies how
+      *  the results parsed by this parser should be combined.
+      *
+      *  @return chainl1(this, sep)
+      */
+    def *[U >: T](sep: => Parser[(U, U) => U]) = chainl1(this, sep)
+
+    /** Returns a parser that repeatedly (at least once) parses what this parser parses.
+      *
+      *  @return rep1(this)
+      */
+    override def + = rep1(this)
+
+    /** Returns a parser that optionally parses what this parser parses.
+      *
+      *  @return opt(this)
+      */
+    override def ? = opt(this)
+
+    /** Changes the failure message produced by a parser.
+      *
+      *  This doesn't change the behavior of a parser on neither
+      *  success nor error, just on failure. The semantics are
+      *  slightly different than those obtained by doing `| failure(msg)`,
+      *  in that the message produced by this method will always
+      *  replace the message produced, which is not guaranteed
+      *  by that idiom.
+      *
+      *  For example, parser `p` below will always produce the
+      *  designated failure message, while `q` will not produce
+      *  it if `sign` is parsed but `number` is not.
+      *
+      *  {{{
+      *  def p = sign.? ~ number withFailureMessage  "Number expected!"
+      *  def q = sign.? ~ number | failure("Number expected!")
+      *  }}}
+      *
+      *  @param msg The message that will replace the default failure message.
+      *  @return    A parser with the same properties and different failure message.
+      */
+    override def withFailureMessage(msg: String) =
+      Parser(super.withFailureMessage(msg), completions)
+
     /** Changes the failure message produced by a parser.
       *
       *  This doesn't change the behavior of a parser on neither
@@ -469,13 +522,17 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     *  @param  completions Possible alternatives (for completion)
     *  @return
     */
-  def elem(kind: String, p: Elem => Boolean, completions: Seq[Elem] = Nil): Parser[Elem] =
-    acceptIf(p,
-             if (completions.isEmpty)
-               None
-             else
-               Some(CompletionSet(CompletionTag(kind), completions.map(c => Completion(c)).toSet)))(inEl =>
-      kind + " expected")
+  def elem(kind: String, p: Elem => Boolean, completions: Set[Elem] = Set()): Parser[Elem] =
+    acceptIf(p, completions)(inEl => kind + " expected")
+
+  /** A parser that matches only the given element `e`.
+    *
+    *  `elem(e)` succeeds if the input starts with an element `e`.
+    *
+    *  @param e the `Elem` that must be the next piece of input for the returned parser to succeed
+    *  @return a `Parser` that succeeds if `e` is the next available input (and returns it).
+    */
+  override def elem(e: Elem): Parser[Elem] = accept(e)
 
   /** A parser that matches only the given element `e`.
     *
@@ -487,7 +544,7 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     *  @return a `tParser` that succeeds if `e` is the next available input.
     */
   override implicit def accept(e: Elem): Parser[Elem] =
-    acceptIf(_ == e, Some(CompletionSet(e)))("'" + e + "' expected but " + _ + " found")
+    acceptIf(_ == e, Set(e))("'" + e + "' expected but " + _ + " found")
 
   /** A parser that matches only the given list of element `es`.
     *
@@ -525,8 +582,24 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     *  @param completions Possible completions
     *  @return        A parser for elements satisfying p(e).
     */
-  def acceptIf(p: Elem => Boolean, completions: Option[CompletionSet])(err: Elem => String): Parser[Elem] = {
-    Parser(super.acceptIf(p)(err), in => completions.map(Completions(in.pos, _)).getOrElse(Completions.empty))
+  def acceptIf(p: Elem => Boolean, completions: Set[Elem])(err: Elem => String): Parser[Elem] = {
+    lazy val completionSet =
+      if (completions.isEmpty)
+        None
+      else
+        Some(CompletionSet(completions.map(c => Completion(c))))
+    Parser(
+      super.acceptIf(p)(err),
+      in =>
+        completionSet match {
+          case None => Completions.empty
+          case Some(c) =>
+            super.acceptIf(p)(err)(in) match {
+              case Success(_, _) => Completions.empty
+              case _             => Completions(in.pos, c)
+            }
+      }
+    )
   }
 
   def acceptMatch[U](expected: String, f: PartialFunction[Elem, U], completions: Set[Completion]): Parser[U] = {
@@ -534,9 +607,18 @@ trait CompletionSupport extends Parsers with CompletionTypes {
       if (completions.nonEmpty)
         Some(CompletionSet(CompletionTag(expected), completions))
       else None
-    Parser(super.acceptMatch(expected, f),
-           in => completionSet.map(Completions(in.pos, _)).getOrElse(Completions.empty))
-      .named(expected)
+    Parser(
+      super.acceptMatch(expected, f),
+      in =>
+        completionSet match {
+          case None => Completions.empty
+          case Some(c) =>
+            super.acceptMatch(expected, f)(in) match {
+              case Success(_, _) => Completions.empty
+              case _             => Completions(in.pos, c)
+            }
+      }
+    ).named(expected)
   }
 
   /** A parser that matches only the given [[scala.collection.Iterable]] collection of elements `es`.

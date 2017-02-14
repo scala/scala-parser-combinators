@@ -128,6 +128,7 @@ trait CompletionTypes {
     def nonEmpty: Boolean                              = !isEmpty
     def setWithTag(tag: String): Option[CompletionSet] = sets.get(tag)
     def allSets: Iterable[CompletionSet]               = sets.values
+    def allCompletions: Iterable[Completion]           = allSets.flatMap(_.completions)
     def defaultSet: Option[CompletionSet]              = sets.get("")
 
     private def unionSets(left: CompletionSet, right: CompletionSet): CompletionSet = {

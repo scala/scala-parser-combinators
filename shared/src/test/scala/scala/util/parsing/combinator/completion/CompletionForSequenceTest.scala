@@ -26,34 +26,34 @@ class CompletionForSequenceTest {
   }
 
   @Test
-  def empty_completes_toLeft =
+  def emptyCompletesToLeft =
     Assert.assertEquals(Seq(left), TestParser.completeString(TestParser.sequence, ""))
 
   @Test
-  def partialLeft_completes_toLeft =
+  def partialLeftCompletesToLeft =
     Assert.assertEquals(Seq(left), TestParser.completeString(TestParser.sequence, left.dropRight(2)))
 
   @Test
-  def completeLeft_completes_toRightAlternatives = {
+  def completeLeftcompletesToRightAlternatives = {
     val completion = TestParser.complete(TestParser.sequence, left)
     Assert.assertEquals(left.length + 1, completion.position.column)
     Assert.assertEquals(Seq(bar, foo), completion.completionStrings)
   }
 
   @Test
-  def completeLeftAndRight_completes_toNothing =
+  def completeLeftAndRightCompletesToNothing =
     Assert.assertEquals(Nil, TestParser.completeString(TestParser.sequence, left + "  " + bar))
 
 
   @Test
-  def empty_composedCompletes_toLeft =
+  def emptyComposedCompletesToLeft =
     Assert.assertEquals(Seq(foo), TestParser.completeString(TestParser.composedSequence, ""))
 
   @Test
-  def left_composedCompletes_toLeftRemainingAlternativeAndRight =
+  def leftComposedCompletesToLeftRemainingAlternativeAndRight =
     Assert.assertEquals(Seq(as, bar, df), TestParser.completeString(TestParser.composedSequence, foo))
 
   @Test
-  def completeLeft_composedCompletes_ToCorrectRightAlternative =
+  def completeLeftComposedCompletesToCorrectRightAlternative =
     Assert.assertEquals(Seq(df), TestParser.completeString(TestParser.composedSequence, foo + " "+ as))
 }

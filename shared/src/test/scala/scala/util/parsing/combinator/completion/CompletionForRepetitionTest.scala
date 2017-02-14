@@ -23,38 +23,38 @@ class CompletionForRepetitionTest {
   }
 
   @Test
-  def empty_repCompletes_toRepeated =
+  def emptyRepCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repSequence, ""))
 
   @Test
-  def nInstancesAndPartial_repCompletes_toRepeated =
+  def nInstancesAndPartialRepCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repSequence, List.fill(3)(repeated).mkString + repeated.dropRight(3)))
 
   @Test
-  def nInstancesOfRepeated_repNCompletes_toRepeated =
+  def nInstancesOfRepeatedRepNCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repNSequence, List.fill(3)(repeated).mkString))
 
   @Test
-  def nInstancesPartialComplete_repNCompletes_toRepeated =
+  def nInstancesPartialCompleteRepNCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repNSequence, List.fill(3)(repeated).mkString + repeated.dropRight(3)))
 
   @Test
-  def nInstancesFollowedByError_repCompletes_toNothing =
+  def nInstancesFollowedByErrorRepCompletesToNothing =
     Assert.assertEquals(Nil, TestParser.completeString(TestParser.repSequence, List.fill(3)(repeated).mkString + "error"))
 
   @Test
-  def empty_repSepCompletes_toRepeated =
+  def emptyRepSepCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repSepSequence, ""))
 
   @Test
-  def repeatedAndSeparator_repSepCompletes_toRepeated =
+  def repeatedAndSeparatorRepSepCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repSepSequence, repeated+separator))
 
   @Test
-  def error_repSepCompletes_ToNothing =
+  def errorRepSepCompletesToNothing =
     Assert.assertEquals(Nil, TestParser.completeString(TestParser.error, repeated))
 
   @Test
-  def empty_repNCompletes_ToRepeated =
+  def emptyRepNCompletesToRepeated =
     Assert.assertEquals(Seq(repeated), TestParser.completeString(TestParser.repNSequence, ""))
 }

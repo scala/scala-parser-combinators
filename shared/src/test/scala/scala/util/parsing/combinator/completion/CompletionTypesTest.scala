@@ -19,7 +19,7 @@ class CompletionTypesTest extends CompletionTypes {
   val setC = CompletionSet("C", Completion("e", 10))
 
   @Test
-  def completions_takeTop_works() = {
+  def completionsTakeTopWorks() = {
     // Arrange
     val compl = Completions(Seq(setA, setB, setC))
 
@@ -30,7 +30,7 @@ class CompletionTypesTest extends CompletionTypes {
   }
 
   @Test
-  def completions_setsScoredWithMaxCompletion_works() = {
+  def completionsSetsScoredWithMaxCompletionWorks() = {
     // Arrange
     val compl = Completions(Seq(setA, setB, setC))
 

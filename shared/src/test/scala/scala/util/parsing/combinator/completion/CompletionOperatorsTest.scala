@@ -17,37 +17,57 @@ class CompletionOperatorsTest {
   }
 
   @Test
-  def completion_specifiedWithBuilder_isCorrect = {
+  def completionSpecifiedWithBuilderIsCorrect = {
     // Arrange
     val completions: Seq[Seq[Char]] = Seq("one", "two", "three")
-    val score = 10
-    val description = "some description"
-    val tag = "some tag"
-    val kind = "some kind"
+    val score                       = 10
+    val description                 = "some description"
+    val tag                         = "some tag"
+    val kind                        = "some kind"
+
+    assertCompletionsMatch(TestParser.someParser %> (completions: _*) % (tag, score) %? description %% kind,
+                           completions,
+                           Some(tag),
+                           Some(score),
+                           Some(description),
+                           Some(kind))
+
+    assertCompletionsMatch(TestParser.someParser %> (completions: _*) % (tag, score, description),
+                           completions,
+                           Some(tag),
+                           Some(score),
+                           Some(description),
+                           None)
+
+    assertCompletionsMatch(TestParser.someParser %> (completions: _*) % (tag, score, description, kind),
+                           completions,
+                           Some(tag),
+                           Some(score),
+                           Some(description),
+                           Some(kind))
 
     assertCompletionsMatch(
-      TestParser.someParser %> (completions: _*) % (tag, score) %? description %% kind,
+      TestParser.someParser %> (completions: _*) % TestParser.CompletionTag(tag, score, Some(description), Some(kind)),
       completions,
       Some(tag),
       Some(score),
       Some(description),
-      Some(kind))
+      Some(kind)
+    )
 
-    assertCompletionsMatch(
-      TestParser.someParser %> (completions: _*) % tag %? description % score %% kind,
-      completions,
-      Some(tag),
-      Some(score),
-      Some(description),
-      Some(kind))
+    assertCompletionsMatch(TestParser.someParser %> (completions: _*) % tag %? description % score %% kind,
+                           completions,
+                           Some(tag),
+                           Some(score),
+                           Some(description),
+                           Some(kind))
 
-    assertCompletionsMatch(
-      TestParser.someParser %> (completions: _*) % tag % score %? description %% kind,
-      completions,
-      Some(tag),
-      Some(score),
-      Some(description),
-      Some(kind))
+    assertCompletionsMatch(TestParser.someParser %> (completions: _*) % tag % score %? description %% kind,
+                           completions,
+                           Some(tag),
+                           Some(score),
+                           Some(description),
+                           Some(kind))
   }
 
   def assertCompletionsMatch[T](sut: TestParser.Parser[T],
@@ -70,18 +90,33 @@ class CompletionOperatorsTest {
   }
 
   @Test
-  def unioning_completionSets_scoresMergedItemsOffsetBySetScore = {
+  def unioningCompletionSetsScoresMergedItemsOffsetBySetScore = {
     // Arrange
-    val a = Seq(TestParser.Completion("one", 10), TestParser.Completion("two"))
-    val b = Seq(TestParser.Completion("three", 5), TestParser.Completion("five"))
-    val c = Seq(TestParser.Completion("four"))
+    val a   = Seq(TestParser.Completion("one", 10), TestParser.Completion("two"))
+    val b   = Seq(TestParser.Completion("three", 5), TestParser.Completion("five"))
+    val c   = Seq(TestParser.Completion("four"))
     val sut = TestParser.someParser %> a % 10 | TestParser.someParser %> b | TestParser.someParser %> c % 3
 
     // Act
     val result = TestParser.complete(sut, "")
 
     // Assert
-    Assert.assertArrayEquals(Seq("one", "two", "three", "four", "five").toArray[AnyRef], result.completionStrings.toArray[AnyRef])
+    Assert.assertArrayEquals(Seq("one", "two", "three", "four", "five").toArray[AnyRef],
+                             result.completionStrings.toArray[AnyRef])
   }
 
+  @Test
+  def topCompletionsLimitsCompletionsAccordingToScore(): Unit = {
+    // Arrange
+    val completions = Seq("one", "two", "three", "four").zipWithIndex.map {
+      case (c, s) => TestParser.Completion(c, s)
+    }
+    val sut = (TestParser.someParser %> completions).topCompletions(2)
+
+    // Act
+    val result = TestParser.complete(sut, "")
+
+    // Assert
+    Assert.assertArrayEquals(Seq("four", "three").toArray[AnyRef], result.completionStrings.toArray[AnyRef])
+  }
 }

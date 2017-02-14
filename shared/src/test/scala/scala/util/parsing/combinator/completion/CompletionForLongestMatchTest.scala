@@ -20,21 +20,21 @@ class CompletionForLongestMatchTest {
   }
 
   @Test
-  def normallyProblematicallyOrderedAlternatives_parse_correctly = {
+  def normallyProblematicallyOrderedAlternativesParseCorrectly = {
     assertTrue(Parsers.parseAll(Parsers.samePrefix, foo).successful)
     assertTrue(Parsers.parseAll(Parsers.samePrefix, foo + bar).successful) // would be false with |
   }
 
   @Test
-  def empty_completesTo_alternatives =
+  def emptyCompletesToAlternatives =
     assertEquals(Seq(foo), Parsers.completeString(Parsers.samePrefix, ""))
 
   @Test
-  def partialLongerAlternative_completesTo_LongerAlternative =
+  def partialLongerAlternativeCompletesToLongerAlternative =
     assertEquals(Seq(bar), Parsers.completeString(Parsers.samePrefix, foo))
 
   @Test
-  def longestParse_providesCompletion =
+  def longestParseProvidesCompletion =
     assertEquals(Seq(bar), Parsers.completeString(Parsers.constrainedAndOpenAlternatives, foo))
 
 

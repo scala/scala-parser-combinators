@@ -32,7 +32,7 @@ class RecursiveGrammarTest {
   }
 
   @Test
-  def expressions_parse_correctly() = {
+  def expressionsParseCorrectly() = {
     assertEquals(1 + 2 + 3, ExprParser.parseAll(ExprParser.expr, "1+2+3").get)
     assertEquals(2 * 3, ExprParser.parseAll(ExprParser.expr, "2*3").get)
     assertEquals(10 / (3 + 2), ExprParser.parseAll(ExprParser.expr, "(5+5)/(3+2)").get)
@@ -41,33 +41,33 @@ class RecursiveGrammarTest {
   }
 
   @Test
-  def empty_completes_toNumberOrParen() =
+  def emptyCompletesToNumberOrParen() =
     ExprParser.assertHasCompletions(Set(Tagged("number", Some("any number"), 0, "1", "10", "99"), Default("(")),
                                     ExprParser.complete(ExprParser.expr, ""))
 
   @Test
-  def number_completes_toOperators() =
+  def numberCompletesToOperators() =
     ExprParser.assertHasCompletions(Set(Tagged("operators", Some("arithmetic operators"), 10, "*", "+", "-", "/")),
                                     ExprParser.complete(ExprParser.expr, "2"))
 
   @Test
-  def numberAndOperation_completes_toNumberOrParen() =
+  def numberAndOperationCompletesToNumberOrParen() =
     ExprParser.assertHasCompletions(Set(Tagged("number", Some("any number"), 0, "1", "10", "99"), Default("(")),
                                     ExprParser.complete(ExprParser.expr, "2*"))
 
   @Test
-  def paren_completes_toNumberAndParen() =
+  def parenCompletesToNumberAndParen() =
     ExprParser.assertHasCompletions(Set(Tagged("number", Some("any number"), 0, "1", "10", "99"), Default("(")),
                                     ExprParser.complete(ExprParser.expr, "("))
 
   @Test
-  def recursiveParenAndNumber_completes_toOperatorsOrParen() =
+  def recursiveParenAndNumberCompletesToOperatorsOrParen() =
     ExprParser.assertHasCompletions(
       Set(Tagged("operators", Some("arithmetic operators"), 10, "*", "+", "-", "/"), Default(")")),
       ExprParser.complete(ExprParser.expr, "(((2"))
 
   @Test
-  def closedParent_completes_toOperators() =
+  def closedParentCompletesToOperators() =
     ExprParser.assertHasCompletions(Set(Tagged("operators", Some("arithmetic operators"), 10, "*", "+", "-", "/")),
                                     ExprParser.complete(ExprParser.expr, "(5*2/2)"))
 }

@@ -21,15 +21,15 @@ class CompletionForAlternativesTest {
   }
 
   @Test
-  def empty_completes_toCommon =
+  def emptyCompletesToCommon =
     Assert.assertEquals(Seq(common), TestParser.completeString(TestParser.alternativesWithCommonFirstParser, ""))
 
   @Test
-  def common_completes_toLeftAndRight =
+  def commonCompletesToLeftAndRight =
     Assert.assertEquals(Seq(left, right), TestParser.completeString(TestParser.alternativesWithCommonFirstParser, common))
 
   @Test
-  def commonPrefix_completes_toRightSinceCompletionPositionsAreDifferent =
+  def commonPrefixCompletesToRightSinceCompletionPositionsAreDifferent =
     Assert.assertEquals(Seq(right), TestParser.completeString(TestParser.alternativesWithCommonPrefix, common))
 
 }
