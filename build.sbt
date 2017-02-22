@@ -23,7 +23,20 @@ crossScalaVersions in ThisBuild := {
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
   settings(
-    name := "scala-parser-combinators-root"
+    name := "scala-parser-combinators-root",
+    apiMappings += (scalaInstance.value.libraryJar ->
+        url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
+    scalacOptions in (Compile, doc) ++= Seq(
+      "-diagrams",
+      "-doc-source-url",
+      s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
+      "-sourcepath",
+      (baseDirectory in LocalRootProject).value.absolutePath,
+      "-doc-title",
+      "Scala Parser Combinators",
+      "-doc-version",
+      version.value
+    )
   ).
   jvmSettings(
     // Mima uses the name of the jvm project in the artifactId

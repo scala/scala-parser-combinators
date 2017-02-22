@@ -1,5 +1,10 @@
 language: scala
 
+addons:
+  apt:
+    packages:
+      - graphviz
+
 before_install:
   - cat /etc/hosts # optionally check the content *before*
   - sudo hostname "$(hostname | cut -c1-63)"
