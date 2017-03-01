@@ -20,7 +20,7 @@ class CompletionForSequenceTest {
   object TestParser extends Parsers with RegexCompletionSupport {
     val sequence = left ~> (foo | bar)
 
-    val subSeqLeft = foo | foo ~ bar
+    val subSeqLeft = foo ~ bar | foo
     val subSeqRight = as ~ df | df ~ as
     val composedSequence = subSeqLeft ~ subSeqRight
   }

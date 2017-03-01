@@ -49,7 +49,7 @@ trait CompletionSupport extends Parsers with CompletionTypes {
           lazy val combinedCompletions = thisCompletions | p.completions(in)
           this(in) match {
             case Success(_, rest) =>
-              // only return optional completions if they start at the last position, otherwise it can behave badly e.g. with fuzzy matching
+              // only return any completions if they start at the last position, otherwise it can behave badly e.g. with fuzzy matching
               if (combinedCompletions.position < rest.pos) Completions.empty
               else combinedCompletions
             case Failure(_, rest) => combinedCompletions
@@ -720,15 +720,17 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     Parser(
       super.rep1(first, p0),
       in => {
-        @tailrec def continue(in: Input): Completions = {
+        def continue(in: Input): Completions = {
+          val currentCompletions = p.completions(in)
           p(in) match {
-            case Success(_, rest) => continue(rest)
-            case NoSuccess(_, _)  => p.completions(in)
+            case Success(_, rest) => currentCompletions | continue(rest)
+            case NoSuccess(_, _)  => currentCompletions
           }
         }
+        val firstCompletions = first.completions(in)
         first(in) match {
-          case Success(_, rest) => continue(rest)
-          case NoSuccess(_, _)  => first.completions(in)
+          case Success(_, rest) => firstCompletions | continue(rest)
+          case NoSuccess(_, _)  => firstCompletions
         }
       }
     )
@@ -746,24 +748,27 @@ trait CompletionSupport extends Parsers with CompletionTypes {
     */
   def repN[T](num: Int, p0: => Parser[T]): Parser[List[T]] = {
     lazy val p = p0 // lazy argument
-    if (num == 0) success(Nil)
-    else
+    if (num == 0) { success(Nil) } else {
       Parser(
         super.repN(num, p0),
         in => {
           var parsedCount = 0
-          @tailrec def completions(in0: Input): Completions =
-            if (parsedCount == num) Completions.empty
-            else
+          def completions(in0: Input): Completions =
+            if (parsedCount == num) {
+              Completions.empty
+            } else {
+              val currentCompletions = p.completions(in0)
               p(in0) match {
-                case Success(_, rest) => parsedCount += 1; completions(rest)
-                case ns: NoSuccess    => p.completions(in0)
+                case Success(_, rest) => parsedCount += 1; currentCompletions | completions(rest)
+                case ns: NoSuccess    => currentCompletions
               }
+            }
 
           val result = completions(in)
           if (parsedCount < num) result else Completions.empty
         }
       )
+    }
   }
 
   /** A parser generator for non-empty repetitions.
