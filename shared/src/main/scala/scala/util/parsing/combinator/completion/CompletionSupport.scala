@@ -425,7 +425,12 @@ trait CompletionSupport extends Parsers with CompletionTypes {
       *          and if then `fq(x)` succeeds
       */
     def into[U](fq: T => Parser[U]): Parser[U] =
-      Parser(super.into(fq), completions)
+      Parser(super.into(fq), in => {
+        this(in) match {
+          case Success(result, next) => fq(result).completions(next)
+          case _: NoSuccess          => this.completions(in)
+        }
+      })
 
     /** Returns `into(fq)`. */
     def >>[U](fq: T => Parser[U]) = into(fq)
