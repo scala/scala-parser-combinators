@@ -156,19 +156,9 @@ trait Parsers {
     val successful = true
   }
 
-  /* two layers of Option:
-   *  outer Option is None if lastNoSuccess tracking is disabled (outside of
-   *               phrase) and Some if tracking is enabled
-   *  inner Option is None if NoSuccess hasn't been seen yet, Some otherwise
-   * this is necessary to avoid leaking NoSuccesses in thread locals */
-  private lazy val lastNoSuccessVar = new DynamicVariable[Option[Option[NoSuccess]]](None)
-
   /** A common super-class for unsuccessful parse results. */
   sealed abstract class NoSuccess(val msg: String, override val next: Input) extends ParseResult[Nothing] { // when we don't care about the difference between Failure and Error
     val successful = false
-
-    if (lastNoSuccessVar.value exists (_ forall (v => !(next.pos < v.next.pos))))
-      lastNoSuccessVar.value = Some(Some(this))
 
     def map[U](f: Nothing => U) = this
     def mapPartial[U](f: PartialFunction[Nothing, U], error: Nothing => String): ParseResult[U] = this
@@ -913,15 +903,11 @@ trait Parsers {
    *           if `p` consumed all the input.
    */
   def phrase[T](p: Parser[T]) = new Parser[T] {
-    def apply(in: Input) = lastNoSuccessVar.withValue(Some(None)) {
-      p(in) match {
-        case s @ Success(out, in1) =>
-          if (in1.atEnd)
-            s
-          else
-            lastNoSuccessVar.value flatMap (_ filterNot { _.next.pos < in1.pos }) getOrElse Failure("end of input expected", in1)
-        case ns => lastNoSuccessVar.value.flatten.getOrElse(ns)
-      }
+    def apply(in: Input) = p(in) match {
+      case s @ Success(out, in1) =>
+        if (in1.atEnd) s
+        else Failure("end of input expected", in1)
+      case ns => ns
     }
   }
 

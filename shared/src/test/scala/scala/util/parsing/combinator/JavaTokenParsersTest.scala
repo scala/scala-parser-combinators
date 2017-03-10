@@ -47,6 +47,7 @@ class JavaTokenParsersTest {
     parseSuccess("with_")
     parseSuccess("_with")
 
+    parseFailure("", 1)
     parseFailure("3start", 1)
     parseFailure("-start", 1)
     parseFailure("with-s", 5)
@@ -72,8 +73,9 @@ class JavaTokenParsersTest {
     val parseResult1 = parseAll(p, "start start")
     parseResult1 match {
       case e @ Failure(message, next) =>
+        assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 7)
-        assert(message.endsWith("string matching regex '(?i)AND' expected but 's' found"))
+        assert(message.endsWith(s"end of input expected"))
       case _ => sys.error(parseResult1.toString)
     }
 
@@ -97,7 +99,7 @@ class JavaTokenParsersTest {
       case Failure(message, next) =>
         assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 1)
-        assert(message.endsWith(s"identifier expected but '-' found"))
+        assert(message.endsWith(s"end of input expected"))
       case _ => sys.error(parseResult.toString)
     }
 
