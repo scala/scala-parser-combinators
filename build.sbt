@@ -1,29 +1,24 @@
-scalaVersion in ThisBuild := crossScalaVersions.value.head
-
-crossScalaVersions in ThisBuild := {
-  val v211 = List("2.11.8")
-  val v212 = List("2.12.1")
-
-  val javaVersion = System.getProperty("java.version")
-  val isTravisPublishing = !util.Properties.envOrElse("TRAVIS_TAG", "").trim.isEmpty
-
-  if (isTravisPublishing) {
-    if (javaVersion.startsWith("1.6.")) v211
-    else if (javaVersion.startsWith("1.8.")) v212
-    else Nil
-  } else if (javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")) {
-    v211
-  } else if (javaVersion.startsWith("1.8.") || javaVersion.startsWith("9")) {
-    v211 ++ v212
-  } else {
-    sys.error(s"Unsupported java version: $javaVersion.")
-  }
-}
+lazy val root = project.in(file("."))
+  .aggregate(`scala-parser-combinatorsJVM`, `scala-parser-combinatorsJS`)
+  .settings(publish := {}, publishLocal := {},
+    crossScalaVersions := (crossScalaVersions in LocalProject("scala-parser-combinatorsJVM")).value,
+    scalaVersion := crossScalaVersions.value.head)
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
   settings(
     name := "scala-parser-combinators-root",
+    scalaVersionsByJvm := {
+      val v212 = "2.12.2"
+      val v211 = "2.11.11"
+
+      Map(
+        6 -> List(v211 -> true),
+        7 -> List(v211 -> false),
+        8 -> List(v212 -> true, v211 -> false),
+        9 -> List(v212 -> false, v211 -> false)
+      )
+    },
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
     scalacOptions in (Compile, doc) ++= Seq(
@@ -44,8 +39,7 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     name := "scala-parser-combinators"
   ).
   jsSettings(
-    name := "scala-parser-combinators-js",
-    scalaJSUseRhino := true
+    name := "scala-parser-combinators-js"
   ).
   settings(
     moduleName         := "scala-parser-combinators",
