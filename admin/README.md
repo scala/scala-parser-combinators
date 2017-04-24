@@ -19,7 +19,8 @@ To configure tag driven releases from Travis CI.
      Edit `.travis.yml` as prompted.
   4. Edit `.travis.yml` to use `./admin/build.sh` as the build script,
      and edit that script to use the tasks required for this project.
-  5. Edit `build.sbt` to select which JDK will be used for publishing.
+  5. Edit `build.sbt`'s `scalaVersionsByJvm` to select which Scala and JDK will
+     be used for publishing.
 
 It is important to add comments in .travis.yml to identify the name
 of each environment variable encoded in a `:secure` section.
@@ -37,11 +38,12 @@ form:
 	    # SONA_PASS
 	    - secure: "XXXXXX"
 	script: admin/build.sh
+        jdk:
+            - openjdk6
+            - oraclejdk8
 
 If Sonatype credentials change in the future, step 3 can be repeated
 without generating a new key.
-
-Be sure to use SBT 0.13.7 or higher to avoid [#1430](https://github.com/sbt/sbt/issues/1430)!
 
 ### Testing
 
@@ -53,8 +55,13 @@ Be sure to use SBT 0.13.7 or higher to avoid [#1430](https://github.com/sbt/sbt/
 
   1. Create a GitHub "Release" (with a corresponding tag) via the GitHub
      web interface.
-  2. Travis CI will schedule a build for this release. Review the build logs.
-  3. Log into https://oss.sonatype.org/ and identify the staging repository.
-  4. Sanity check its contents
-  5. Release staging repository to Maven and send out release announcement.
+  2. The release will be published using the Scala and JVM version combinations specified
+     in `scalaVersionsByJvm` in `build.sbt`.
+     - If you need to release against a different Scala version, include the Scala version
+       and the JVM version to use in the tag name, separated by `#`s (e.g., `v0.1.1#2.13.0-M1#8`).
+       Note that the JVM version needs to be listed in `.travis.yml` for the build to run.
+  3. Travis CI will schedule a build for this release. Review the build logs.
+  4. Log into https://oss.sonatype.org/ and identify the staging repository.
+  5. Sanity check its contents
+  6. Release staging repository to Maven and send out release announcement.
 
