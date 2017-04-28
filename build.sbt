@@ -1,23 +1,16 @@
-scalaVersion in ThisBuild := crossScalaVersions.value.head
+import ScalaModulePlugin._
 
-crossScalaVersions in ThisBuild := {
-  val v211 = List("2.11.8")
-  val v212 = List("2.12.1")
+scalaVersionsByJvm in ThisBuild := {
+  val v211 = "2.11.11"
+  val v212 = "2.12.2"
+  val v213 = "2.13.0-M1"
 
-  val javaVersion = System.getProperty("java.version")
-  val isTravisPublishing = !util.Properties.envOrElse("TRAVIS_TAG", "").trim.isEmpty
-
-  if (isTravisPublishing) {
-    if (javaVersion.startsWith("1.6.")) v211
-    else if (javaVersion.startsWith("1.8.")) v212
-    else Nil
-  } else if (javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")) {
-    v211
-  } else if (javaVersion.startsWith("1.8.") || javaVersion.startsWith("9")) {
-    v211 ++ v212
-  } else {
-    sys.error(s"Unsupported java version: $javaVersion.")
-  }
+  Map(
+    6 -> List(v211 -> true),
+    7 -> List(v211 -> false),
+    8 -> List(v212 -> true, v213 -> true, v211 -> false),
+    9 -> List(v212 -> false, v213 -> false, v211 -> false)
+  )
 }
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
@@ -44,22 +37,14 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     name := "scala-parser-combinators"
   ).
   jsSettings(
-    name := "scala-parser-combinators-js",
-    scalaJSUseRhino := true
+    name := "scala-parser-combinators-js"
   ).
   settings(
     moduleName         := "scala-parser-combinators",
     version            := "1.0.6-SNAPSHOT"
   ).
   jvmSettings(
-    // important!! must come here (why?)
-    scalaModuleOsgiSettings: _*
-  ).
-  jvmSettings(
-    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
-
-    // needed to fix classloader issues (see scala-xml#20)
-    fork in Test := true
+    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
   ).
   jsSettings(
     // Scala.js cannot run forked tests
