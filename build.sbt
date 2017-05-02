@@ -45,7 +45,7 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   ).
   settings(
     moduleName         := "scala-parser-combinators",
-    version            := "1.0.6-SNAPSHOT"
+    version            := "1.0.7-SNAPSHOT"
   ).
   jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")

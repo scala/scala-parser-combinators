@@ -9,7 +9,7 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 
 ## Documentation
 
- * [Current API](http://www.scala-lang.org/files/archive/api/current/scala-parser-combinators/scala/util/parsing/combinator)
+ * [Current API](https://javadoc.io/page/org.scala-lang.modules/scala-parser-combinators_2.12/latest/scala/util/parsing/combinator/index.html)
  * The [Getting Started](docs/Getting_Started.md) guide
  * A more complicated example, [Building a lexer and parser with Scala's Parser Combinators](https://enear.github.io/2016/03/31/parser-combinators/)
  * "Combinator Parsing", chapter 33 of [_Programming in Scala, Third Edition_](http://www.artima.com/shop/programming_in_scala), shows how to use this library to parse arithmetic expressions and JSON. The second half of the chapter examines how the library is implemented.
@@ -18,7 +18,7 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 To depend on scala-parser-combinators in SBT, add something like this to your build.sbt:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
 ```
 
 (Assuming you're using a `scalaVersion` for which a scala-parser-combinators is published. The first 2.11 milestone for which this is true is 2.11.0-M4.)
@@ -60,7 +60,7 @@ For a detailed unpacking of this example see
 Scala-parser-combinators directly supports scala-js 0.6+, starting with v1.0.5:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.5"
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.6"
 ```
 
 ## Contributing
