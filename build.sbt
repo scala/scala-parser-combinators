@@ -13,6 +13,10 @@ scalaVersionsByJvm in ThisBuild := {
   )
 }
 
+lazy val root = project.in(file("."))
+  .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`)
+  .settings(disablePublishing)
+
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
   settings(
