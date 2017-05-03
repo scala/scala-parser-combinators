@@ -1,29 +1,39 @@
-scalaVersion in ThisBuild := crossScalaVersions.value.head
+import ScalaModulePlugin._
 
-crossScalaVersions in ThisBuild := {
-  val v211 = List("2.11.8")
-  val v212 = List("2.12.0-RC1")
+scalaVersionsByJvm in ThisBuild := {
+  val v211 = "2.11.11"
+  val v212 = "2.12.2"
+  val v213 = "2.13.0-M1"
 
-  val javaVersion = System.getProperty("java.version")
-  val isTravisPublishing = !util.Properties.envOrElse("TRAVIS_TAG", "").trim.isEmpty
-
-  if (isTravisPublishing) {
-    if (javaVersion.startsWith("1.6.")) v211
-    else if (javaVersion.startsWith("1.8.")) v212
-    else Nil
-  } else if (javaVersion.startsWith("1.6.") || javaVersion.startsWith("1.7.")) {
-    v211
-  } else if (javaVersion.startsWith("1.8.") || javaVersion.startsWith("9")) {
-    v211 ++ v212
-  } else {
-    sys.error(s"Unsupported java version: $javaVersion.")
-  }
+  Map(
+    6 -> List(v211 -> true),
+    7 -> List(v211 -> false),
+    8 -> List(v212 -> true, v213 -> true, v211 -> false),
+    9 -> List(v212 -> false, v213 -> false, v211 -> false)
+  )
 }
+
+lazy val root = project.in(file("."))
+  .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`)
+  .settings(disablePublishing)
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
   settings(
-    name := "scala-parser-combinators-root"
+    name := "scala-parser-combinators-root",
+    apiMappings += (scalaInstance.value.libraryJar ->
+        url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
+    scalacOptions in (Compile, doc) ++= Seq(
+      "-diagrams",
+      "-doc-source-url",
+      s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
+      "-sourcepath",
+      (baseDirectory in LocalRootProject).value.absolutePath,
+      "-doc-title",
+      "Scala Parser Combinators",
+      "-doc-version",
+      version.value
+    )
   ).
   jvmSettings(
     // Mima uses the name of the jvm project in the artifactId
@@ -38,14 +48,7 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     version            := "1.1.0-SNAPSHOT"
   ).
   jvmSettings(
-    // important!! must come here (why?)
-    scalaModuleOsgiSettings: _*
-  ).
-  jvmSettings(
-    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
-
-    // needed to fix classloader issues (see scala-xml#20)
-    fork in Test := true
+    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
   ).
   jsSettings(
     // Scala.js cannot run forked tests
