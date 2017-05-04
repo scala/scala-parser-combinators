@@ -28,6 +28,7 @@ package util.parsing.json
  *
  * @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
+@deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 object JSON extends Parser {
 
   /**
