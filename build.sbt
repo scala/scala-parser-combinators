@@ -33,7 +33,8 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
       "Scala Parser Combinators",
       "-doc-version",
       version.value
-    )
+    ),
+    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
   ).
   jvmSettings(
     // Mima uses the name of the jvm project in the artifactId
@@ -46,9 +47,6 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(
     moduleName         := "scala-parser-combinators",
     version            := "1.0.7-SNAPSHOT"
-  ).
-  jvmSettings(
-    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
   ).
   jsSettings(
     // Scala.js cannot run forked tests
