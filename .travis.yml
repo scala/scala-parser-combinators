@@ -1,5 +1,7 @@
 language: scala
 
+sudo: required
+
 addons:
   apt:
     packages:
