@@ -19,10 +19,15 @@ lazy val root = project.in(file("."))
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
+  jvmSettings(scalaModuleSettingsJVM).
   settings(
-    name := "scala-parser-combinators-root",
+    repoName := "scala-parser-combinators",
+    version := "1.0.7-SNAPSHOT",
+    mimaPreviousVersion := Some("1.0.5"),
+
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
+
     scalacOptions in (Compile, doc) ++= Seq(
       "-diagrams",
       "-doc-source-url",
@@ -36,32 +41,15 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     )
   ).
   jvmSettings(
-    // Mima uses the name of the jvm project in the artifactId
-    // when resolving previous versions (so no "-jvm" project)
-    name := "scala-parser-combinators"
-  ).
-  jsSettings(
-    name := "scala-parser-combinators-js"
-  ).
-  settings(
-    moduleName         := "scala-parser-combinators",
-    version            := "1.0.7-SNAPSHOT"
-  ).
-  jvmSettings(
-    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
+    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
+    libraryDependencies += "junit" % "junit" % "4.12" % "test",
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
   ).
   jsSettings(
     // Scala.js cannot run forked tests
     fork in Test := false
   ).
-  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
-  jvmSettings(
-    libraryDependencies += "junit" % "junit" % "4.12" % "test",
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
-  ).
-  jvmSettings(
-    mimaPreviousVersion := Some("1.0.4")
-  )
+  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
 
 lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
 lazy val `scala-parser-combinatorsJS` = `scala-parser-combinators`.js
