@@ -1,5 +1,7 @@
 language: scala
 
+dist: trusty
+
 sudo: required
 
 addons:
@@ -12,7 +14,7 @@ before_install:
   - sudo hostname "$(hostname | cut -c1-63)"
   - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts > /tmp/hosts
   - sudo mv /tmp/hosts /etc/hosts
-  - cat /etc/hosts # optionally check the content *after*  
+  - cat /etc/hosts # optionally check the content *after*
   - admin/setup_travis.sh
 
 env:
