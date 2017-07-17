@@ -2,8 +2,6 @@ language: scala
 
 sudo: required
 
-dist: trusty
-
 addons:
   apt:
     packages:
@@ -14,33 +12,8 @@ before_install:
   - sudo hostname "$(hostname | cut -c1-63)"
   - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts > /tmp/hosts
   - sudo mv /tmp/hosts /etc/hosts
-  - cat /etc/hosts # optionally check the content *after*
-  - sudo apt-get -qq update
-  - sudo sh -c "echo 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.7 main' >> /etc/apt/sources.list"
-  - sudo sh -c "echo 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise main' >> /etc/apt/sources.list"
-  - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo apt-get -qq update
-  - |
-    sudo apt-get install -y \
-      clang++-3.7 \
-      llvm-3.7 \
-      llvm-3.7-dev \
-      llvm-3.7-runtime \
-      llvm-3.7-tool \
-      libgc-dev \
-      libunwind7-dev
-  # Install re2
-  # (libre2-dev) since Xenial (16.04 LTS) http://packages.ubuntu.com/xenial/libre2-dev
-  - sudo apt-get install -y make
-  - export CXX=clang++-3.7
-  - git clone https://code.googlesource.com/re2
-  - pushd re2
-  - git checkout 2017-03-01
-  - make -j4 test
-  - sudo make install prefix=/usr
-  - make testinstall prefix=/usr
-  - popd
+  - cat /etc/hosts # optionally check the content *after*  
+  - admin/setup_travis.sh
 
 env:
   global:
