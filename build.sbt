@@ -61,7 +61,12 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
     name := "scala-parser-combinators-native",
     scalaVersion := "2.11.11",
     skip in compile := System.getProperty("java.version").startsWith("1.6"),
-    test := {}
+    test := {},
+    libraryDependencies := {
+      if (!scalaVersion.value.startsWith("2.11"))
+        libraryDependencies.value.filterNot(_.organization == "org.scala-native")
+      else libraryDependencies.value
+    }
   )
 
 lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
