@@ -59,7 +59,9 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
   jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
   nativeSettings(
     name := "scala-parser-combinators-native",
-    scalaVersion := "2.11.11"
+    scalaVersion := "2.11.11",
+    skip in compile := System.getProperty("java.version").startsWith("1.6"),
+    test := {}
   )
 
 lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
