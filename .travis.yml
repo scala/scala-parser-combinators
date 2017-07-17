@@ -2,6 +2,8 @@ language: scala
 
 sudo: required
 
+dist: trusty
+
 addons:
   apt:
     packages:
