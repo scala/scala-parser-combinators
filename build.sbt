@@ -21,7 +21,7 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
   jvmSettings(scalaModuleSettingsJVM).
   settings(
-    repoName := "scala-parser-combinators",
+    name := "scala-parser-combinators",
     version := "1.0.7-SNAPSHOT",
     mimaPreviousVersion := Some("1.0.5"),
 
