@@ -3,8 +3,8 @@ import sbtcrossproject.{crossProject, CrossType}
 
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.11"
-  val v212 = "2.12.2"
-  val v213 = "2.13.0-M1"
+  val v212 = "2.12.3"
+  val v213 = "2.13.0-M2"
 
   Map(
     6 -> List(v211 -> true),
@@ -21,10 +21,8 @@ lazy val root = project.in(file("."))
 lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(scalaModuleSettings: _*).
   settings(
-    moduleName := "scala-parser-combinators",
-    repoName   := moduleName.value,
-    version    := "1.0.7-SNAPSHOT",
-
+    name := "scala-parser-combinators",
+    version := "1.0.7-SNAPSHOT",
     mimaPreviousVersion := Some("1.0.5"),
 
     apiMappings += (scalaInstance.value.libraryJar ->
