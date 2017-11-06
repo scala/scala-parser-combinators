@@ -44,19 +44,16 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
   jvmSettings(
     // Mima uses the name of the jvm project in the artifactId
     // when resolving previous versions (so no "-jvm" project)
-    name := "scala-parser-combinators",
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
     libraryDependencies += "junit" % "junit" % "4.12" % "test",
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
   ).
   jsSettings(
-    name := "scala-parser-combinators-js",
     // Scala.js cannot run forked tests
     fork in Test := false
   ).
   jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
   nativeSettings(
-    name := "scala-parser-combinators-native",
     scalaVersion := "2.11.11",
     skip in compile := System.getProperty("java.version").startsWith("1.6"),
     test := {},
