@@ -1,9 +1,11 @@
 import ScalaModulePlugin._
 
+resolvers in ThisBuild += "scala-pr" at "https://scala-ci.typesafe.com/artifactory/scala-integration/"
+
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.12"
   val v212 = "2.12.4"
-  val v213 = "2.13.0-M3"
+  val v213 = "2.13.0-pre-66da69b"
 
   Map(
     6 -> List(v211 -> true),
