@@ -25,7 +25,7 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
   settings(
     name := "scala-parser-combinators",
     version := "1.0.7-SNAPSHOT",
-    mimaPreviousVersion := Some("1.0.5"),
+    mimaPreviousVersion := Some("1.0.6"),
 
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),

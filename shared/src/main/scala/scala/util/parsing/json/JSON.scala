@@ -73,8 +73,8 @@ object JSON extends Parser {
    * arrays. See the `parse` method for details.
    */
   def resolveType(input: Any): Any = input match {
-    case JSONObject(data) => data.transform {
-      case (k,v) => resolveType(v)
+    case JSONObject(data) => data.map {
+      case (k,v) => k -> resolveType(v)
     }
     case JSONArray(data) => data.map(resolveType)
     case x => x
