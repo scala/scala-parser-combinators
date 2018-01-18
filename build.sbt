@@ -3,7 +3,7 @@ import ScalaModulePlugin._
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.12"
   val v212 = "2.12.6"
-  val v213 = "2.13.0-M3"
+  val v213 = "2.13.0-M4"
 
   Map(
     6 -> List(v211 -> true),
