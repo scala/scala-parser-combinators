@@ -1,10 +1,12 @@
 import ScalaModulePlugin._
 import sbtcrossproject.{crossProject, CrossType}
 
+resolvers in ThisBuild += "scala-pr" at "https://scala-ci.typesafe.com/artifactory/scala-pr-validation-snapshots/"
+
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.11"
   val v212 = "2.12.3"
-  val v213 = "2.13.0-M2"
+  val v213 = "2.13.0-pre-47ffa9c-SNAPSHOT"
 
   Map(
     6 -> List(v211 -> true),
@@ -23,7 +25,7 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
   settings(
     name := "scala-parser-combinators",
     version := "1.0.7-SNAPSHOT",
-    mimaPreviousVersion := Some("1.0.5"),
+    mimaPreviousVersion := Some("1.0.6"),
 
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
