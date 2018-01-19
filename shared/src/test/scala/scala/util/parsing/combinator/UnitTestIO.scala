@@ -26,7 +26,7 @@ class UnitTestIO {
     val s = "Here is a test string"
     val f = io.Source.fromBytes(s.getBytes("utf-8"))
     val b = new collection.mutable.ArrayBuffer[Char]()
-    f.copyToBuffer(b)
+    b ++= f
     assertEquals(new String(b.toArray), s)
   }
 }
