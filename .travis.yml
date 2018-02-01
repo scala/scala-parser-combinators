@@ -34,7 +34,7 @@ jdk:
 
 notifications:
   email:
-    - adriaan.moors@typesafe.com
+    - adriaan.moors@lightbend.com
     - antoine@gourlay.fr
 
 before_cache:
