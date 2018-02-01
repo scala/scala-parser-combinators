@@ -1,9 +1,9 @@
 import ScalaModulePlugin._
 
 scalaVersionsByJvm in ThisBuild := {
-  val v211 = "2.11.11"
-  val v212 = "2.12.2"
-  val v213 = "2.13.0-M1"
+  val v211 = "2.11.12"
+  val v212 = "2.12.4"
+  val v213 = "2.13.0-M2"
 
   Map(
     6 -> List(v211 -> true),
@@ -19,10 +19,15 @@ lazy val root = project.in(file("."))
 
 lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   settings(scalaModuleSettings: _*).
+  jvmSettings(scalaModuleSettingsJVM).
   settings(
-    name := "scala-parser-combinators-root",
+    name := "scala-parser-combinators",
+    version := "1.1.0-SNAPSHOT",
+    mimaPreviousVersion := None,
+
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
+
     scalacOptions in (Compile, doc) ++= Seq(
       "-diagrams",
       "-doc-source-url",
@@ -36,32 +41,15 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
     )
   ).
   jvmSettings(
-    // Mima uses the name of the jvm project in the artifactId
-    // when resolving previous versions (so no "-jvm" project)
-    name := "scala-parser-combinators"
-  ).
-  jsSettings(
-    name := "scala-parser-combinators-js"
-  ).
-  settings(
-    moduleName         := "scala-parser-combinators",
-    version            := "1.1.0-SNAPSHOT"
-  ).
-  jvmSettings(
-    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}")
+    OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
+    libraryDependencies += "junit" % "junit" % "4.12" % "test",
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
   ).
   jsSettings(
     // Scala.js cannot run forked tests
     fork in Test := false
   ).
-  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
-  jvmSettings(
-    libraryDependencies += "junit" % "junit" % "4.12" % "test",
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
-  ).
-  jvmSettings(
-    mimaPreviousVersion := None
-  )
+  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
 
 lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
 lazy val `scala-parser-combinatorsJS` = `scala-parser-combinators`.js

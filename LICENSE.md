@@ -1,5 +1,5 @@
-Copyright (c) 2002-2013 EPFL
-Copyright (c) 2011-2013 Typesafe, Inc.
+Copyright (c) 2002-2018 EPFL
+Copyright (c) 2011-2018 Lightbend, Inc.
 
 All rights reserved.
 
