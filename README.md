@@ -1,4 +1,4 @@
-scala-parser-combinators [<img src="https://img.shields.io/travis/scala/scala-parser-combinators.svg"/>](https://travis-ci.org/scala/scala-parser-combinators) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.11.svg?label=latest%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.11) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.12*.svg?label=latest%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.12*) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scala/scala-parser-combinators)
+scala-parser-combinators [<img src="https://img.shields.io/travis/scala/scala-parser-combinators.svg"/>](https://travis-ci.org/scala/scala-parser-combinators) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.11.svg?label=latest%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.11) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.12.svg?label=latest%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.12) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scala/scala-parser-combinators)
 ========================
 
 ### Scala Standard Parser Combinator Library
@@ -18,7 +18,7 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 To depend on scala-parser-combinators in SBT, add something like this to your build.sbt:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7"
 ```
 
 (Assuming you're using a `scalaVersion` for which a scala-parser-combinators is published. The first 2.11 milestone for which this is true is 2.11.0-M4.)
@@ -60,7 +60,7 @@ For a detailed unpacking of this example see
 Scala-parser-combinators directly supports scala-js 0.6+, starting with v1.0.5:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.6"
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.7"
 ```
 
 ## Contributing
