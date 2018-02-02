@@ -18,12 +18,12 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 To depend on scala-parser-combinators in SBT, add something like this to your build.sbt:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.0"
 ```
 
 (Assuming you're using a `scalaVersion` for which a scala-parser-combinators is published. The first 2.11 milestone for which this is true is 2.11.0-M4.)
 
-To support multiple Scala versions, see the example in https://github.com/scala/scala-module-dependency-sample.
+To support multiple Scala versions, see the example in [scala/scala-module-dependency-sample](https://github.com/scala/scala-module-dependency-sample).
 
 ## Example
 
@@ -60,11 +60,11 @@ For a detailed unpacking of this example see
 Scala-parser-combinators directly supports scala-js 0.6+, starting with v1.0.5:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.7"
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.0"
 ```
 
 ## Contributing
 
- * See the [Scala Developer Guidelines](https://github.com/scala/scala/blob/2.12.x/CONTRIBUTING.md) for general contributing guidelines
+ * See the [Scala Developer Guidelines](https://github.com/scala/scala/blob/2.13.x/CONTRIBUTING.md) for general contributing guidelines
  * Have a look at [existing issues](https://github.com/scala/scala-parser-combinators/issues)
  * Ask questions and discuss [on Gitter](https://gitter.im/scala/scala-parser-combinators)

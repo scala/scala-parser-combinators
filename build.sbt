@@ -22,8 +22,8 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
   jvmSettings(scalaModuleSettingsJVM).
   settings(
     name := "scala-parser-combinators",
-    version := "1.1.0-SNAPSHOT",
-    mimaPreviousVersion := None,
+    version := "1.1.1-SNAPSHOT",
+    mimaPreviousVersion := Some("1.1.0"),
 
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
