@@ -17,7 +17,7 @@ package util.parsing.input
  * @author Martin Odersky
  * @author Adriaan Moors
  */
-abstract class Reader[+T] {
+abstract class Reader[+T, +P <: Position] {
 
   /** If this is a reader over character sequences, the underlying char sequence.
    *  If not, throws a `NoSuchMethodError` exception.
@@ -39,12 +39,12 @@ abstract class Reader[+T] {
    * @return If `atEnd` is `true`, the result will be `this';
    *         otherwise, it's a `Reader` containing more elements.
    */
-  def rest: Reader[T]
+  def rest: Reader[T, P]
 
   /** Returns an abstract reader consisting of all elements except the first `n` elements.
    */
-  def drop(n: Int): Reader[T] = {
-    var r: Reader[T] = this
+  def drop(n: Int): Reader[T, P] = {
+    var r: Reader[T, P] = this
     var cnt = n
     while (cnt > 0) {
       r = r.rest; cnt -= 1
@@ -54,7 +54,7 @@ abstract class Reader[+T] {
 
   /** The position of the first element in the reader.
    */
-  def pos: Position
+  def pos: P
 
   /** `true` iff there are no more elements in this reader.
    */

@@ -12,6 +12,8 @@ package util.parsing
 package combinator
 package syntactical
 
+import input.Position
+
 /** This is the core component for token-based parsers.
  *
  *  @author Martin Odersky
@@ -29,6 +31,10 @@ trait TokenParsers extends Parsers {
 
   /** The input-type for these parsers*/
   type Elem = lexical.Token
+
+  /** The position-type for token parsers
+    */
+  type Pos = Position
 
 }
 

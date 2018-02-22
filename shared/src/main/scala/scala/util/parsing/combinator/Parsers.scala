@@ -76,14 +76,19 @@ import scala.util.DynamicVariable
  */
 trait Parsers {
   /** the type of input elements the provided parsers consume (When consuming
-   *  invidual characters, a parser is typically called a ''scanner'', which
+   *  individual characters, a parser is typically called a ''scanner'', which
    *  produces ''tokens'' that are consumed by what is normally called a ''parser''.
    *  Nonetheless, the same principles apply, regardless of the input type.) */
   type Elem
 
+  /** the type of position descriptors providing spatial information of the
+    * tokens within the input document.
+    */
+  type Pos <: Position
+
   /** The parser input is an abstract reader of input elements, i.e. the type
    *  of input the parsers in this component expect. */
-  type Input = Reader[Elem]
+  type Input = Reader[Elem, Pos]
 
   /** A base class for parser results. A result is either successful or not
    *  (failure may be fatal, i.e., an Error, or not, i.e., a Failure). On

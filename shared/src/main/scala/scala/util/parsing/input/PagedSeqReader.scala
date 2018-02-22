@@ -30,7 +30,7 @@ object PagedSeqReader {
  * @author Martin Odersky
  */
 class PagedSeqReader(seq: PagedSeq[Char],
-                     override val offset: Int) extends Reader[Char] { outer =>
+                     override val offset: Int) extends Reader[Char, Position] { outer =>
   import PagedSeqReader._
 
   override val source: java.lang.CharSequence = seq

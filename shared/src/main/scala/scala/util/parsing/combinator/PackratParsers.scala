@@ -59,7 +59,7 @@ trait PackratParsers extends Parsers {
    * A specialized `Reader` class that wraps an underlying `Reader`
    * and provides memoization of parse results.
    */
-  class PackratReader[+T](underlying: Reader[T]) extends Reader[T] { outer =>
+  class PackratReader[+T, +P <: Position](underlying: Reader[T, P]) extends Reader[T, P] { outer =>
 
     /*
      * caching of intermediate parse results and information about recursion
@@ -86,13 +86,13 @@ trait PackratParsers extends Parsers {
     override def offset: Int = underlying.offset
 
     def first: T = underlying.first
-    def rest: Reader[T] = new PackratReader(underlying.rest) {
+    def rest: Reader[T, P] = new PackratReader(underlying.rest) {
       override private[PackratParsers] val cache = outer.cache
       override private[PackratParsers] val recursionHeads = outer.recursionHeads
       lrStack = outer.lrStack
     }
 
-    def pos: Position = underlying.pos
+    def pos: P = underlying.pos
     def atEnd: Boolean = underlying.atEnd
   }
 
@@ -106,7 +106,7 @@ trait PackratParsers extends Parsers {
     val q = super.phrase(p)
     new PackratParser[T] {
       def apply(in: Input) = in match {
-        case in: PackratReader[_] => q(in)
+        case in: PackratReader[_, _] => q(in)
         case in => q(new PackratReader(in))
       }
     }
@@ -153,7 +153,7 @@ trait PackratParsers extends Parsers {
    * In the former case, it makes sure that rules involved in the recursion are evaluated.
    * It also prevents non-involved rules from getting evaluated further
    */
-  private def recall(p: super.Parser[_], in: PackratReader[Elem]): Option[MemoEntry[_]] = {
+  private def recall(p: super.Parser[_], in: PackratReader[Elem, Pos]): Option[MemoEntry[_]] = {
     val cached = in.getFromCache(p)
     val head = in.recursionHeads.get(in.pos)
 
@@ -185,7 +185,7 @@ trait PackratParsers extends Parsers {
    * we modify the involvedSets of all LRs in the stack, till we see
    * the current parser again
    */
-  private def setupLR(p: Parser[_], in: PackratReader[_], recDetect: LR): Unit = {
+  private def setupLR(p: Parser[_], in: PackratReader[_, _], recDetect: LR): Unit = {
     if(recDetect.head == None) recDetect.head = Some(Head(p, Nil, Nil))
 
     in.lrStack.takeWhile(_.rule != p).foreach {x =>
@@ -207,7 +207,7 @@ is not, however, this means we have detected a recursion, and we use the setupLR
 to update each parser involved in the recursion.
    */
 
-  private def lrAnswer[T](p: Parser[T], in: PackratReader[Elem], growable: LR): ParseResult[T] = growable match {
+  private def lrAnswer[T](p: Parser[T], in: PackratReader[Elem, Pos], growable: LR): ParseResult[T] = growable match {
     //growable will always be having a head, we can't enter lrAnswer otherwise
     case LR(seed ,rule, Some(head)) =>
       if(head.getHead != p) /*not head rule, so not growing*/ seed.asInstanceOf[ParseResult[T]]
@@ -236,7 +236,7 @@ to update each parser involved in the recursion.
         /*
          * transformed reader
          */
-        val inMem = in.asInstanceOf[PackratReader[Elem]]
+        val inMem = in.asInstanceOf[PackratReader[Elem, Pos]]
 
         //look in the global cache if in a recursion
         val m = recall(p, inMem)
@@ -281,7 +281,7 @@ to update each parser involved in the recursion.
     }
   }
 
-  private def grow[T](p: super.Parser[T], rest: PackratReader[Elem], head: Head): ParseResult[T] = {
+  private def grow[T](p: super.Parser[T], rest: PackratReader[Elem, Pos], head: Head): ParseResult[T] = {
     //store the head into the recursionHeads
     rest.recursionHeads.put(rest.pos, head /*match {case Head(hp,involved,_) => Head(hp,involved,involved)}*/)
     val oldRes: ParseResult[T] = rest.getFromCache(p).get match {

@@ -27,7 +27,7 @@ object CharSequenceReader {
  * @author Martin Odersky
  */
 class CharSequenceReader(override val source: java.lang.CharSequence,
-                         override val offset: Int) extends Reader[Char] {
+                         override val offset: Int) extends Reader[Char, OffsetPosition] {
   import CharSequenceReader._
 
   /** Construct a `CharSequenceReader` with its first element at
@@ -51,7 +51,7 @@ class CharSequenceReader(override val source: java.lang.CharSequence,
 
   /** The position of the first element in the reader.
    */
-  def pos: Position = new OffsetPosition(source, offset)
+  def pos: OffsetPosition = new OffsetPosition(source, offset)
 
   /** true iff there are no more elements in this reader (except for trailing
    *  EofCh's)

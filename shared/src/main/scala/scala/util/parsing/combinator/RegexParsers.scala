@@ -58,6 +58,8 @@ trait RegexParsers extends Parsers {
 
   type Elem = Char
 
+  type Pos = Position
+
   protected val whiteSpace = """\s+""".r
 
   def skipWhitespace = whiteSpace.toString.length > 0
@@ -152,7 +154,7 @@ trait RegexParsers extends Parsers {
     super.phrase(p <~ "".r)
 
   /** Parse some prefix of reader `in` with parser `p`. */
-  def parse[T](p: Parser[T], in: Reader[Char]): ParseResult[T] =
+  def parse[T](p: Parser[T], in: Reader[Char, Pos]): ParseResult[T] =
     p(in)
 
   /** Parse some prefix of character sequence `in` with parser `p`. */
@@ -164,7 +166,7 @@ trait RegexParsers extends Parsers {
     p(new PagedSeqReader(PagedSeq.fromReader(in)))
 
   /** Parse all of reader `in` with parser `p`. */
-  def parseAll[T](p: Parser[T], in: Reader[Char]): ParseResult[T] =
+  def parseAll[T](p: Parser[T], in: Reader[Char, Pos]): ParseResult[T] =
     parse(phrase(p), in)
 
   /** Parse all of reader `in` with parser `p`. */
