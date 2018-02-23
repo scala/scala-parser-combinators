@@ -16,7 +16,7 @@ class JavaTokenParsersTest {
     assertEquals(".1", decimalNumber(new CharArrayReader(".1".toCharArray)).get)
     // should fail to parse and we should get Failure as ParseResult
     val failure = decimalNumber(new CharArrayReader("!1".toCharArray)).asInstanceOf[Failure]
-    assertEquals("""string matching regex `(\d+(\.\d*)?|\d*\.\d+)' expected but `!' found""", failure.msg)
+    assertEquals("""string matching regex '(\d+(\.\d*)?|\d*\.\d+)' expected but '!' found""", failure.msg)
   }
 
   @Test
@@ -73,7 +73,7 @@ class JavaTokenParsersTest {
     parseResult1 match {
       case e @ Failure(message, next) =>
         assertEquals(next.pos.column, 7)
-        assert(message.endsWith("string matching regex `(?i)AND' expected but `s' found"))
+        assert(message.endsWith("string matching regex '(?i)AND' expected but 's' found"))
       case _ => sys.error(parseResult1.toString)
     }
 
@@ -97,7 +97,7 @@ class JavaTokenParsersTest {
       case Failure(message, next) =>
         assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 1)
-        assert(message.endsWith(s"identifier expected but `-' found"))
+        assert(message.endsWith(s"identifier expected but '-' found"))
       case _ => sys.error(parseResult.toString)
     }
 
