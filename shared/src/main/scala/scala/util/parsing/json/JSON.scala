@@ -83,7 +83,7 @@ object JSON extends Parser {
   /**
    * The global (VM) default function for converting a string to a numeric value.
    */
-  def globalNumberParser_=(f: NumericParser) { defaultNumberParser = f }
+  def globalNumberParser_=(f: NumericParser): Unit = { defaultNumberParser = f }
   def globalNumberParser : NumericParser = defaultNumberParser
 
   /**
@@ -91,6 +91,6 @@ object JSON extends Parser {
    * numeric format on a per-thread basis. Use `globalNumberParser` for a
    * global override.
    */
-   def perThreadNumberParser_=(f : NumericParser) { numberParser.set(f) }
+   def perThreadNumberParser_=(f : NumericParser): Unit = { numberParser.set(f) }
    def perThreadNumberParser : NumericParser = numberParser.get()
 }

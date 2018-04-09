@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 class UnitTestIO {
 
   @Test
-  def testUTF8 {
+  def testUTF8: Unit = {
     def decode(ch: Int) = new String(Array(ch), 0, 1).getBytes("UTF-8")
     
     assert(new String( decode(0x004D), "utf8") == new String(Array(0x004D.asInstanceOf[Char])))
@@ -22,7 +22,7 @@ class UnitTestIO {
   }
 
   @Test
-  def testSource {
+  def testSource: Unit = {
     val s = "Here is a test string"
     val f = io.Source.fromBytes(s.getBytes("utf-8"))
     val b = new collection.mutable.ArrayBuffer[Char]()

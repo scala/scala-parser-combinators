@@ -19,7 +19,7 @@ class t4929 {
   def test: Unit = {
     (1 to THREAD_COUNT) foreach { i =>
       val thread = new Thread {
-        override def run() {
+        override def run(): Unit = {
           begin.await(1, TimeUnit.SECONDS)
           try {
             while (count.getAndIncrement() < LIMIT && errors.isEmpty) {

@@ -35,17 +35,17 @@ class JsonTest {
     assertTrue("Parse failed for \"%s\"".format(given), (JSON parseRaw given).isDefined)
    
   // For this usage, do a raw parse (to JSONObject/JSONArray)
-  def printJSON(given : String, expected : JSONType) {
+  def printJSON(given : String, expected : JSONType): Unit = {
     printJSON(given, JSON.parseRaw, expected)
   }
 
   // For this usage, do a raw parse (to JSONType and subclasses)
-  def printJSONFull(given : String, expected : Any) {
+  def printJSONFull(given : String, expected : Any): Unit = {
     printJSON(given, JSON.parseFull, expected)
   }
 
   // For this usage, do configurable parsing so that you can do raw if desired
-  def printJSON[T](given : String, parser : String => T, expected : Any) {
+  def printJSON[T](given : String, parser : String => T, expected : Any): Unit = {
     parser(given) match {
       case None => assertTrue("Parse failed for \"%s\"".format(given), false)
       case Some(parsed) => if (parsed != expected) {
