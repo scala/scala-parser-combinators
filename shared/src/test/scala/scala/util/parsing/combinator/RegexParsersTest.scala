@@ -25,9 +25,9 @@ class RegexParsersTest {
     }
 
     val failure1 = parseAll(p, "-x").asInstanceOf[Failure]
-    assertEquals("string matching regex `\\d+' expected but `x' found", failure1.msg)
+    assertEquals("string matching regex '\\d+' expected but 'x' found", failure1.msg)
     val failure2 = parseAll(p, "x").asInstanceOf[Failure]
-    assertEquals("string matching regex `\\d+' expected but `x' found", failure2.msg)
+    assertEquals("string matching regex '\\d+' expected but 'x' found", failure2.msg)
     assertEquals(result(-5), extractResult(parseAll(p, "-5")))
     assertEquals(result(5), extractResult(parseAll(p, "5")))
     val error1 = parseAll(q, "-x").asInstanceOf[Error]

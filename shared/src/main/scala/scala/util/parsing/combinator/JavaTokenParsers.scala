@@ -28,7 +28,7 @@ trait JavaTokenParsers extends RegexParsers {
    */
   def ident: Parser[String] = (
       "" ~> // handle whitespace
-      rep1(acceptIf(Character.isJavaIdentifierStart)("identifier expected but `" + _ + "' found"),
+      rep1(acceptIf(Character.isJavaIdentifierStart)("identifier expected but '" + _ + "' found"),
           elem("identifier part", Character.isJavaIdentifierPart(_: Char))) ^^ (_.mkString)
   )
 

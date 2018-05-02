@@ -19,7 +19,7 @@ package token
 trait StdTokens extends Tokens {
   /** The class of keyword tokens */
   case class Keyword(chars: String) extends Token {
-    override def toString = "`"+chars+"'"
+    override def toString = "'"+chars+"'"
   }
 
   /** The class of numeric literal tokens */
