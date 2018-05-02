@@ -10,7 +10,6 @@
 package scala
 package util.parsing.combinator
 
-import java.util.regex.Pattern
 import scala.util.matching.Regex
 import scala.util.parsing.input._
 import scala.language.implicitConversions

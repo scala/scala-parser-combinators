@@ -1,6 +1,5 @@
 package scala.util.parsing.input
 
-import java.lang.{CharSequence, ThreadLocal}
 import java.util.WeakHashMap
 
 /**
