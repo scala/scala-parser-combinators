@@ -1,9 +1,10 @@
 package scala.util.parsing.combinator
 
+import scala.language.postfixOps
+import scala.util.parsing.combinator.syntactical.StandardTokenParsers
+
 import org.junit.Assert.{assertEquals, assertTrue}
 import org.junit.Test
-
-import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 /**
   * Test for issue 56: https://github.com/scala/scala-parser-combinators/issues/56
