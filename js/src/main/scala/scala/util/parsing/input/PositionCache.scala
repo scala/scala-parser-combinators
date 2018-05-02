@@ -1,6 +1,5 @@
 package scala.util.parsing.input
 
-import java.lang.CharSequence
 import java.util.{AbstractMap, Collections}
 
 private[input] trait PositionCache {

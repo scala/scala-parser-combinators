@@ -10,8 +10,6 @@ package scala
 package util.parsing.input
 
 import scala.collection.mutable.ArrayBuffer
-import java.lang.{CharSequence, ThreadLocal}
-import java.util.WeakHashMap
 
 /** `OffsetPosition` is a standard class for positions
  *   represented as offsets into a source ``document''.

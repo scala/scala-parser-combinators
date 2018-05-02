@@ -1,4 +1,3 @@
-import scala.io.Source
 import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.Reader
 import scala.util.parsing.input.Position

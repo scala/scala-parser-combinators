@@ -1,6 +1,6 @@
 import scala.util.parsing.json._
 import java.util.concurrent._
-import collection.JavaConversions._
+import collection.JavaConverters._
 
 import org.junit.Test
 
@@ -36,6 +36,6 @@ class t4929 {
       thread.setDaemon(true)
       thread.start()
     }
-    errors foreach { throw(_) }
+    errors.asScala foreach { throw(_) }
   }
 }
