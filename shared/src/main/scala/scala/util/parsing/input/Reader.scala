@@ -36,7 +36,7 @@ abstract class Reader[+T] {
 
   /** Returns an abstract reader consisting of all elements except the first
    *
-   * @return If `atEnd` is `true`, the result will be `this';
+   * @return If `atEnd` is `true`, the result will be `this`;
    *         otherwise, it's a `Reader` containing more elements.
    */
   def rest: Reader[T]
