@@ -17,7 +17,6 @@ class UnitTestIO {
     val expected = "a" -> "\""
 
     val parsed = scala.util.parsing.json.JSON.parseFull(test)
-    val result = parsed == Some(Map(expected))
     assertEquals(Some(Map(expected)), parsed)
   }
 
