@@ -1,9 +1,11 @@
 import ScalaModulePlugin._
 
+resolvers in ThisBuild += "scala-pr" at "https://scala-ci.typesafe.com/artifactory/scala-integration/"
+
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.12"
   val v212 = "2.12.4"
-  val v213 = "2.13.0-M3"
+  val v213 = "2.13.0-pre-66da69b"
 
   Map(
     6 -> List(v211 -> true),
@@ -38,7 +40,15 @@ lazy val `scala-parser-combinators` = crossProject.in(file(".")).
       "Scala Parser Combinators",
       "-doc-version",
       version.value
-    )
+    ),
+    unmanagedSourceDirectories in Compile ++= {
+      (unmanagedSourceDirectories in Compile).value.map { dir =>
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, 13)) => file(dir.getPath ++ "-2.13")
+          case _             => file(dir.getPath ++ "-2.11-2.12")
+        }
+      }
+    }
   ).
   jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
