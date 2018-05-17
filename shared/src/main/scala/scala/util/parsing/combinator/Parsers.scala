@@ -604,7 +604,7 @@ trait Parsers {
    *  @param  es the list of expected elements
    *  @return a Parser that recognizes a specified list of elements
    */
-  def accept[ES <% List[Elem]](es: ES): Parser[List[Elem]] = acceptSeq(es)
+  def accept[ES](es: ES)(implicit f: ES => List[Elem]): Parser[List[Elem]] = acceptSeq(es)
 
   /** The parser that matches an element in the domain of the partial function `f`.
    *
@@ -661,7 +661,7 @@ trait Parsers {
    *  @param  es the list of expected elements
    *  @return a Parser that recognizes a specified list of elements
    */
-  def acceptSeq[ES <% Iterable[Elem]](es: ES): Parser[List[Elem]] =
+  def acceptSeq[ES](es: ES)(implicit f: ES => Iterable[Elem]): Parser[List[Elem]] =
     es.foldRight[Parser[List[Elem]]](success(Nil)){(x, pxs) => accept(x) ~ pxs ^^ mkList}
 
   /** A parser that always fails.
