@@ -1,4 +1,5 @@
 import ScalaModulePlugin._
+import sbtcrossproject.crossProject
 
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.12"
@@ -17,7 +18,7 @@ lazy val root = project.in(file("."))
   .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`)
   .settings(disablePublishing)
 
-lazy val `scala-parser-combinators` = crossProject.in(file(".")).
+lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform).in(file(".")).
   settings(scalaModuleSettings: _*).
   jvmSettings(scalaModuleSettingsJVM).
   settings(
