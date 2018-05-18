@@ -63,4 +63,12 @@ class CharSequenceReader(override val source: java.lang.CharSequence,
    */
   override def drop(n: Int): CharSequenceReader =
     new CharSequenceReader(source, offset + n)
+
+  /** Returns a String in the form `CharSequenceReader(first, ...)`,
+   *  or `CharSequenceReader()` if this is `atEnd`.
+   */
+  override def toString: String = {
+    val c = if (atEnd) "" else s"'$first', ..."
+    s"CharSequenceReader($c)"
+  }
 }
