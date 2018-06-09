@@ -63,12 +63,14 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
    * @return the line at `offset` (not including a newline)
    */
   def lineContents: String = {
-    val endIndex = if (source.charAt(index(line) - 1) == '\n') {
-      index(line) -  1
+    val lineStart = index(line - 1)
+    val lineEnd = index(line)
+    val endIndex = if ( lineStart < lineEnd && source.charAt(lineEnd - 1) == '\n') {
+      lineEnd - 1
     } else {
-      index(line)
+      lineEnd
     }
-    source.subSequence(index(line - 1), endIndex).toString
+    source.subSequence(lineStart, endIndex).toString
   }
 
   /** Returns a string representation of the `Position`, of the form `line.column`. */
