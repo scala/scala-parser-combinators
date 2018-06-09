@@ -1,6 +1,5 @@
-# disables sudo
-# this allows for faster builds, using  travis's docker-based build infra
-sudo: false
+# needed to work around https://github.com/travis-ci/travis-ci/issues/9713
+sudo: true
 
 language: scala
 
@@ -21,7 +20,12 @@ env:
     # SONA_PASS
     - secure: "OIVtcj7AHZr8Grpf03ZmZsygcADewiYIvSnRwLYCx+5AqOzs39EZ68DsIOxi7wEXVUbVj5RvLXpKzLX3iN+UszLOQRoFPFQyyn+3Y50f8T2aRxdZtInzXn0sCVTj4Hhd/zbKl1W+2Nh3Sqazab7tFoQVzEyYqhcPeiNRMF7h+aY="
 
-script: admin/build.sh
+script:
+  - echo $JAVA_HOME
+  # work around https://github.com/travis-ci/travis-ci/issues/9713
+  - if [[ $JAVA_HOME = *java-6* ]]; then jdk_switcher use openjdk6; fi
+  - java -version
+  - admin/build.sh
 
 addons:
   apt:
