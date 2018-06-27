@@ -61,6 +61,14 @@ Scala-parser-combinators directly supports Scala.js 0.6+:
 libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.1"
 ```
 
+## Issues
+
+Many old issues from the Scala JIRA issue tracker have been migrated
+here, but not all of them. Community assistance identifying and
+migrating still-relevant issues is welcome.  See [this
+page](https://github.com/scala/scala-parser-combinators/issues/61) for
+details.
+
 ## Contributing
 
  * See the [Scala Developer Guidelines](https://github.com/scala/scala/blob/2.13.x/CONTRIBUTING.md) for general contributing guidelines
