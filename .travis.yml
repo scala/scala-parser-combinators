@@ -36,10 +36,12 @@ jdk:
   - openjdk6
   - oraclejdk8
   - oraclejdk9
+  - oraclejdk10
 
 notifications:
   email:
     - adriaan.moors@lightbend.com
+    - seth.tisue@lightbend.com
     - antoine@gourlay.fr
 
 before_cache:
