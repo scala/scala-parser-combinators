@@ -301,6 +301,16 @@ trait Parsers {
       (for(a <- this; b <- p) yield a).named("<~")
     }
 
+    /**
+     * A parser combinator for exceptions.
+     *
+     * `p - q` succeeds if `p` succeeds, and `q` fails on the same input given `p`.
+     *
+     * @param q a parser that will be executed before `p` (this parser). q will not consume the input.
+     * @return a `Parser` that returns the result of `p` (this parser) if it succeeds and q fails. If q succeeds, the parser will fail.
+     */
+    def - [U](q: Parser[U]): Parser[T] = (not(q) ~> this).named("-")
+
      /* not really useful: V cannot be inferred because Parser is covariant in first type parameter (V is always trivially Nothing)
     def ~~ [U, V](q: => Parser[U])(implicit combine: (T, U) => V): Parser[V] = new Parser[V] {
       def apply(in: Input) = seq(Parser.this, q)((x, y) => combine(x,y))(in)
