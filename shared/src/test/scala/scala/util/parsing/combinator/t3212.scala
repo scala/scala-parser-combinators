@@ -5,12 +5,12 @@ import org.junit.Assert.assertEquals
 
 class t3212 extends RegexParsers {
 
-    sealed trait BuySell
-    case object BUY extends BuySell
-    case object SELL extends BuySell
+  sealed trait BuySell
+  case object BUY extends BuySell
+  case object SELL extends BuySell
 
-    def buy_sell: Parser[BuySell] =
-      "to" ~> "buy" ^^^ BUY |
+  def buy_sell: Parser[BuySell] =
+    "to" ~> "buy" ^^^ BUY |
       "to" ~> "sell" ^^^ SELL |
       failure("buy or sell expected")
 
