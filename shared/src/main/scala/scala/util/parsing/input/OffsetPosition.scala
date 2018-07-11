@@ -35,10 +35,10 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
   private def genIndex: Array[Int] = {
     val lineStarts = new ArrayBuffer[Int]
     lineStarts += 0 // first line
-    for (i <- 0 until source.length) {
-      if (i >= 1 && source.charAt(i - 1) == '\n') // \n or \r\n
+    for (i <- 1 until source.length) {
+      if (source.charAt(i - 1) == '\n') // \n or \r\n
         lineStarts += i
-      else if (i >= 1 && source.charAt(i - 1) == '\r' && source.charAt(i) != '\n') // \r but not \r\n
+      else if (source.charAt(i - 1) == '\r' && source.charAt(i) != '\n') // \r but not \r\n
         lineStarts += i
     }
     lineStarts += source.length // eof
