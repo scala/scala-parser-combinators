@@ -1,5 +1,4 @@
-scala-parser-combinators [<img src="https://img.shields.io/travis/scala/scala-parser-combinators.svg"/>](https://travis-ci.org/scala/scala-parser-combinators) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.11.svg?label=latest%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.11) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.12.svg?label=latest%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.12) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scala/scala-parser-combinators)
-========================
+# scala-parser-combinators [<img src="https://img.shields.io/travis/scala/scala-parser-combinators.svg"/>](https://travis-ci.org/scala/scala-parser-combinators) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.11.svg?label=latest%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.11) [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.12.svg?label=latest%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.12) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scala/scala-parser-combinators)
 
 ### Scala Standard Parser Combinator Library
 
@@ -29,8 +28,7 @@ To support multiple Scala versions, see the example in [scala/scala-module-depen
 import scala.util.parsing.combinator._
 
 case class WordFreq(word: String, count: Int) {
-  override def toString = "Word <" + word + "> " +
-                          "occurs with frequency " + count
+  override def toString = s"Word <$word> occurs with frequency $count"
 }
 
 class SimpleParser extends RegexParsers {
@@ -43,8 +41,8 @@ object TestSimpleParser extends SimpleParser {
   def main(args: Array[String]) = {
     parse(freq, "johnny 121") match {
       case Success(matched,_) => println(matched)
-      case Failure(msg,_) => println("FAILURE: " + msg)
-      case Error(msg,_) => println("ERROR: " + msg)
+      case Failure(msg,_) => println(s"FAILURE: $msg")
+      case Error(msg,_) => println(s"ERROR: $msg")
     }
   }
 }
