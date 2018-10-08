@@ -50,4 +50,8 @@ if [[ "$TRAVIS_TAG" =~ $tagPat ]]; then
   openssl aes-256-cbc -K $K -iv $IV -in admin/secring.asc.enc -out admin/secring.asc -d
 fi
 
-sbt "$publishVersion" "$publishScalaVersion" clean update +test +publishLocal $extraTarget
+if [[ "$TRAVIS_JDK_VERSION" == "openjdk6" ]]; then
+  SBTOPTS="-Dsbt.override.build.repos=true -Dsbt.repository.config=./.sbtrepos"
+fi
+
+sbt $SBTOPTS "$publishVersion" "$publishScalaVersion" clean update +test +publishLocal $extraTarget
