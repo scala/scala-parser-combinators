@@ -3,7 +3,7 @@ import sbtcrossproject.crossProject
 
 scalaVersionsByJvm in ThisBuild := {
   val v211 = "2.11.12"
-  val v212 = "2.12.6"
+  val v212 = "2.12.7"
   val v213 = "2.13.0-M5"
 
   val allFalse = List(v212 -> false, v213 -> false, v211 -> false)

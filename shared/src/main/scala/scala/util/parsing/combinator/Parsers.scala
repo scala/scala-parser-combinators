@@ -14,7 +14,6 @@ import scala.collection.mutable.ListBuffer
 import scala.annotation.tailrec
 import scala.annotation.migration
 import scala.language.implicitConversions
-import scala.util.DynamicVariable
 
 // TODO: better error handling (labelling like parsec's <?>)
 
