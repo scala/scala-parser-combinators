@@ -57,6 +57,9 @@ matrix:
       jdk: openjdk6
     - scala: 2.13.0-M5
       jdk: openjdk6
+  include:
+    - env: SCALANATIVE_VERSION=0.3.8
+      jdk: oraclejdk8
 
 notifications:
   email:

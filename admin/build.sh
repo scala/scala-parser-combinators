@@ -17,15 +17,21 @@ set -e
 # of the existing tag. Then a new tag can be created for that commit, e.g., `v1.2.3#2.13.0-M5`.
 # Everything after the `#` in the tag name is ignored.
 
-if [[ "$TRAVIS_JDK_VERSION" == "openjdk6" && "$TRAVIS_SCALA_VERSION" =~ 2\.11\..* \
+if [[ "$SCALANATIVE_VERSION" != "" ]]; then
+  if [[ "$TRAVIS_JDK_VERSION" == "oraclejdk8" && "$TRAVIS_SCALA_VERSION" =~ 2\.11\..* ]]; then
+    RELEASE_COMBO=true;
+  fi
+elif [[ "$TRAVIS_JDK_VERSION" == "openjdk6" && "$TRAVIS_SCALA_VERSION" =~ 2\.11\..* \
       || "$TRAVIS_JDK_VERSION" == "oraclejdk8" && "$TRAVIS_SCALA_VERSION" =~ 2\.1[23]\..* ]]; then
   RELEASE_COMBO=true;
 fi
 
-if [ "$SCALAJS_VERSION" = "" ]; then
-  projectPrefix="scala-parser-combinators"
-else
+if ! [ "$SCALAJS_VERSION" == "" ]; then
   projectPrefix="scala-parser-combinatorsJS"
+elif ! [ "$SCALANATIVE_VERSION" == "" ]; then
+  projectPrefix="scala-parser-combinatorsNative"
+else
+  projectPrefix="scala-parser-combinators"
 fi
 
 verPat="[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9-]+)?"

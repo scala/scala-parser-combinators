@@ -4,10 +4,10 @@ import sbtcrossproject.crossProject
 crossScalaVersions in ThisBuild := List("2.12.7", "2.11.12", "2.13.0-M5")
 
 lazy val root = project.in(file("."))
-  .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`)
+  .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`, `scala-parser-combinatorsNative`)
   .settings(disablePublishing)
 
-lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform).
+lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, NativePlatform).
   withoutSuffixFor(JVMPlatform).in(file(".")).
   settings(scalaModuleSettings: _*).
   jvmSettings(scalaModuleSettingsJVM).
@@ -48,7 +48,17 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform).
     // Scala.js cannot run forked tests
     fork in Test := false
   ).
-  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
+  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
+  nativeSettings(
+    skip in compile := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
+    test := {},
+    libraryDependencies := {
+      if (!scalaVersion.value.startsWith("2.11"))
+        libraryDependencies.value.filterNot(_.organization == "org.scala-native")
+      else libraryDependencies.value
+    }
+  )
 
 lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
 lazy val `scala-parser-combinatorsJS` = `scala-parser-combinators`.js
+lazy val `scala-parser-combinatorsNative` = `scala-parser-combinators`.native
