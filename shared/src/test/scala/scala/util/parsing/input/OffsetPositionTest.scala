@@ -18,7 +18,7 @@ class OffsetPositionTest {
 
   @Test
   def lineContentsWithTrailingCRLF: Unit = {
-    val op = new OffsetPosition("\r\n", 1)
+    val op = new OffsetPosition("\r\n", 2)
     assertEquals("", op.lineContents)
   }
 
@@ -43,6 +43,42 @@ class OffsetPositionTest {
   @Test
   def linesWithCRLF: Unit = {
     val op = new OffsetPosition("foo\r\nbar", 5)
+    assertEquals(2, op.line)
+  }
+
+  @Test
+  def linesWithTrailingLFs: Unit = {
+    val op = new OffsetPosition("foo\n\n", 5)
+    assertEquals(3, op.line)
+  }
+
+  @Test
+  def linesWithTrailingCRs: Unit = {
+    val op = new OffsetPosition("foo\r\r", 5)
+    assertEquals(3, op.line)
+  }
+
+  @Test
+  def linesWithTrailingCRLFs: Unit = {
+    val op = new OffsetPosition("foo\r\n\r\n", 7)
+    assertEquals(3, op.line)
+  }
+
+  @Test
+  def linesWithLeadingLF: Unit = {
+    val op = new OffsetPosition("\n", 1)
+    assertEquals(2, op.line)
+  }
+
+  @Test
+  def linesWithLeadingCR: Unit = {
+    val op = new OffsetPosition("\r", 1)
+    assertEquals(2, op.line)
+  }
+
+  @Test
+  def linesWithLeadingCRLF: Unit = {
+    val op = new OffsetPosition("\r\n", 2)
     assertEquals(2, op.line)
   }
 }
