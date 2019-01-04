@@ -243,7 +243,12 @@ private class Page[T: ClassTag](val num: Int) {
   /** The last page as currently present in the sequence; This can change as more
    *  elements get appended to the sequence.  */
   final def latest: Page[T] = {
-    if (later.next != null) later = later.next.latest
+    var oldLater = later
+    while (later.next != null) later = later.next
+    while (oldLater.next != null) {
+      oldLater = oldLater.next
+      oldLater.later = later
+    }
     later
   }
 
