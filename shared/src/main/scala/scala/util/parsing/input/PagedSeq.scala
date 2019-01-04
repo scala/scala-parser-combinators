@@ -41,21 +41,8 @@ object PagedSeq {
     fromIterator(source.iterator)
 
   /** Constructs a paged character sequence from a string iterator */
-  def fromStrings(source: Iterator[String]): PagedSeq[Char] = {
-    var current: String = ""
-    def more(data: Array[Char], start: Int, len: Int): Int =
-      if (current.length != 0) {
-        val cnt = current.length min len
-        current.getChars(0, cnt, data, start)
-        current = current.substring(cnt)
-        if (cnt == len) cnt
-        else (more(data, start + cnt, len - cnt) max 0) + cnt
-      } else if (source.hasNext) {
-        current = source.next()
-        more(data, start, len)
-      } else -1
-    new PagedSeq(more(_: Array[Char], _: Int, _: Int))
-  }
+  def fromStrings(source: Iterator[String]): PagedSeq[Char] =
+    fromIterator(source.flatMap(_.iterator))
 
   /** Constructs a paged character sequence from a string iterable */
   def fromStrings(source: Iterable[String]): PagedSeq[Char] =
