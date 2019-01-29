@@ -21,7 +21,7 @@ env:
   matrix:
     # The empty SCALAJS_VERSION will only compile for the JVM
     - SCALAJS_VERSION=
-    - SCALAJS_VERSION=0.6.25
+    - SCALAJS_VERSION=0.6.26
     - SCALAJS_VERSION=1.0.0-M6
 
 script: admin/build.sh
