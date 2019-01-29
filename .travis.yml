@@ -1,15 +1,14 @@
-# needed to work around https://github.com/travis-ci/travis-ci/issues/9713
-sudo: true
+sudo: required
 
 language: scala
+jdk:
+  - oraclejdk8
+  - openjdk11
 
-addons:
-  hosts:
-    - myshorthost
-  hostname: myshorthost
-  apt:
-    packages:
-      - graphviz
+scala:
+  - 2.11.12
+  - 2.12.8
+  - 2.13.0-M5
 
 env:
   global:
@@ -20,51 +19,12 @@ env:
     # SONA_PASS
     - secure: "OIVtcj7AHZr8Grpf03ZmZsygcADewiYIvSnRwLYCx+5AqOzs39EZ68DsIOxi7wEXVUbVj5RvLXpKzLX3iN+UszLOQRoFPFQyyn+3Y50f8T2aRxdZtInzXn0sCVTj4Hhd/zbKl1W+2Nh3Sqazab7tFoQVzEyYqhcPeiNRMF7h+aY="
   matrix:
+    # The empty SCALAJS_VERSION will only compile for the JVM
     - SCALAJS_VERSION=
     - SCALAJS_VERSION=0.6.25
     - SCALAJS_VERSION=1.0.0-M6
 
-script:
-  - echo $JAVA_HOME
-  # work around https://github.com/travis-ci/travis-ci/issues/9713
-  - if [[ $JAVA_HOME = *java-6* ]]; then jdk_switcher use openjdk6; fi
-  - java -version
-  - admin/build.sh
-
-addons:
-  apt:
-    packages:
-      - openjdk-6-jdk
-
-jdk:
-  - openjdk6
-  - oraclejdk8
-  - openjdk11
-
-scala:
-  - 2.11.12
-  - 2.12.8
-  - 2.13.0-M5
-
-matrix:
-  exclude:
-    - jdk: openjdk11
-      env: SCALAJS_VERSION=0.6.26
-    - jdk: openjdk11
-      env: SCALAJS_VERSION=1.0.0-M6
-    - scala: 2.11.12
-      env: SCALAJS_VERSION=1.0.0-M6
-    - scala: 2.11.12
-      jdk: oraclejdk8
-    - scala: 2.11.12
-      jdk: openjdk11
-    - scala: 2.12.8
-      jdk: openjdk6
-    - scala: 2.13.0-M5
-      jdk: openjdk6
-  include:
-    - env: SCALANATIVE_VERSION=0.3.8
-      jdk: oraclejdk8
+script: admin/build.sh
 
 notifications:
   email:
