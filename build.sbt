@@ -14,6 +14,8 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
   settings(
     name := "scala-parser-combinators",
     version := "1.1.2-SNAPSHOT",
+    // this line could be removed after https://github.com/scala/sbt-scala-module/issues/48 is fixed
+    licenses := Seq(("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))),
     mimaPreviousVersion := Some("1.1.0").filter(_ => System.getenv("SCALAJS_VERSION") != "1.0.0-M6"),
 
     apiMappings += (scalaInstance.value.libraryJar ->
