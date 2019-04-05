@@ -21,8 +21,7 @@ if [[ "$SCALANATIVE_VERSION" != "" ]]; then
   if [[ "$TRAVIS_JDK_VERSION" == "oraclejdk8" && "$TRAVIS_SCALA_VERSION" =~ 2\.11\..* ]]; then
     RELEASE_COMBO=true;
   fi
-elif [[ "$TRAVIS_JDK_VERSION" == "openjdk6" && "$TRAVIS_SCALA_VERSION" =~ 2\.11\..* \
-      || "$TRAVIS_JDK_VERSION" == "oraclejdk8" && "$TRAVIS_SCALA_VERSION" =~ 2\.1[23]\..* ]]; then
+elif [[ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]]; then
   RELEASE_COMBO=true;
 fi
 
@@ -60,8 +59,4 @@ if [[ "$TRAVIS_TAG" =~ $tagPat ]]; then
   fi
 fi
 
-if [[ "$TRAVIS_JDK_VERSION" == "openjdk6" ]]; then
-  SBTOPTS="-Dsbt.override.build.repos=true -Dsbt.repository.config=./.sbtrepos"
-fi
-
-sbt $SBTOPTS "++$TRAVIS_SCALA_VERSION" "$publishVersion" "$projectPrefix/update"  "$projectPrefix/compile" "$projectPrefix/test" "$projectPrefix/publishLocal" "$publishTask"
+sbt "++$TRAVIS_SCALA_VERSION" "$publishVersion" "$projectPrefix/update"  "$projectPrefix/compile" "$projectPrefix/test" "$projectPrefix/publishLocal" "$publishTask"
