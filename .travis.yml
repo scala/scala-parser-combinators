@@ -15,9 +15,9 @@ env:
     # PGP_PASSPHRASE
     - secure: "SkBtn/6OjEldoikn0MFuyeLT/pau27kwKSDYTVQeJ4BKDzdWLwLE5Q3RukLGttIfNdhOvRoocpQSW9GkZfibTHmwrRnAokucfZCqTsKbwoOp1xIoOh5GrrVrB6gcP7WBTKinqFdBgSvLOrP7GviImz4ZuB9wq1r+mToGG4pDrXc="
     # SONA_USER
-    - secure: "JSv/Er6q1XtTpRH1bpU63YBf7ufwg0vW+Kv/udQBtr8YX/P3gRYC1x6hW4uwftaKMYh7wXDkfNy51SRpH3kUptdJvjPUifVElyPiYlsumetmD+rZJmxX6agx+U5pdjIXPqPoton9MdSVHNTROeTu339bDak0Z+N5ht5wRfjP7F4="
+    - secure: "DRoNJ0TNlccqEQ761m5ta/+cesErkcgiwxw0n+IPZMofh1N2IVvhB6hC2mzjy/6iqNE97176L/jIc9nrHunYlpMMMhhD8+3k2UfCUULxpR2zXj6AW2+d38DPlirUy8HDYhonvMhxKEStlv55zDbOIadKsXnFoG7w9CxGZd2AJhE="
     # SONA_PASS
-    - secure: "OIVtcj7AHZr8Grpf03ZmZsygcADewiYIvSnRwLYCx+5AqOzs39EZ68DsIOxi7wEXVUbVj5RvLXpKzLX3iN+UszLOQRoFPFQyyn+3Y50f8T2aRxdZtInzXn0sCVTj4Hhd/zbKl1W+2Nh3Sqazab7tFoQVzEyYqhcPeiNRMF7h+aY="
+    - secure: "C2Y8a080/qum7YwfZBL6acvduv6j7m0acF4TECYSTJTj62miQ69ygfBS4/JlEXXr+lFPL3mrtexoGSA/DSvo8FoMM6rtypTxtsyLND2dxlwS+U3q3qKxH0BUCUy7WpTzAO4NzZ0B0avR+kRtsWjwpSx7WhXQSh1K8z7WDC49Tbk="
   matrix:
     # The empty SCALAJS_VERSION will only compile for the JVM
     - SCALAJS_VERSION=
