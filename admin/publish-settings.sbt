@@ -6,4 +6,4 @@ pgpPublicRing := file("admin/pubring.asc")
 
 pgpSecretRing := file("admin/secring.asc")
 
-credentials   += Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", env("SONA_USER"), env("SONA_PASS"))
+Global / credentials += Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", env("SONA_USER"), env("SONA_PASS"))
