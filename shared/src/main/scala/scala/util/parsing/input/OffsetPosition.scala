@@ -82,7 +82,7 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
   }
 
   /** Returns a string representation of the `Position`, of the form `line.column`. */
-  override def toString = line+"."+column
+  override def toString = s"$line.$column"
 
   /** Compare this position to another, by first comparing their line numbers,
    * and then -- if necessary -- using the columns to break a tie.
