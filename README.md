@@ -17,7 +17,7 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
 To depend on scala-parser-combinators in SBT, add something like this to your build.sbt:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 ```
 
 To support multiple Scala versions, see the example in [scala/scala-module-dependency-sample](https://github.com/scala/scala-module-dependency-sample).
@@ -56,7 +56,7 @@ For a detailed unpacking of this example see
 Scala-parser-combinators directly supports Scala.js 0.6+:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.1"
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"
 ```
 
 ## Issues
