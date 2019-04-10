@@ -43,5 +43,5 @@ trait Tokens {
   }
 
   /** This token is produced by a scanner `Scanner` when scanning failed. */
-  def errorToken(msg: String): Token = new ErrorToken(msg)
+  def errorToken(msg: String): Token = ErrorToken(msg)
 }
