@@ -365,7 +365,6 @@ trait Parsers {
      */
     def | [U >: T](q: => Parser[U]): Parser[U] = append(q).named("|")
 
-    // TODO
     /** A parser combinator for alternative with longest match composition.
      *
      *  `p ||| q` succeeds if `p` succeeds or `q` succeeds.
@@ -382,11 +381,11 @@ trait Parsers {
         val res2 = q(in)
 
         (res1, res2) match {
-          case (s1 @ Success(_, next1), s2 @ Success(_, next2)) => if (next2.pos < next1.pos) s1 else s2
+          case (s1 @ Success(_, next1), s2 @ Success(_, next2)) => if (next2.pos < next1.pos || next2.pos == next1.pos) s1 else s2
           case (s1 @ Success(_, _), _) => s1
           case (_, s2 @ Success(_, _)) => s2
           case (e1 @ Error(_, _), _) => e1
-          case (f1 @ Failure(_, next1), ns2 @ NoSuccess(_, next2)) => if (next2.pos < next1.pos) f1 else ns2
+          case (f1 @ Failure(_, next1), ns2 @ NoSuccess(_, next2)) => if (next2.pos < next1.pos || next2.pos == next1.pos) f1 else ns2
         }
       }
       override def toString = "|||"
