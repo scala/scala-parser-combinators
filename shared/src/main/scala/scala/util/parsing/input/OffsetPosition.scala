@@ -16,7 +16,7 @@ package util.parsing.input
 import scala.collection.mutable.ArrayBuffer
 
 /** `OffsetPosition` is a standard class for positions
- *   represented as offsets into a source ``document''.
+ *   represented as offsets into a source ``document``.
  *
  *   @param source   The source document
  *   @param offset   The offset indicating the position

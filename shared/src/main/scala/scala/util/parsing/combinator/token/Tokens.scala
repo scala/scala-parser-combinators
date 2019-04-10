@@ -22,7 +22,7 @@ package token
  * @author Adriaan Moors
  */
 trait Tokens {
-  /** Objects of this type are produced by a lexical parser or ``scanner'', and consumed by a parser.
+  /** Objects of this type are produced by a lexical parser or ``scanner``, and consumed by a parser.
    *
    *  @see [[scala.util.parsing.combinator.syntactical.TokenParsers]]
    */
