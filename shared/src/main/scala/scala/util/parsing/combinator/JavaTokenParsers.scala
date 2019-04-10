@@ -29,11 +29,10 @@ trait JavaTokenParsers extends RegexParsers {
    * <a href="http://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.8">The Java Language Spec</a>.
    * Generally, this means a letter, followed by zero or more letters or numbers.
    */
-  def ident: Parser[String] = (
+  def ident: Parser[String] =
       "" ~> // handle whitespace
       rep1(acceptIf(Character.isJavaIdentifierStart)("identifier expected but '" + _ + "' found"),
           elem("identifier part", Character.isJavaIdentifierPart(_: Char))) ^^ (_.mkString)
-  )
 
   /** An integer, without sign or with a negative sign. */
   def wholeNumber: Parser[String] =
