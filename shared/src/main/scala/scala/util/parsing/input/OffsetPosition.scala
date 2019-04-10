@@ -53,7 +53,7 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
     var lo = 0
     var hi = index.length - 1
     while (lo + 1 < hi) {
-      val mid = (hi + lo) / 2
+      val mid = lo + ((hi - lo) / 2)
       if (offset < index(mid)) hi = mid
       else lo = mid
     }
