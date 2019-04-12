@@ -56,9 +56,6 @@ import scala.language.implicitConversions
  */
 
 trait PackratParsers extends Parsers {
-
-  //type Input = PackratReader[Elem]
-
   /**
    * A specialized `Reader` class that wraps an underlying `Reader`
    * and provides memoization of parse results.
