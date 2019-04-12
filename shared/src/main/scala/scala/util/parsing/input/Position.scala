@@ -39,7 +39,7 @@ trait Position {
   /** Returns a string representation of the `Position`, of the form `line.column`. */
   override def toString = ""+line+"."+column
 
-  /** Returns a more ``visual'' representation of this position.
+  /** Returns a more ``visual`` representation of this position.
    *  More precisely, the resulting string consists of two lines:
    *   1. the line in the document referred to by this position
    *   2. a caret indicating the column

@@ -63,8 +63,8 @@ class StdLexical extends Lexical with StdTokens {
     )
 
   protected def comment: Parser[Any] = (
-    rep (chrExcept (EofCh, '*')) ~ '*' ~ '/'     ^^ { case _ => ' ' }
-  | rep (chrExcept (EofCh, '*')) ~ '*' ~ comment ^^ { case _ => ' ' }
+    rep (chrExcept (EofCh, '*')) ~ '*' ~ '/'     ^^ { _ => ' ' }
+  | rep (chrExcept (EofCh, '*')) ~ '*' ~ comment ^^ { _ => ' ' }
   )
 
   /** The set of reserved identifiers: these will be returned as `Keyword`s. */

@@ -22,7 +22,7 @@ package token
  * @author Adriaan Moors
  */
 trait Tokens {
-  /** Objects of this type are produced by a lexical parser or ``scanner'', and consumed by a parser.
+  /** Objects of this type are produced by a lexical parser or ``scanner``, and consumed by a parser.
    *
    *  @see [[scala.util.parsing.combinator.syntactical.TokenParsers]]
    */
@@ -43,5 +43,5 @@ trait Tokens {
   }
 
   /** This token is produced by a scanner `Scanner` when scanning failed. */
-  def errorToken(msg: String): Token = new ErrorToken(msg)
+  def errorToken(msg: String): Token = ErrorToken(msg)
 }

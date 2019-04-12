@@ -16,7 +16,7 @@ package util.parsing.input
 import scala.collection.mutable.ArrayBuffer
 
 /** `OffsetPosition` is a standard class for positions
- *   represented as offsets into a source ``document''.
+ *   represented as offsets into a source ``document``.
  *
  *   @param source   The source document
  *   @param offset   The offset indicating the position
@@ -53,7 +53,7 @@ case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
     var lo = 0
     var hi = index.length - 1
     while (lo + 1 < hi) {
-      val mid = (hi + lo) / 2
+      val mid = lo + ((hi - lo) / 2)
       if (offset < index(mid)) hi = mid
       else lo = mid
     }
