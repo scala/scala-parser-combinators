@@ -37,7 +37,7 @@ trait Position {
   protected def lineContents: String
 
   /** Returns a string representation of the `Position`, of the form `line.column`. */
-  override def toString = ""+line+"."+column
+  override def toString = s"$line.$column"
 
   /** Returns a more ``visual`` representation of this position.
    *  More precisely, the resulting string consists of two lines:

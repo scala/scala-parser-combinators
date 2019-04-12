@@ -154,7 +154,7 @@ trait Parsers {
     def get: T = result
 
     /** The toString method of a Success. */
-    override def toString = "["+next.pos+"] parsed: "+result
+    override def toString = s"[${next.pos}] parsed: $result"
 
     val successful = true
   }
@@ -190,7 +190,7 @@ trait Parsers {
    */
   case class Failure(override val msg: String, override val next: Input) extends NoSuccess(msg, next) {
     /** The toString method of a Failure yields an error message. */
-    override def toString = "["+next.pos+"] failure: "+msg+"\n\n"+next.pos.longString
+    override def toString = s"[${next.pos}] failure: $msg\n\n${next.pos.longString}"
 
     def append[U >: Nothing](a: => ParseResult[U]): ParseResult[U] = { val alt = a; alt match {
       case Success(_, _) => alt
@@ -207,7 +207,7 @@ trait Parsers {
    */
   case class Error(override val msg: String, override val next: Input) extends NoSuccess(msg, next) {
     /** The toString method of an Error yields an error message. */
-    override def toString = "["+next.pos+"] error: "+msg+"\n\n"+next.pos.longString
+    override def toString = s"[${next.pos}] error: $msg\n\n${next.pos.longString}"
     def append[U >: Nothing](a: => ParseResult[U]): ParseResult[U] = this
   }
 
@@ -223,7 +223,7 @@ trait Parsers {
   abstract class Parser[+T] extends (Input => ParseResult[T]) {
     private var name: String = ""
     def named(n: String): this.type = {name=n; this}
-    override def toString() = "Parser ("+ name +")"
+    override def toString = s"Parser ($name)"
 
     /** An unspecified method that defines the behaviour of this parser. */
     def apply(in: Input): ParseResult[T]
@@ -940,7 +940,7 @@ trait Parsers {
    *  }}}
    */
   case class ~[+a, +b](_1: a, _2: b) {
-    override def toString = "("+ _1 +"~"+ _2 +")"
+    override def toString = s"(${_1}~${_2})"
   }
 
   /** A parser whose `~` combinator disallows back-tracking.
