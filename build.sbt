@@ -1,5 +1,5 @@
 import ScalaModulePlugin._
-import sbtcrossproject.crossProject
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 crossScalaVersions in ThisBuild := List("2.12.8", "2.11.12", "2.13.0-RC1")
 
