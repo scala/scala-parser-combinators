@@ -41,8 +41,8 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
   ).
   jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
-    libraryDependencies += "junit" % "junit" % "4.12" % "test",
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
+    libraryDependencies += "junit" % "junit" % "4.12" % Test,
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
   ).
   jsSettings(
     // Scala.js cannot run forked tests
