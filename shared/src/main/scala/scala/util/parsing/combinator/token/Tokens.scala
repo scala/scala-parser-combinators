@@ -34,7 +34,7 @@ trait Tokens {
    *  errors detected during lexical analysis
    */
   case class ErrorToken(msg: String) extends Token {
-    def chars = "*** error: "+msg
+    def chars = s"*** error: $msg"
   }
 
   /** A class for end-of-file tokens */
