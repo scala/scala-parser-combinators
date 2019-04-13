@@ -45,7 +45,7 @@ trait Scanners extends Parsers {
    */
   class Scanner(in: Reader[Char]) extends Reader[Token] {
     /** Convenience constructor (makes a character reader out of the given string) */
-    def this(in: String) = this(new CharArrayReader(in.toCharArray()))
+    def this(in: String) = this(new CharArrayReader(in.toCharArray))
     private val (tok, rest1, rest2) = whitespace(in) match {
       case Success(_, in1) =>
         token(in1) match {
@@ -64,4 +64,3 @@ trait Scanners extends Parsers {
     def atEnd = in.atEnd || (whitespace(in) match { case Success(_, in1) => in1.atEnd case _ => false })
   }
 }
-
