@@ -12,13 +12,11 @@
 
 package scala.util.parsing.input
 
-import java.util.WeakHashMap
-
 private[input] trait PositionCache {
   private lazy val indexCacheTL =
     // not DynamicVariable as that would share the map from parent to child :-(
     new ThreadLocal[java.util.Map[CharSequence, Array[Int]]] {
-      override def initialValue = new WeakHashMap[CharSequence, Array[Int]]
+      override def initialValue = new java.util.WeakHashMap[CharSequence, Array[Int]]
     }
 
   private[input] def indexCache = indexCacheTL.get

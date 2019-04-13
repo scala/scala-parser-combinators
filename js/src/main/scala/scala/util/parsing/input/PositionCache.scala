@@ -12,14 +12,14 @@
 
 package scala.util.parsing.input
 
-import java.util.{AbstractMap, Collections}
+import java.util.Collections
 
 private[input] trait PositionCache {
-  private[input] lazy val indexCache: java.util.Map[CharSequence,Array[Int]] = new AbstractMap[CharSequence, Array[Int]] {
+  private[input] lazy val indexCache: java.util.Map[CharSequence,Array[Int]] =
+    new java.util.AbstractMap[CharSequence, Array[Int]] {
+      override def entrySet() = Collections.emptySet()
 
-    override def entrySet() = Collections.emptySet()
-
-    // the /dev/null of Maps
-    override def put(ch: CharSequence, a: Array[Int]) = null
-  }
+      // the /dev/null of Maps
+      override def put(ch: CharSequence, a: Array[Int]) = null
+    }
 }
