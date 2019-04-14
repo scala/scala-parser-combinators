@@ -7,11 +7,11 @@ lazy val root = project.in(file("."))
   .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`, `scala-parser-combinatorsNative`)
   .settings(disablePublishing)
 
-lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, NativePlatform).
-  withoutSuffixFor(JVMPlatform).in(file(".")).
-  settings(scalaModuleSettings: _*).
-  jvmSettings(scalaModuleSettingsJVM).
-  settings(
+lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+  .withoutSuffixFor(JVMPlatform).in(file("."))
+  .settings(scalaModuleSettings: _*)
+  .jvmSettings(scalaModuleSettingsJVM)
+  .settings(
     name := "scala-parser-combinators",
     version := "1.2.0-SNAPSHOT",
     mimaPreviousVersion := None,
@@ -38,18 +38,18 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
         }
       }
     }
-  ).
-  jvmSettings(
+  )
+  .jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
     libraryDependencies += "junit" % "junit" % "4.12" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
-  ).
-  jsSettings(
+  )
+  .jsSettings(
     // Scala.js cannot run forked tests
     fork in Test := false
-  ).
-  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
-  nativeSettings(
+  )
+  .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
+  .nativeSettings(
     skip in compile := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
     test := {},
     libraryDependencies := {
