@@ -23,7 +23,7 @@ package token
 trait StdTokens extends Tokens {
   /** The class of keyword tokens */
   case class Keyword(chars: String) extends Token {
-    override def toString = "'"+chars+"'"
+    override def toString = s"'$chars'"
   }
 
   /** The class of numeric literal tokens */
@@ -33,11 +33,11 @@ trait StdTokens extends Tokens {
 
   /** The class of string literal tokens */
   case class StringLit(chars: String) extends Token {
-    override def toString = "\""+chars+"\""
+    override def toString = s""""$chars""""
   }
 
   /** The class of identifier tokens */
   case class Identifier(chars: String) extends Token {
-    override def toString = "identifier "+chars
+    override def toString = s"identifier $chars"
   }
 }

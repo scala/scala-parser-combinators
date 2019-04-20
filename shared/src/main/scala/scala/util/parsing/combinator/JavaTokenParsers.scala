@@ -37,6 +37,7 @@ trait JavaTokenParsers extends RegexParsers {
   /** An integer, without sign or with a negative sign. */
   def wholeNumber: Parser[String] =
     """-?\d+""".r
+
   /** Number following one of these rules:
    *
    *  - An integer. For example: `13`
@@ -46,6 +47,7 @@ trait JavaTokenParsers extends RegexParsers {
    */
   def decimalNumber: Parser[String] =
     """(\d+(\.\d*)?|\d*\.\d+)""".r
+
   /** Double quotes (`"`) enclosing a sequence of:
    *
    *  - Any character except double quotes, control characters or backslash (`\`)
@@ -56,6 +58,7 @@ trait JavaTokenParsers extends RegexParsers {
   @migration("`stringLiteral` allows escaping single and double quotes, but not forward slashes any longer.", "2.10.0")
   def stringLiteral: Parser[String] =
     ("\""+"""([^"\x00-\x1F\x7F\\]|\\[\\'"bfnrt]|\\u[a-fA-F0-9]{4})*"""+"\"").r
+
   /** A number following the rules of `decimalNumber`, with the following
    *  optional additions:
    *

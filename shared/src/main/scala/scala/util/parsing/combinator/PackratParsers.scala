@@ -56,9 +56,6 @@ import scala.language.implicitConversions
  */
 
 trait PackratParsers extends Parsers {
-
-  //type Input = PackratReader[Elem]
-
   /**
    * A specialized `Reader` class that wraps an underlying `Reader`
    * and provides memoization of parse results.
@@ -165,7 +162,7 @@ trait PackratParsers extends Parsers {
       case None => /*no heads*/ cached
       case Some(h@Head(hp, involved, evalSet)) => {
         //heads found
-        if(cached == None && !(hp::involved contains p)) {
+        if(cached.isEmpty && !(hp::involved contains p)) {
           //Nothing in the cache, and p is not involved
           return Some(MemoEntry(Right(Failure("dummy ",in))))
         }
@@ -190,7 +187,7 @@ trait PackratParsers extends Parsers {
    * the current parser again
    */
   private def setupLR(p: Parser[_], in: PackratReader[_], recDetect: LR): Unit = {
-    if(recDetect.head == None) recDetect.head = Some(Head(p, Nil, Nil))
+    if(recDetect.head.isEmpty) recDetect.head = Some(Head(p, Nil, Nil))
 
     in.lrStack.takeWhile(_.rule != p).foreach {x =>
       x.head = recDetect.head
