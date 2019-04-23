@@ -33,8 +33,8 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
     unmanagedSourceDirectories in Compile ++= {
       (unmanagedSourceDirectories in Compile).value.map { dir =>
         CrossVersion.partialVersion(scalaVersion.value) match {
-          case Some((2, 13)) => file(dir.getPath ++ "-2.13")
-          case _             => file(dir.getPath ++ "-2.11-2.12")
+          case Some((2, 13)) => file(dir.getPath ++ "-2.13+")
+          case _             => file(dir.getPath ++ "-2.13-")
         }
       }
     }
