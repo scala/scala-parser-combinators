@@ -1,6 +1,6 @@
 language: scala
 jdk:
-  - oraclejdk8
+  - openjdk8
   - openjdk11
 
 scala:
@@ -25,7 +25,7 @@ env:
 matrix:
   include:
     - env: SCALANATIVE_VERSION=0.3.9
-      jdk: oraclejdk8
+      jdk: openjdk8
 
 script: admin/build.sh
 
