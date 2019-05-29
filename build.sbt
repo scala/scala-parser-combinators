@@ -1,7 +1,7 @@
 import ScalaModulePlugin._
 import sbtcrossproject.crossProject
 
-crossScalaVersions in ThisBuild := List("2.12.8", "2.11.12", "2.13.0-RC2")
+crossScalaVersions in ThisBuild := List("2.12.8", "2.11.12", "2.13.0-RC3")
 
 lazy val root = project.in(file("."))
   .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`, `scala-parser-combinatorsNative`)
