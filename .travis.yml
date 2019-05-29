@@ -25,7 +25,7 @@ env:
 
 matrix:
   include:
-    - env: SCALANATIVE_VERSION=0.3.8
+    - env: SCALANATIVE_VERSION=0.3.9
       jdk: oraclejdk8
 
 script: admin/build.sh
