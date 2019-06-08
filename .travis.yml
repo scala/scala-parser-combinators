@@ -20,7 +20,7 @@ env:
     # The empty SCALAJS_VERSION will only compile for the JVM
     - SCALAJS_VERSION=
     - SCALAJS_VERSION=0.6.28
-    - SCALAJS_VERSION=1.0.0-M7
+    - SCALAJS_VERSION=1.0.0-M8
 
 matrix:
   include:
