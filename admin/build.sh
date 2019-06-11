@@ -22,7 +22,7 @@ if [[ "$SCALANATIVE_VERSION" != "" ]]; then
     RELEASE_COMBO=true;
   fi
 elif [[ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ]]; then
-  RELEASE_COMBO=true;
+  RELEASE_COMBO=false;
 fi
 
 if ! [ "$SCALAJS_VERSION" == "" ]; then
@@ -34,7 +34,7 @@ else
 fi
 
 verPat="[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9-]+)?"
-tagPat="^v$verPat(#$verPat#[0-9]+)?$"
+tagPat="^v$verPat(#native#[0-9]+)?$"
 
 if [[ "$TRAVIS_TAG" =~ $tagPat ]]; then
   tagVer=${TRAVIS_TAG}
