@@ -34,7 +34,7 @@ else
 fi
 
 verPat="[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9-]+)?"
-tagPat="^v$verPat(#$verPat#[0-9]+)?$"
+tagPat="^v$verPat(#.*)?$"
 
 if [[ "$TRAVIS_TAG" =~ $tagPat ]]; then
   tagVer=${TRAVIS_TAG}
