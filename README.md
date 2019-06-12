@@ -28,6 +28,14 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % 
 
 To support multiple Scala versions, see the example in [scala/scala-module-dependency-sample](https://github.com/scala/scala-module-dependency-sample).
 
+### Scala.js and Scala Native
+
+Scala-parser-combinators is also available for Scala.js 0.6+ and Scala Native:
+
+```
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"
+```
+
 ## Example
 
 ```scala
@@ -56,14 +64,6 @@ object TestSimpleParser extends SimpleParser {
 
 For a detailed unpacking of this example see
 [Getting Started](docs/Getting_Started.md).
-
-## ScalaJS support
-
-Scala-parser-combinators directly supports Scala.js 0.6+:
-
-```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"
-```
 
 ## Issues
 
