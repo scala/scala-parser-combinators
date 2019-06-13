@@ -19,14 +19,22 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
  * A more complicated example, [Building a lexer and parser with Scala's Parser Combinators](https://enear.github.io/2016/03/31/parser-combinators/)
  * "Combinator Parsing", chapter 33 of [_Programming in Scala, Third Edition_](http://www.artima.com/shop/programming_in_scala), shows how to use this library to parse arithmetic expressions and JSON. The second half of the chapter examines how the library is implemented.
 
-## Adding an SBT dependency
-To depend on scala-parser-combinators in SBT, add something like this to your build.sbt:
+## Adding an sbt dependency
+To depend on scala-parser-combinators in sbt, add something like this to your build.sbt:
 
 ```
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 ```
 
 To support multiple Scala versions, see the example in [scala/scala-module-dependency-sample](https://github.com/scala/scala-module-dependency-sample).
+
+### Scala.js and Scala Native
+
+Scala-parser-combinators is also available for Scala.js 0.6+ and Scala Native:
+
+```
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"
+```
 
 ## Example
 
@@ -56,14 +64,6 @@ object TestSimpleParser extends SimpleParser {
 
 For a detailed unpacking of this example see
 [Getting Started](docs/Getting_Started.md).
-
-## ScalaJS support
-
-Scala-parser-combinators directly supports Scala.js 0.6+:
-
-```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"
-```
 
 ## Issues
 
