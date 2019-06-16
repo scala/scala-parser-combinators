@@ -13,9 +13,9 @@ set -e
 # [ "$RELEASE_COMBO" = "true" ].
 
 # In order to build a previously released version against a new (binary incompatible) Scala release,
-# a new commit that modifies (and prunes) the Scala versions in .travis.yml needs to be added on top
-# of the existing tag. Then a new tag can be created for that commit, e.g., `v1.2.3#2.13.0-M5`.
-# Everything after the `#` in the tag name is ignored.
+# add a new commit that modifies (and prunes) the Scala versions in .travis.yml on top of the existing tag.
+# Then add a new tag for that commit, e.g., `v1.1.2#2.13.0-M5`. or `v1.1.2#native`. Everything after the `#`
+# in the tag name is ignored. Push the tag (the commit doesn't need to be on any branch).
 
 if [[ "$SCALANATIVE_VERSION" != "" ]]; then
   if [[ "$TRAVIS_JDK_VERSION" == "oraclejdk8" && "$TRAVIS_SCALA_VERSION" =~ 2\.11\..* ]]; then
