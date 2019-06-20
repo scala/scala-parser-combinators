@@ -8,7 +8,7 @@
 
 ### Scala Standard Parser Combinator Library
 
-This library is now community-maintained. If you are interested in helping please contact [@gourlaysama](https://github.com/gourlaysama) or [@Philippus](https://github.com/philippus) or mention it on [Gitter](https://gitter.im/scala/scala-parser-combinators).
+This library is now community-maintained. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
 
 As of Scala 2.11, this library is a separate jar that can be omitted from Scala projects that do not use Parser Combinators.
 
