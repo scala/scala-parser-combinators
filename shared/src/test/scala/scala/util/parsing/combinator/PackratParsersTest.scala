@@ -126,11 +126,11 @@ class PackratParsersTest {
       assertEquals(expected, result)
     }
 
-    assertSuccess(List('a, 'b), List('a), List('b, 'c), "a b c")
-    assertSuccess(List('a, 'a, 'b, 'b), List('a, 'a), List('b, 'b, 'c, 'c), "a a b b c c")
-    assertSuccess(List('a, 'a, 'a, 'b, 'b, 'b), List('a, 'a, 'a), List('b, 'b, 'b, 'c, 'c, 'c),
+    assertSuccess(List(Symbol("a"), Symbol("b")), List(Symbol("a")), List(Symbol("b"), Symbol("c")), "a b c")
+    assertSuccess(List(Symbol("a"), Symbol("a"), Symbol("b"), Symbol("b")), List(Symbol("a"), Symbol("a")), List(Symbol("b"), Symbol("b"), Symbol("c"), Symbol("c")), "a a b b c c")
+    assertSuccess(List(Symbol("a"), Symbol("a"), Symbol("a"), Symbol("b"), Symbol("b"), Symbol("b")), List(Symbol("a"), Symbol("a"), Symbol("a")), List(Symbol("b"), Symbol("b"), Symbol("b"), Symbol("c"), Symbol("c"), Symbol("c")),
       "a a a b b b c c c")
-    assertSuccess(List('a, 'a, 'a, 'a, 'b, 'b, 'b, 'b), List('a, 'a, 'a, 'a), List('b, 'b, 'b, 'b, 'c, 'c, 'c, 'c),
+    assertSuccess(List(Symbol("a"), Symbol("a"), Symbol("a"), Symbol("a"), Symbol("b"), Symbol("b"), Symbol("b"), Symbol("b")), List(Symbol("a"), Symbol("a"), Symbol("a"), Symbol("a")), List(Symbol("b"), Symbol("b"), Symbol("b"), Symbol("b"), Symbol("c"), Symbol("c"), Symbol("c"), Symbol("c")),
       "a a a a b b b b c c c c")
 
     def assertFailure(expectedFailureMsg: String, input: String): Unit = {
