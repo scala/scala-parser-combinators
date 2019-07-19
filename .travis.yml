@@ -43,7 +43,6 @@ notifications:
   email:
     - adriaan.moors@lightbend.com
     - seth.tisue@lightbend.com
-    - antoine@gourlay.fr
 
 before_cache:
   - find $HOME/.sbt -name "*.lock" | xargs rm
