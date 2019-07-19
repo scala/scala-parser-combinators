@@ -16,7 +16,7 @@ As of Scala 2.11, this library is a separate jar that can be omitted from Scala 
  * [Current API](https://javadoc.io/page/org.scala-lang.modules/scala-parser-combinators_2.12/latest/scala/util/parsing/combinator/index.html)
  * The [Getting Started](docs/Getting_Started.md) guide
  * A more complicated example, [Building a lexer and parser with Scala's Parser Combinators](https://enear.github.io/2016/03/31/parser-combinators/)
- * "Combinator Parsing", chapter 33 of [_Programming in Scala, Third Edition_](http://www.artima.com/shop/programming_in_scala), shows how to use this library to parse arithmetic expressions and JSON. The second half of the chapter examines how the library is implemented.
+ * "Combinator Parsing", chapter 33 of [_Programming in Scala, Third Edition_](http://www.artima.com/shop/programming_in_scala), shows how to apply this library to e.g. parsing of arithmetic expressions. The second half of the chapter examines how the library is implemented.
 
 ## Adding an sbt dependency
 To depend on scala-parser-combinators in sbt, add something like this to your build.sbt:
