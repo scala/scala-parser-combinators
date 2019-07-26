@@ -22,7 +22,8 @@ env:
 
 matrix:
   include:
-    - env: SCALANATIVE_VERSION=0.3.9 ADOPTOPENJDK=8
+    - env: SCALANATIVE_VERSION=0.3.9    ADOPTOPENJDK=8
+    - env: SCALANATIVE_VERSION=0.4.0-M2 ADOPTOPENJDK=8
 
 before_install:
   # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
