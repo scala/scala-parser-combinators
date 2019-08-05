@@ -42,7 +42,15 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
           case _             => file(dir.getPath ++ "-2.11-2.12")
         }
       }
-    }
+    },
+    mimaBinaryIssueFilters ++= {
+      import com.typesafe.tools.mima.core._, ProblemFilters._
+      Seq(
+        // these are safe to exclude because they're `private[combinator]`
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.Parsers.Success"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.Parsers.selectLastFailure"),
+      )
+    },
   )
   .jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
