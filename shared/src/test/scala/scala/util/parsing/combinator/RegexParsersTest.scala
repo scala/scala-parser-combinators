@@ -117,4 +117,71 @@ class RegexParsersTest {
     assertTrue(s"expected an Error but got: ${error.getClass.getName}", error.isInstanceOf[Error])
     assertEquals("error!", error.asInstanceOf[Error].msg)
   }
+
+  @Test
+  def hierarchicalRepSuccess: Unit = {
+    case class Node(a: String, b: String)
+
+    object parser extends RegexParsers {
+      def top: Parser[List[List[Node]]] = rep(nodes)
+      def nodes: Parser[List[Node]] = "{" ~> rep(node) <~ "}"
+      def node: Parser[Node] = "[a-z]+".r ~ ":" ~ "[a-z]+".r ^^ { case a ~ _ ~ b => Node(a, b) }
+    }
+
+    import parser._
+
+    val success0 = parseAll(top, "{ a : b c : d}").get
+    assertEquals(List(List(Node("a", "b"), Node("c", "d"))), success0)
+    val success1 = parseAll(top, "{ a : b } { c : d }").get
+    assertEquals(List(List(Node("a", "b")), List(Node("c", "d"))), success1)
+    val success2 = parseAll(top, "{} {}").get
+    assertEquals(List(List(), List()), success2)
+    val success3 = parseAll(top, "").get
+    assertEquals(List(), success3)
+  }
+
+  @Test
+  def hierarchicalRepFailure: Unit = {
+    case class Node(a: String, b: String)
+
+    object parser extends RegexParsers {
+      def top: Parser[List[List[Node]]] = rep(nodes)
+      def nodes: Parser[List[Node]] = "{" ~> rep(node) <~ "}"
+      def node: Parser[Node] = "[a-z]+".r ~ ":" ~ "[a-z]+".r ^^ { case a ~ _ ~ b => Node(a, b) }
+    }
+
+    def test(src: String, expect: String, column: Int): Unit = {
+      import parser._
+      val result = parseAll(top, src)
+      result match {
+        case Failure(msg, next) =>
+          assertEquals(column, next.pos.column)
+          assertEquals(expect, msg)
+        case _ =>
+          sys.error(result.toString)
+      }
+    }
+
+    test("{ a : b c : }", "string matching regex '[a-z]+' expected but '}' found", 13)
+    test("{", "'}' expected but end of source found", 2)
+  }
+
+  @Test
+  def ifElseTest: Unit = {
+    object parser extends RegexParsers {
+      def top: Parser[List[Unit]] = ifelse*
+      def ifelse: Parser[Unit] = "IF" ~ condition ~ "THEN" ~ "1"~ "END" ^^ { _ => }
+      def condition: Parser[String] = "TRUE" | "FALSE"
+    }
+
+    import parser._
+    val res = parseAll(top, "IF FALSE THEN 1 IF TRUE THEN 1 END")
+    res match {
+      case Failure(msg, next) =>
+        assertEquals(17, next.pos.column)
+        assertEquals("'END' expected but 'I' found", msg)
+      case _ =>
+        sys.error(res.toString)
+    }
+  }
 }

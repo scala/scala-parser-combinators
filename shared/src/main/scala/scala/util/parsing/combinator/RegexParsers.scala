@@ -94,7 +94,7 @@ trait RegexParsers extends Parsers {
         j += 1
       }
       if (i == s.length)
-        Success(source.subSequence(start, j).toString, in.drop(j - offset))
+        Success(source.subSequence(start, j).toString, in.drop(j - offset), None)
       else  {
         val found = if (start == source.length()) "end of source" else "'"+source.charAt(start)+"'"
         Failure("'"+s+"' expected but "+found+" found", in.drop(start - offset))
@@ -111,7 +111,8 @@ trait RegexParsers extends Parsers {
       (r findPrefixMatchOf (new SubSequence(source, start))) match {
         case Some(matched) =>
           Success(source.subSequence(start, start + matched.end).toString,
-                  in.drop(start + matched.end - offset))
+                  in.drop(start + matched.end - offset),
+                  None)
         case None =>
           val found = if (start == source.length()) "end of source" else "'"+source.charAt(start)+"'"
           Failure("string matching regex '"+r+"' expected but "+found+" found", in.drop(start - offset))
