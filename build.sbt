@@ -3,6 +3,8 @@ import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 crossScalaVersions in ThisBuild := List("2.12.9", "2.11.12", "2.13.0")
 
+useCoursier in ThisBuild := !scalaVersion.value.startsWith("2.11.") // https://github.com/sbt/sbt/issues/4995
+
 lazy val root = project.in(file("."))
   .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`, `scala-parser-combinatorsNative`)
   .settings(disablePublishing)
