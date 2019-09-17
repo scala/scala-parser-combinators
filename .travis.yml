@@ -6,28 +6,21 @@ scala:
   - 2.13.0
 
 env:
-  global:
-    # PGP_PASSPHRASE
-    - secure: "SkBtn/6OjEldoikn0MFuyeLT/pau27kwKSDYTVQeJ4BKDzdWLwLE5Q3RukLGttIfNdhOvRoocpQSW9GkZfibTHmwrRnAokucfZCqTsKbwoOp1xIoOh5GrrVrB6gcP7WBTKinqFdBgSvLOrP7GviImz4ZuB9wq1r+mToGG4pDrXc="
-    # SONA_USER
-    - secure: "JSv/Er6q1XtTpRH1bpU63YBf7ufwg0vW+Kv/udQBtr8YX/P3gRYC1x6hW4uwftaKMYh7wXDkfNy51SRpH3kUptdJvjPUifVElyPiYlsumetmD+rZJmxX6agx+U5pdjIXPqPoton9MdSVHNTROeTu339bDak0Z+N5ht5wRfjP7F4="
-    # SONA_PASS
-    - secure: "OIVtcj7AHZr8Grpf03ZmZsygcADewiYIvSnRwLYCx+5AqOzs39EZ68DsIOxi7wEXVUbVj5RvLXpKzLX3iN+UszLOQRoFPFQyyn+3Y50f8T2aRxdZtInzXn0sCVTj4Hhd/zbKl1W+2Nh3Sqazab7tFoQVzEyYqhcPeiNRMF7h+aY="
-  matrix:
-    # The empty SCALAJS_VERSION will only compile for the JVM
-    - SCALAJS_VERSION=         ADOPTOPENJDK=8
-    - SCALAJS_VERSION=0.6.28   ADOPTOPENJDK=8
-    - SCALAJS_VERSION=1.0.0-M8 ADOPTOPENJDK=8
-    - SCALAJS_VERSION=         ADOPTOPENJDK=11
+  - ADOPTOPENJDK=8     SCALAJS_VERSION=
+  - ADOPTOPENJDK=8     SCALAJS_VERSION=0.6.28
+  - ADOPTOPENJDK=8     SCALAJS_VERSION=1.0.0-M8
+  - ADOPTOPENJDK=11    SCALAJS_VERSION=
 
 matrix:
   include:
-    - env: SCALANATIVE_VERSION=0.3.9    ADOPTOPENJDK=8
-    - env: SCALANATIVE_VERSION=0.4.0-M2 ADOPTOPENJDK=8
+    - scala: 2.11.12
+      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.3.9
+    - scala: 2.11.12
+      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0-M2
 
 before_install:
   # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
-  - "[[ -d $HOME/.sdkman/bin/ ]] || rm -rf $HOME/.sdkman/"
+  - "[[ -d $HOME/.sdkman/bin ]] || rm -rf $HOME/.sdkman/"
   - curl -sL https://get.sdkman.io | bash
   - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -36,9 +29,9 @@ install:
   - sdk install java $(sdk list java | grep -o "$ADOPTOPENJDK\.[0-9\.]*hs-adpt" | head -1)
   - unset JAVA_HOME
   - java -Xmx32m -version
-  - javac -J-Xmx32m -version
+  - git fetch --tags # get all tags for sbt-dynver
 
-script: admin/build.sh
+script: ./build.sh
 
 notifications:
   email:
@@ -46,11 +39,11 @@ notifications:
     - seth.tisue@lightbend.com
 
 before_cache:
-  - find $HOME/.sbt -name "*.lock" | xargs rm
-  - find $HOME/.ivy2/cache -name "ivydata-*.properties" | xargs rm
+  - rm -fv $HOME/.ivy2/.sbt.ivy.lock
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -print -delete
+  - find $HOME/.sbt        -name "*.lock"               -print -delete
 cache:
   directories:
     - $HOME/.ivy2/cache
-    - $HOME/.sbt/boot
-    - $HOME/.sbt/launchers
+    - $HOME/.sbt
     - $HOME/.sdkman

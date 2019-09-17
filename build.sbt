@@ -1,22 +1,14 @@
-import ScalaModulePlugin._
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
-
-crossScalaVersions in ThisBuild := List("2.12.9", "2.11.12", "2.13.0")
 
 useCoursier in ThisBuild := !scalaVersion.value.startsWith("2.11.") // https://github.com/sbt/sbt/issues/4995
 
-lazy val root = project.in(file("."))
-  .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`, `scala-parser-combinatorsNative`)
-  .settings(disablePublishing)
-
-lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, NativePlatform)
+lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .withoutSuffixFor(JVMPlatform).in(file("."))
-  .settings(scalaModuleSettings: _*)
-  .jvmSettings(scalaModuleSettingsJVM)
+  .settings(ScalaModulePlugin.scalaModuleSettings)
+  .jvmSettings(ScalaModulePlugin.scalaModuleSettingsJVM)
   .settings(
     name := "scala-parser-combinators",
-    version := "1.2.0-SNAPSHOT",
-    mimaPreviousVersion := None,
+    scalaModuleMimaPreviousVersion := None,
 
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
@@ -60,7 +52,3 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
       else libraryDependencies.value
     }
   )
-
-lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
-lazy val `scala-parser-combinatorsJS` = `scala-parser-combinators`.js
-lazy val `scala-parser-combinatorsNative` = `scala-parser-combinators`.native
