@@ -793,6 +793,57 @@ trait Parsers {
       applyp(in)
     }
 
+  /** A parser generator for a specified range of repetitions interleaved by a
+   * separator.
+   *
+   *  `repN(n, m, p, s)` uses `p` at least `m` times and up to `n` times, interleaved
+   *  with separator `s`, to parse the input
+   *  (the result is a `List` of at least `m` consecutive results of `p` and up to `n` results).
+   *
+   * @param m   minimum number of repetitions
+   * @param n   maximum number of repetitions
+   * @param p   a `Parser` that is to be applied successively to the input
+   * @param sep a `Parser` that interleaves with p
+   * @return    A parser that returns a list of results produced by repeatedly applying `p` interleaved
+   *            with `sep` to the input. The list has a size between `m` and up to `n`
+   *            (and that only succeeds if `p` matches exactly at least `n` times).
+   */
+  def repMN[T](m: Int, n: Int, p: Parser[T], sep: Parser[Any]): Parser[List[T]] = Parser { in =>
+    require(0 <= m && m <= n)
+    val mandatory = if (m == 0) success(Nil) else (p ~ repN(m - 1, sep ~> p)).map { case head ~ tail => head :: tail }
+    val elems = new ListBuffer[T]
+
+    def continue(in: Input): ParseResult[List[T]] = {
+      val p0 = sep ~> p // avoid repeatedly re-evaluating by-name parser
+      @tailrec def applyp(in0: Input): ParseResult[List[T]] = p0(in0) match {
+        case Success(x, rest) => elems += x; if (elems.length == n) Success(elems.toList, rest) else applyp(rest)
+        case e @ Error(_, _) => e // still have to propagate error
+        case _ => Success(elems.toList, in0)
+      }
+
+      applyp(in)
+    }
+
+    mandatory(in) match {
+      case Success(x, rest) => elems ++= x; continue(rest)
+      case ns: NoSuccess => ns
+    }
+  }
+
+  /** A parser generator for a specified range of repetitions.
+   *
+   *  `repN(n, m, p)` uses `p` at least `m` times and up to `n` times to parse the input
+   *  (the result is a `List` of at least `m` consecutive results of `p` and up to `n` results).
+   *
+   * @param m   minimum number of repetitions
+   * @param n   maximum number of repetitions
+   * @param p   a `Parser` that is to be applied successively to the input
+   * @return    A parser that returns a list of results produced by repeatedly applying `p` to the input.
+   *            The list has a size between `m` and up to `n`
+   *            (and that only succeeds if `p` matches exactly at least `n` times).
+   */
+  def repMN[T](m: Int, n: Int, p: Parser[T]): Parser[List[T]] = repMN[T](m, n, p, success(()))
+
   /** A parser generator for non-empty repetitions.
    *
    *  `rep1sep(p, q)` repeatedly applies `p` interleaved with `q` to parse the
