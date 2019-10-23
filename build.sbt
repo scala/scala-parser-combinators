@@ -12,7 +12,9 @@ scalaVersionsByJvm in ThisBuild := {
     9 -> List(v212 -> false, v213 -> false, v211 -> false),
     10 -> List(v212 -> false, v213 -> false, v211 -> false),
     11 -> List(v212 -> false, v213 -> false, v211 -> false),
-    12 -> List(v212 -> false, v213 -> false, v211 -> false)
+    12 -> List(v212 -> false, v213 -> false, v211 -> false),
+    13 -> List(v212 -> false, v213 -> false, v211 -> false),
+    14 -> List(v212 -> false, v213 -> false, v211 -> false)
   )
 }
 
