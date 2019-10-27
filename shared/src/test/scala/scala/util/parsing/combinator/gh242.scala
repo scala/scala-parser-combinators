@@ -7,12 +7,12 @@ import scala.util.parsing.input.CharSequenceReader
 class gh242 {
   class TestWithSeparator extends Parsers {
     type Elem = Char
-    val csv: Parser[List[Char]] = repMN(5, 10, 'a', ',')
+    val csv: Parser[List[Char]] = repNM(5, 10, 'a', ',')
   }
 
   class TestWithoutSeparator extends Parsers {
     type Elem = Char
-    val csv: Parser[List[Char]] = repMN(5, 10, 'a')
+    val csv: Parser[List[Char]] = repNM(5, 10, 'a')
   }
 
   @Test
