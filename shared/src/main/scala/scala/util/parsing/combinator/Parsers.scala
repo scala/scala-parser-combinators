@@ -792,6 +792,42 @@ trait Parsers {
       applyp(in)
     }
 
+  /** A parser generator for a specified range of repetitions interleaved by a
+   * separator.
+   *
+   *  `repNM(n, m, p, s)` uses `p` at least `n` times and up to `m` times, interleaved
+   *  with separator `s`, to parse the input
+   *  (the result is a `List` of at least `n` consecutive results of `p` and up to `m` results).
+   *
+   * @param n   minimum number of repetitions
+   * @param m   maximum number of repetitions
+   * @param p   a `Parser` that is to be applied successively to the input
+   * @param sep a `Parser` that interleaves with p
+   * @return    A parser that returns a list of results produced by repeatedly applying `p` interleaved
+   *            with `sep` to the input. The list has a size between `n` and up to `m`
+   *            (and that only succeeds if `p` matches at least `n` times).
+   */
+  def repNM[T](n: Int, m: Int, p: Parser[T], sep: Parser[Any] = success(())): Parser[List[T]] = Parser { in =>
+    val mandatory = if (n == 0) success(Nil) else (p ~ repN(n - 1, sep ~> p)).map { case head ~ tail => head :: tail }
+    val elems = new ListBuffer[T]
+
+    def continue(in: Input): ParseResult[List[T]] = {
+      val p0 = sep ~> p // avoid repeatedly re-evaluating by-name parser
+      @tailrec def applyp(in0: Input): ParseResult[List[T]] = p0(in0) match {
+        case Success(x, rest) => elems += x; if (elems.length == m) Success(elems.toList, rest) else applyp(rest)
+        case e @ Error(_, _) => e // still have to propagate error
+        case _ => Success(elems.toList, in0)
+      }
+
+      applyp(in)
+    }
+
+    mandatory(in) match {
+      case Success(x, rest) => elems ++= x; continue(rest)
+      case ns: NoSuccess => ns
+    }
+  }
+
   /** A parser generator for non-empty repetitions.
    *
    *  `rep1sep(p, q)` repeatedly applies `p` interleaved with `q` to parse the
