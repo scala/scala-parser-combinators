@@ -35,7 +35,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   )
   .jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
-    libraryDependencies += "junit" % "junit" % "4.12" % Test,
+    libraryDependencies += "junit" % "junit" % "4.13" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
   )
   .jsSettings(
