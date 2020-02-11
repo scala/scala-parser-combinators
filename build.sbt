@@ -1,7 +1,5 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-useCoursier in ThisBuild := !scalaVersion.value.startsWith("2.11.") // https://github.com/sbt/sbt/issues/4995
-
 lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .withoutSuffixFor(JVMPlatform).in(file("."))
   .settings(ScalaModulePlugin.scalaModuleSettings)
