@@ -1,23 +1,28 @@
-import ScalaModulePlugin._
-import sbtcrossproject.crossProject
+import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-crossScalaVersions in ThisBuild := List("2.12.8", "2.11.12", "2.13.0")
-
-lazy val root = project.in(file("."))
-  .aggregate(`scala-parser-combinatorsJS`, `scala-parser-combinatorsJVM`, `scala-parser-combinatorsNative`)
-  .settings(disablePublishing)
-
-lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, NativePlatform).
-  withoutSuffixFor(JVMPlatform).in(file(".")).
-  settings(scalaModuleSettings: _*).
-  jvmSettings(scalaModuleSettingsJVM).
-  settings(
+lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+  .withoutSuffixFor(JVMPlatform).in(file("."))
+  .settings(ScalaModulePlugin.scalaModuleSettings)
+  .jvmSettings(ScalaModulePlugin.scalaModuleSettingsJVM)
+  .settings(
     name := "scala-parser-combinators",
-    version := "1.1.2-SNAPSHOT",
-    mimaPreviousVersion := Some("1.1.0").filter(_ => System.getenv("SCALAJS_VERSION") != "1.0.0"),
+
+    scalaModuleMimaPreviousVersion := Some("1.1.0").filter(_ => System.getenv("SCALAJS_VERSION") != "1.0.0"),
+    mimaBinaryIssueFilters ++= {
+      import com.typesafe.tools.mima.core._
+      import com.typesafe.tools.mima.core.ProblemFilters._
+      Seq(
+        exclude[IncompatibleSignatureProblem]("*"),
+
+        // the following 3 are due to https://github.com/lightbend/mima/issues/388
+        exclude[DirectMissingMethodProblem]("scala.util.parsing.json.JSON.numberParser"),
+        exclude[DirectMissingMethodProblem]("scala.util.parsing.json.JSON.defaultNumberParser"),
+        exclude[DirectMissingMethodProblem]("scala.util.parsing.json.JSON.keywordCache")
+      )
+    },
 
     apiMappings += (scalaInstance.value.libraryJar ->
-        url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
+      url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
 
     scalacOptions in (Compile, doc) ++= Seq(
       "-diagrams",
@@ -38,18 +43,18 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
         }
       }
     }
-  ).
-  jvmSettings(
+  )
+  .jvmSettings(
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
-    libraryDependencies += "junit" % "junit" % "4.12" % "test",
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
-  ).
-  jsSettings(
+    libraryDependencies += "junit" % "junit" % "4.13" % Test,
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
+  )
+  .jsSettings(
     // Scala.js cannot run forked tests
     fork in Test := false
-  ).
-  jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin)).
-  nativeSettings(
+  )
+  .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
+  .nativeSettings(
     skip in compile := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
     test := {},
     libraryDependencies := {
@@ -58,7 +63,3 @@ lazy val `scala-parser-combinators` = crossProject(JSPlatform, JVMPlatform, Nati
       else libraryDependencies.value
     }
   )
-
-lazy val `scala-parser-combinatorsJVM` = `scala-parser-combinators`.jvm
-lazy val `scala-parser-combinatorsJS` = `scala-parser-combinators`.js
-lazy val `scala-parser-combinatorsNative` = `scala-parser-combinators`.native
