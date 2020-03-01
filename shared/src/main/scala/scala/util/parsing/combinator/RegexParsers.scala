@@ -138,6 +138,22 @@ trait RegexParsers extends Parsers {
     }
   }
 
+  // we might want to make it public/protected in a future version
+  private def ws[T](p: Parser[T]): Parser[T] = new Parser[T] {
+    def apply(in: Input) = {
+      val offset = in.offset
+      val start = handleWhiteSpace(in.source, offset)
+      p(in.drop (start - offset))
+    }
+  }
+
+  /**
+    * @inheritdoc
+    *
+    * This parser additionally skips whitespace if `skipWhitespace` returns true.
+    */
+  override def err(msg: String) = ws(super.err(msg))
+
   /**
    * A parser generator delimiting whole phrases (i.e. programs).
    *
