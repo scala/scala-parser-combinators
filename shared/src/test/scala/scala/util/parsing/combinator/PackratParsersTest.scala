@@ -140,14 +140,14 @@ private object grammars1 extends StandardTokenParsers with PackratParsers {
    */
 
 
- val term: PackratParser[Int] = (term~("+"~>fact) ^^ {case x~y => x+y}
-           |term~("-"~>fact) ^^ {case x~y => x-y}
-           |fact)
+   val term: PackratParser[Int] = (term~("+"~>fact) ^^ {case x~y => x+y}
+             |term~("-"~>fact) ^^ {case x~y => x-y}
+             |fact)
 
- val fact: PackratParser[Int] = (fact~("*"~>numericLit) ^^ {case x~y => x*y.toInt}
-           |fact~("/"~>numericLit) ^^ {case x~y => x/y.toInt}
-           |"("~>term<~")"
-           |numericLit ^^ {_.toInt})
+   val fact: PackratParser[Int] = (fact~("*"~>numericLit) ^^ {case x~y => x*y.toInt}
+             |fact~("/"~>numericLit) ^^ {case x~y => x/y.toInt}
+             |"("~>term<~")"
+             |numericLit ^^ {_.toInt})
 }
 
 private object grammars2 extends StandardTokenParsers with PackratParsers {

@@ -12,7 +12,7 @@ class T1100 {
     def p1: Parser[Char] = accept('a') | err("errors are propagated")
   }
 
-val expected = """[1.4] error: errors are propagated
+  val expected = """[1.4] error: errors are propagated
 
 aaab
    ^"""
