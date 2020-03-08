@@ -20,7 +20,9 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
       "-doc-title",
       "Scala Parser Combinators",
       "-doc-version",
-      version.value
+      version.value,
+      if (isDotty.value) "-language:Scala2"
+      else ""
     ),
     unmanagedSourceDirectories in Compile ++= {
       (unmanagedSourceDirectories in Compile).value.map { dir =>
