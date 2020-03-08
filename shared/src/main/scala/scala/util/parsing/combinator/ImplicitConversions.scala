@@ -33,14 +33,14 @@ import scala.language.implicitConversions
  * @author Adriaan Moors
  */
 trait ImplicitConversions { self: Parsers =>
-  implicit def flatten2[A, B, C]         (f: (A, B) => C) =
+  implicit def flatten2[A, B, C]         (f: (A, B) => C): A ~ B => C =
     (p: ~[A, B]) => p match {case a ~ b => f(a, b)}
-  implicit def flatten3[A, B, C, D]      (f: (A, B, C) => D) =
+  implicit def flatten3[A, B, C, D]      (f: (A, B, C) => D): A ~ B ~ C => D =
     (p: ~[~[A, B], C]) => p match {case a ~ b ~ c => f(a, b, c)}
-  implicit def flatten4[A, B, C, D, E]   (f: (A, B, C, D) => E) =
+  implicit def flatten4[A, B, C, D, E]   (f: (A, B, C, D) => E): A ~ B ~ C ~ D => E =
     (p: ~[~[~[A, B], C], D]) => p match {case a ~ b ~ c ~ d => f(a, b, c, d)}
-  implicit def flatten5[A, B, C, D, E, F](f: (A, B, C, D, E) => F) =
+  implicit def flatten5[A, B, C, D, E, F](f: (A, B, C, D, E) => F): A ~ B ~ C ~ D ~ E => F =
     (p: ~[~[~[~[A, B], C], D], E]) => p match {case a ~ b ~ c ~ d ~ e=> f(a, b, c, d, e)}
-  implicit def headOptionTailToFunList[A, T] (f: List[A] => T)=
+  implicit def headOptionTailToFunList[A, T] (f: List[A] => T): A ~ Option[List[A]] => T =
     (p: ~[A, Option[List[A]]]) => f(p._1 :: (p._2 match { case Some(xs) => xs case None => Nil}))
 }
