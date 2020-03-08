@@ -12,6 +12,7 @@
 
 import java.io.{File,StringReader}
 
+import scala.language.implicitConversions
 import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.{CharArrayReader, StreamReader}
 

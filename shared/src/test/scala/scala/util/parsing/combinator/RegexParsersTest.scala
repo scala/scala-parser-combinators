@@ -12,6 +12,8 @@
 
 package scala.util.parsing.combinator
 
+import scala.language.implicitConversions
+
 import org.junit.Test
 import org.junit.Assert.{ assertEquals, assertTrue }
 

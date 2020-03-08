@@ -14,6 +14,7 @@ package scala.util.parsing.input
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import scala.language.implicitConversions
 
 class gh178 {
 

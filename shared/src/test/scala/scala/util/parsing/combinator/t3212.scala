@@ -14,6 +14,7 @@ package scala.util.parsing.combinator
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import scala.language.implicitConversions
 
 class t3212 extends RegexParsers {
 
