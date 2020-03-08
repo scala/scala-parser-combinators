@@ -8,8 +8,10 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleMimaPreviousVersion := None,
 
-    apiMappings += (scalaInstance.value.libraryJar ->
-        url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
+    apiMappings ++= scalaInstance.value.libraryJars.collect {
+      case file if file.getName.startsWith("scala-library") && file.getName.endsWith(".jar") =>
+        file -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
+    }.toMap,
 
     scalacOptions in (Compile, doc) ++= Seq(
       "-diagrams",
