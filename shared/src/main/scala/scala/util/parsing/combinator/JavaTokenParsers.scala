@@ -14,6 +14,7 @@ package scala
 package util.parsing.combinator
 
 import scala.annotation.migration
+import scala.language.implicitConversions
 
 /** `JavaTokenParsers` differs from [[scala.util.parsing.combinator.RegexParsers]]
  *  by adding the following definitions:
