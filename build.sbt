@@ -11,19 +11,22 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
 
-    scalacOptions in (Compile, doc) ++= Seq(
-      "-diagrams",
-      "-doc-source-url",
-      s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
-      "-sourcepath",
-      (baseDirectory in LocalRootProject).value.absolutePath,
-      "-doc-title",
-      "Scala Parser Combinators",
-      "-doc-version",
-      version.value,
-      if (isDotty.value) "-language:Scala2"
-      else ""
-    ),
+    scalacOptions in (Compile, doc) ++= {
+      if (isDotty.value)
+        Seq("-language:Scala2")
+      else
+        Seq(
+          "-diagrams",
+          "-doc-source-url",
+          s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
+          "-sourcepath",
+          (baseDirectory in LocalRootProject).value.absolutePath,
+          "-doc-title",
+          "Scala Parser Combinators",
+          "-doc-version",
+          version.value
+        )
+    },
     unmanagedSourceDirectories in Compile ++= {
       (unmanagedSourceDirectories in Compile).value.map { dir =>
         CrossVersion.partialVersion(scalaVersion.value) match {
