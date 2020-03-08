@@ -2,6 +2,7 @@ import scala.util.parsing.combinator._
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import scala.language.implicitConversions
 
 class t6067 extends RegexParsers {
   object TestParser extends RegexParsers {

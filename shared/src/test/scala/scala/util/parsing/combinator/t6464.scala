@@ -1,3 +1,4 @@
+import scala.language.implicitConversions
 import scala.util.parsing.input.CharSequenceReader
 import scala.util.parsing.combinator.RegexParsers
 

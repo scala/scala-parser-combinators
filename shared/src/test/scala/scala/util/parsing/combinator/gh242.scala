@@ -1,6 +1,7 @@
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+import scala.language.implicitConversions
 import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.CharSequenceReader
 

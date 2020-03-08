@@ -2,6 +2,7 @@ package scala.util.parsing.input
 
 import org.junit.Assert._
 import org.junit.Test
+import scala.language.implicitConversions
 
 class gh64 {
 

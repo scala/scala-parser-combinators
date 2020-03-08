@@ -1,3 +1,4 @@
+import scala.language.implicitConversions
 import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.Reader
 import scala.util.parsing.input.Position
