@@ -107,7 +107,7 @@ trait PackratParsers extends Parsers {
     val q = super.phrase(p)
     new PackratParser[T] {
       def apply(in: Input) = in match {
-        case in if in.isInstanceOf[PackratReader[_]] => q(in)
+        case in if in.isInstanceOf[PackratReader[_]] => q(in) // TODO: try to change back to "case in: PackratReader[_]" after https://github.com/lampepfl/dotty/pull/8413
         case in => q(new PackratReader(in))
       }
     }

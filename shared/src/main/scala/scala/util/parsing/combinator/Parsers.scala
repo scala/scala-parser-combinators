@@ -664,7 +664,8 @@ trait Parsers {
    *  @return a Parser that recognizes a specified list of elements
    */
   def acceptSeq[ES](es: ES)(implicit f: ES => Iterable[Elem]): Parser[List[Elem]] = {
-    f(es).foldRight[Parser[List[Elem]]](success(Nil)){(x, pxs) => accept(x) ~ pxs ^^ mkList}
+    f(es) // explicit conversion for dotty
+      .foldRight[Parser[List[Elem]]](success(Nil)){(x, pxs) => accept(x) ~ pxs ^^ mkList}
   }
 
   /** A parser that always fails.

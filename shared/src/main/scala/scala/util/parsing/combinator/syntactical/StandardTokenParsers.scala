@@ -25,7 +25,7 @@ import scala.language.implicitConversions
  */
 class StandardTokenParsers extends StdTokenParsers {
   type Tokens = StdTokens
-  val lexical: StdLexical = new StdLexical()
+  val lexical: StdLexical = new StdLexical() // type annotation added for dotty
 
   //an implicit keyword function that gives a warning when a given word is not in the reserved/delimiters list
   override implicit def keyword(chars : String): Parser[String] =
