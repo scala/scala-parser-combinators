@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
+import scala.language.implicitConversions
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 class PackratParsersTest {
@@ -16,6 +17,8 @@ class PackratParsersTest {
     def extractResult(r : ParseResult[Int]): Int = r match {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
     }
     def check(expected: Int, expr: String): Unit = {
       val parseResult = head(new lexical.Scanner(expr))
@@ -70,6 +73,8 @@ class PackratParsersTest {
     def extractResult(r : ParseResult[Int]): Int = r match {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
     }
     def check(expected: Int, expr: String): Unit = {
       val parseResult = head(new lexical.Scanner(expr))
@@ -93,6 +98,8 @@ class PackratParsersTest {
     def extractResult(r: ParseResult[AnBnCnResult]): AnBnCnResult = r match {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
     }
     def threeLists(as: List[Symbol], bs: List[Symbol], cs: List[Symbol]): AnBnCnResult = {
       val as1 = as.map(_.name)
@@ -139,14 +146,14 @@ private object grammars1 extends StandardTokenParsers with PackratParsers {
    */
 
 
- val term: PackratParser[Int] = (term~("+"~>fact) ^^ {case x~y => x+y}
-           |term~("-"~>fact) ^^ {case x~y => x-y}
-           |fact)
+   val term: PackratParser[Int] = (term~("+"~>fact) ^^ {case x~y => x+y}
+             |term~("-"~>fact) ^^ {case x~y => x-y}
+             |fact)
 
- val fact: PackratParser[Int] = (fact~("*"~>numericLit) ^^ {case x~y => x*y.toInt}
-           |fact~("/"~>numericLit) ^^ {case x~y => x/y.toInt}
-           |"("~>term<~")"
-           |numericLit ^^ {_.toInt})
+   val fact: PackratParser[Int] = (fact~("*"~>numericLit) ^^ {case x~y => x*y.toInt}
+             |fact~("/"~>numericLit) ^^ {case x~y => x/y.toInt}
+             |"("~>term<~")"
+             |numericLit ^^ {_.toInt})
 }
 
 private object grammars2 extends StandardTokenParsers with PackratParsers {

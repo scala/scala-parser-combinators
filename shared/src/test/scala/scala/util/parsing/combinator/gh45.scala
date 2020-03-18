@@ -1,5 +1,6 @@
 package scala.util.parsing.combinator
 
+import scala.language.implicitConversions
 import scala.util.parsing.input._
 
 import org.junit.Test

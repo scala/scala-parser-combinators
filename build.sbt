@@ -11,21 +11,27 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     apiMappings += (scalaInstance.value.libraryJar ->
         url(s"https://www.scala-lang.org/api/${scalaVersion.value}/")),
 
-    scalacOptions in (Compile, doc) ++= Seq(
-      "-diagrams",
-      "-doc-source-url",
-      s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
-      "-sourcepath",
-      (baseDirectory in LocalRootProject).value.absolutePath,
-      "-doc-title",
-      "Scala Parser Combinators",
-      "-doc-version",
-      version.value
-    ),
+    scalacOptions in (Compile, doc) ++= {
+      if (isDotty.value)
+        Seq("-language:Scala2")
+      else
+        Seq(
+          "-diagrams",
+          "-doc-source-url",
+          s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
+          "-sourcepath",
+          (baseDirectory in LocalRootProject).value.absolutePath,
+          "-doc-title",
+          "Scala Parser Combinators",
+          "-doc-version",
+          version.value
+        )
+    },
     unmanagedSourceDirectories in Compile ++= {
       (unmanagedSourceDirectories in Compile).value.map { dir =>
         CrossVersion.partialVersion(scalaVersion.value) match {
           case Some((2, 13)) => file(dir.getPath ++ "-2.13+")
+          case Some((0, _))  => file(dir.getPath ++ "-2.13+")
           case _             => file(dir.getPath ++ "-2.13-")
         }
       }
@@ -37,6 +43,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
   )
   .jsSettings(
+    crossScalaVersions -= "0.23.0-RC1",
     // Scala.js cannot run forked tests
     fork in Test := false
   )
