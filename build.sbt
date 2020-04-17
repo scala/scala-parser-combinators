@@ -3,7 +3,7 @@ import sbtcrossproject.CrossPlugin.autoImport.crossProject
 lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .withoutSuffixFor(JVMPlatform).in(file("."))
   .settings(ScalaModulePlugin.scalaModuleSettings)
-  .jvmSettings(ScalaModulePlugin.scalaModuleSettingsJVM)
+  .jvmSettings(ScalaModulePlugin.scalaModuleOsgiSettings)
   .settings(
     name := "scala-parser-combinators",
     scalaModuleMimaPreviousVersion := None,
