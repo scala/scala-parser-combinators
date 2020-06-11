@@ -12,14 +12,11 @@ scala:
 
 env:
   - ADOPTOPENJDK=8     SCALAJS_VERSION=
-  - ADOPTOPENJDK=8     SCALAJS_VERSION=0.6.33
   - ADOPTOPENJDK=8     SCALAJS_VERSION=1.1.0
   - ADOPTOPENJDK=11    SCALAJS_VERSION=
 
 matrix:
   exclude:
-    - scala: 0.24.0-RC1
-      env: ADOPTOPENJDK=8     SCALAJS_VERSION=0.6.33
     - scala: 0.24.0-RC1
       env: ADOPTOPENJDK=8     SCALAJS_VERSION=1.1.0
   include:
