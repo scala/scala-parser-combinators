@@ -45,7 +45,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
   )
   .jsSettings(
-    crossScalaVersions -= "0.26.0-RC1",
+    crossScalaVersions -= "0.27.0-RC1",
     // Scala.js cannot run forked tests
     fork in Test := false
   )
