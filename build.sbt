@@ -1,12 +1,15 @@
-import sbtcrossproject.CrossPlugin.autoImport.crossProject
+lazy val root = project.in(file("."))
+  .aggregate(parserCombinatorsJVM, parserCombinatorsJS, parserCombinatorsNative)
+  .settings(
+    publish / skip := true,
+  )
 
 lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
-  .withoutSuffixFor(JVMPlatform).in(file("."))
-  .settings(ScalaModulePlugin.scalaModuleSettings)
-  .jvmSettings(ScalaModulePlugin.scalaModuleOsgiSettings)
+  .in(file("."))
   .settings(
+    ScalaModulePlugin.scalaModuleSettings,
     name := "scala-parser-combinators",
-    scalaModuleMimaPreviousVersion := None,
+    scalaModuleMimaPreviousVersion := None,  // until we publish 1.2.0
 
     apiMappings ++= scalaInstance.value.libraryJars.collect {
       case file if file.getName.startsWith("scala-library") && file.getName.endsWith(".jar") =>
@@ -40,6 +43,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     }
   )
   .jvmSettings(
+    ScalaModulePlugin.scalaModuleOsgiSettings,
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
     libraryDependencies += "junit" % "junit" % "4.13.1" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
@@ -59,3 +63,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
       else libraryDependencies.value
     }
   )
+
+lazy val parserCombinatorsJVM    = parserCombinators.jvm
+lazy val parserCombinatorsJS     = parserCombinators.js
+lazy val parserCombinatorsNative = parserCombinators.native
