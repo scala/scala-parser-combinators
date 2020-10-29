@@ -13,7 +13,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
         file -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
     }.toMap,
 
-    scalacOptions in (Compile, doc) ++= {
+    Compile / doc / scalacOptions ++= {
       if (isDotty.value)
         Seq("-language:Scala2")
       else
@@ -22,15 +22,15 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
           "-doc-source-url",
           s"https://github.com/scala/scala-parser-combinators/tree/v${version.value}€{FILE_PATH}.scala",
           "-sourcepath",
-          (baseDirectory in LocalRootProject).value.absolutePath,
+          (LocalRootProject / baseDirectory).value.absolutePath,
           "-doc-title",
           "Scala Parser Combinators",
           "-doc-version",
           version.value
         )
     },
-    unmanagedSourceDirectories in Compile ++= {
-      (unmanagedSourceDirectories in Compile).value.map { dir =>
+    Compile / unmanagedSourceDirectories ++= {
+      (Compile / unmanagedSourceDirectories).value.map { dir =>
         CrossVersion.partialVersion(scalaVersion.value) match {
           case Some((2, 13)) => file(dir.getPath ++ "-2.13+")
           case Some((0, _))  => file(dir.getPath ++ "-2.13+")
@@ -47,11 +47,11 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .jsSettings(
     crossScalaVersions -= "0.27.0-RC1",
     // Scala.js cannot run forked tests
-    fork in Test := false
+    Test / fork := false
   )
   .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
   .nativeSettings(
-    skip in compile := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
+    compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
     test := {},
     libraryDependencies := {
       if (!scalaVersion.value.startsWith("2.11"))
