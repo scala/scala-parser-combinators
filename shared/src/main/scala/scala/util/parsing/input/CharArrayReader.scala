@@ -25,8 +25,6 @@ object CharArrayReader {
  * @param chars  an array of characters
  * @param index  starting offset into the array; the first element returned will be `source(index)`
  */
-class CharArrayReader(chars: Array[Char], index: Int) extends CharSequenceReader(chars, index) {
-
+class CharArrayReader(chars: Array[Char], index: Int) extends CharSequenceReader(java.nio.CharBuffer.wrap(chars), index) {
   def this(chars: Array[Char]) = this(chars, 0)
-
 }
