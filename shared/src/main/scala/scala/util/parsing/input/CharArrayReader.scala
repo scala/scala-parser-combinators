@@ -31,8 +31,5 @@ object CharArrayReader {
  * @author Martin Odersky
  * @author Adriaan Moors
  */
-class CharArrayReader(chars: Array[Char], index: Int) extends CharSequenceReader(chars, index) {
-
-  def this(chars: Array[Char]) = this(chars, 0)
-
-}
+class CharArrayReader(chars: Array[Char], index: Int = 0)
+    extends CharSequenceReader(java.nio.CharBuffer.wrap(chars), index)

@@ -34,7 +34,7 @@ class PagedSeqReader(seq: PagedSeq[Char],
                      override val offset: Int) extends Reader[Char] { outer =>
   import PagedSeqReader._
 
-  override val source: java.lang.CharSequence = seq
+  override val source: java.lang.CharSequence = new SeqCharSequence(seq)
 
   /** Construct a `PagedSeqReader` with its first element at
    *  `source(0)` and position `(1,1)`.

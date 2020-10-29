@@ -7,7 +7,7 @@ import org.junit.Assert.assertEquals
 
 class t7483 {
   val s = "foo\nbar"
-  val reader = new CharSequenceReader(s.toCharArray(), 0)
+  val reader = new CharSequenceReader(s, 0)
   val p = reader.pos.asInstanceOf[OffsetPosition]
 
   @Test
