@@ -238,7 +238,7 @@ trait Parsers {
       = withFilter(p)
 
     def withFilter(p: T => Boolean): Parser[T]
-      = Parser{ in => this(in) filterWithError(p, "Input doesn't match filter: "+_, in)}
+      = Parser{ in => this(in).filterWithError(p, "Input doesn't match filter: "+_, in)}
 
     // no filter yet, dealing with zero is tricky!
 

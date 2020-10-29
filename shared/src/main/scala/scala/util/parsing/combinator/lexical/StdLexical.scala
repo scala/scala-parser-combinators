@@ -18,7 +18,6 @@ package lexical
 import token._
 import input.CharArrayReader.EofCh
 import scala.collection.mutable
-import scala.language.implicitConversions
 
 /** This component provides a standard lexical parser for a simple,
  *  [[http://scala-lang.org Scala]]-like language. It parses keywords and

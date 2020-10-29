@@ -67,11 +67,11 @@ trait PackratParsers extends Parsers {
      */
     private[PackratParsers] val cache = mutable.HashMap.empty[(Parser[_], Position), MemoEntry[_]]
 
-    private[PackratParsers] def getFromCache[T](p: Parser[T]): Option[MemoEntry[T]] = {
-      cache.get((p, pos)).asInstanceOf[Option[MemoEntry[T]]]
+    private[PackratParsers] def getFromCache[T2](p: Parser[T2]): Option[MemoEntry[T2]] = {
+      cache.get((p, pos)).asInstanceOf[Option[MemoEntry[T2]]]
     }
 
-    private[PackratParsers] def updateCacheAndGet[T](p: Parser[T], w: MemoEntry[T]): MemoEntry[T] = {
+    private[PackratParsers] def updateCacheAndGet[T2](p: Parser[T2], w: MemoEntry[T2]): MemoEntry[T2] = {
       cache.put((p, pos),w)
       w
     }
