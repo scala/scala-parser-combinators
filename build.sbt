@@ -16,6 +16,25 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
         file -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
     }.toMap,
 
+    // go nearly warning-free, but only on 2.13, it's too hard across all versions
+    Compile / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) => Seq("-Werror",
+        // ideally we'd do something about this. `^?` is the responsible method
+        "-Wconf:site=scala.util.parsing.combinator.Parsers.*&cat=lint-multiarg-infix:i",
+        // not sure what resolving this would look like? didn't think about it too hard
+        "-Wconf:site=scala.util.parsing.combinator.lexical.StdLexical.*&cat=other-match-analysis:i",
+      )
+      case _ => Seq()
+    }),
+    Compile / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) => Seq(
+        // it isn't able to link to [[java.lang.NoSuchMethodError]]
+        // scala-xml doesn't have this problem, I tried copying their apiMappings stuff
+        // and that didn't help, I'm mystified why :-/
+        """-Wconf:msg=Could not find any member to link for*:i""",
+      )
+      case _ => Seq()
+    }),
     Compile / doc / scalacOptions ++= {
       if (isDotty.value)
         Seq("-language:Scala2")
