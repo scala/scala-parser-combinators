@@ -16,9 +16,9 @@ set -e
 # - commit the changes and tag this new revision with an arbitrary suffix after a hash, e.g.,
 #   `v1.2.3#dotty-0.27` (the suffix is ignored, the version will be `1.2.3`)
 
-# For normal tags that are cross-built, we release on JDK 8 for Scala 2.x
+# We release on JDK 8 (for Scala 2.x and Dotty 0.x)
 isReleaseJob() {
-  if [[ "$ADOPTOPENJDK" == "8" && "$TRAVIS_SCALA_VERSION" =~ ^2\.1[01234]\..*$ ]]; then
+  if [[ "$ADOPTOPENJDK" == "8" ]]; then
     true
   else
     false
@@ -26,11 +26,11 @@ isReleaseJob() {
 }
 
 if [[ "$SCALAJS_VERSION" != "" ]]; then
-  projectPrefix="parserCombinatorsJS"
+  projectPrefix="parserCombinatorsJS/"
 elif [[ "$SCALANATIVE_VERSION" != "" ]]; then
-  projectPrefix="parserCombinatorsNative"
+  projectPrefix="parserCombinatorsNative/"
 else
-  projectPrefix="parserCombinators"
+  projectPrefix="parserCombinatorsJVM/"
 fi
 
 verPat="[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9-]+)?"
@@ -45,12 +45,12 @@ if [[ "$TRAVIS_TAG" =~ $tagPat ]]; then
 fi
 
 # default is +publishSigned; we cross-build with travis jobs, not sbt's crossScalaVersions
-export CI_RELEASE="$projectPrefix/publishSigned"
-export CI_SNAPSHOT_RELEASE="$projectPrefix/publish"
+export CI_RELEASE="${projectPrefix}publishSigned"
+export CI_SNAPSHOT_RELEASE="${projectPrefix}publish"
 
 # default is sonatypeBundleRelease, which closes and releases the staging repo
 # see https://github.com/xerial/sbt-sonatype#commands
 # for now, until we're confident in the new release scripts, just close the staging repo.
 export CI_SONATYPE_RELEASE="; sonatypePrepare; sonatypeBundleUpload; sonatypeClose"
 
-sbt clean $projectPrefix/test $projectPrefix/publishLocal $releaseTask
+sbt clean ${projectPrefix}test ${projectPrefix}publishLocal $releaseTask
