@@ -20,8 +20,6 @@ import scala.collection.mutable
 import scala.language.implicitConversions
 
 /** This component provides primitive parsers for the standard tokens defined in `StdTokens`.
-*
-* @author Martin Odersky, Adriaan Moors
  */
 trait StdTokenParsers extends TokenParsers {
   type Tokens <: StdTokens
