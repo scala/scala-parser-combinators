@@ -11,6 +11,9 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleMimaPreviousVersion := None,  // until we publish 1.2.0
 
+    libraryDependencies += "junit" % "junit" % "4.13.1" % Test,
+    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
+
     apiMappings ++= scalaInstance.value.libraryJars.collect {
       case file if file.getName.startsWith("scala-library") && file.getName.endsWith(".jar") =>
         file -> url(s"http://www.scala-lang.org/api/${scalaVersion.value}/")
@@ -35,9 +38,12 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
       )
       case _ => Seq()
     }),
+    // don't run Dottydoc, it errors and isn't needed anyway
+    Compile / doc / sources := (if (isDotty.value) Seq() else (Compile / doc/ sources).value),
+    Compile / packageDoc / publishArtifact := !isDotty.value,
     Compile / doc / scalacOptions ++= {
       if (isDotty.value)
-        Seq("-language:Scala2")
+        Seq()
       else
         Seq(
           "-diagrams",
@@ -64,11 +70,15 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .jvmSettings(
     ScalaModulePlugin.scalaModuleOsgiSettings,
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
-    libraryDependencies += "junit" % "junit" % "4.13.1" % Test,
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test
   )
   .jsSettings(
     crossScalaVersions -= "0.27.0-RC1",
+    // mystified why https://github.com/scala-js/scala-js/issues/635 would be rearing its head,
+    // but only on sbt 1.4 + 2.13 and only in Test config?! WEIRD
+    Test / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) => Seq("-Wconf:msg=dropping dependency on node with no phase object*:i")
+      case _ => Seq()
+    }),
     // Scala.js cannot run forked tests
     Test / fork := false
   )
