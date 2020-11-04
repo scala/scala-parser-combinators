@@ -72,10 +72,6 @@ import scala.language.implicitConversions
  *  methods `success`, `err` and `failure` as examples.
  *
  *  @see [[scala.util.parsing.combinator.RegexParsers]] and other known subclasses for practical examples.
- *
- *  @author Martin Odersky
- *  @author Iulian Dragos
- *  @author Adriaan Moors
  */
 trait Parsers {
   /** the type of input elements the provided parsers consume (When consuming

@@ -20,8 +20,6 @@ import lexical.StdLexical
 import scala.language.implicitConversions
 
 /** This component provides primitive parsers for the standard tokens defined in `StdTokens`.
-*
-* @author Martin Odersky, Adriaan Moors
  */
 class StandardTokenParsers extends StdTokenParsers {
   type Tokens = StdTokens

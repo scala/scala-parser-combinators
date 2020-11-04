@@ -51,8 +51,6 @@ import scala.language.implicitConversions
  * @see Alessandro Warth, James R. Douglass, Todd Millstein: "Packrat Parsers Can Support Left Recursion." PEPM'08
  *
  * @since 2.8
- * @author Manohar Jonnalagedda
- * @author Tiark Rompf
  */
 
 trait PackratParsers extends Parsers {

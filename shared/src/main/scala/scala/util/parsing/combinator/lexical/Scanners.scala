@@ -21,8 +21,6 @@ import input._
  *
  *  See its subclasses [[scala.util.parsing.combinator.lexical.Lexical]] and -- most interestingly
  *  [[scala.util.parsing.combinator.lexical.StdLexical]], for more functionality.
- *
- *  @author Martin Odersky, Adriaan Moors
  */
 trait Scanners extends Parsers {
   type Elem = Char

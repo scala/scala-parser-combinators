@@ -14,9 +14,6 @@ package scala.util.parsing.input
 
 import java.util.WeakHashMap
 
-/**
- * @author Tomáš Janoušek
- */
 private[input] trait PositionCache {
   private lazy val indexCacheTL =
     // not DynamicVariable as that would share the map from parent to child :-(

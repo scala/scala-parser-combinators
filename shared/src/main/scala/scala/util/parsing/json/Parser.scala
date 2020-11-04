@@ -18,8 +18,6 @@ import scala.util.parsing.combinator.syntactical._
 
 /**
  *  A marker class for the JSON result types.
- *
- *  @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
 @deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 sealed abstract class JSONType {
@@ -40,8 +38,6 @@ sealed abstract class JSONType {
  * This object defines functions that are used when converting JSONType
  * values into String representations. Mostly this is concerned with
  * proper quoting of strings.
- *
- * @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
 @deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 object JSONFormat {
@@ -92,8 +88,6 @@ object JSONFormat {
 
 /**
  *  Represents a JSON Object (map).
- *
- *  @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
 @deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 case class JSONObject (obj : Map[String,Any]) extends JSONType {
@@ -103,7 +97,6 @@ case class JSONObject (obj : Map[String,Any]) extends JSONType {
 
 /**
  *  Represents a JSON Array (list).
- *  @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
 @deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 case class JSONArray (list : List[Any]) extends JSONType {
@@ -113,8 +106,6 @@ case class JSONArray (list : List[Any]) extends JSONType {
 
 /**
  *  The main JSON Parser.
- *
- *  @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
 @deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 class Parser extends StdTokenParsers with ImplicitConversions {

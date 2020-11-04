@@ -20,9 +20,6 @@ package util.parsing.input
  *   - comparing two positions (`<`).
  *
  *  To use this class for a concrete kind of `document`, implement the `lineContents` method.
- *
- * @author Martin Odersky
- * @author Adriaan Moors
  */
 trait Position {
 

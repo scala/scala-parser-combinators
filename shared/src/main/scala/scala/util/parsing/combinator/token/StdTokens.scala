@@ -16,9 +16,6 @@ package combinator
 package token
 
 /** This component provides the standard `Token`s for a simple, Scala-like language.
- *
- * @author Martin Odersky
- * @author Adriaan Moors
  */
 trait StdTokens extends Tokens {
   /** The class of keyword tokens */
