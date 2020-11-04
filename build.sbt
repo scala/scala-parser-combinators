@@ -1,10 +1,10 @@
 lazy val root = project.in(file("."))
-  .aggregate(parserCombinatorsJVM, parserCombinatorsJS, parserCombinatorsNative)
+  .aggregate(parserCombinatorsJVM, parserCombinatorsJS)
   .settings(
     publish / skip := true,
   )
 
-lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
+lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform)
   .in(file("."))
   .settings(
     ScalaModulePlugin.scalaModuleSettings,
@@ -73,16 +73,6 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     Test / fork := false
   )
   .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
-  .nativeSettings(
-    compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
-    test := {},
-    libraryDependencies := {
-      if (!scalaVersion.value.startsWith("2.11"))
-        libraryDependencies.value.filterNot(_.organization == "org.scala-native")
-      else libraryDependencies.value
-    }
-  )
 
 lazy val parserCombinatorsJVM    = parserCombinators.jvm
 lazy val parserCombinatorsJS     = parserCombinators.js
-lazy val parserCombinatorsNative = parserCombinators.native

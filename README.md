@@ -1,15 +1,12 @@
 # scala-parser-combinators
 
 [<img src="https://img.shields.io/travis/scala/scala-parser-combinators.svg"/>](https://travis-ci.org/scala/scala-parser-combinators)
-[<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.11.svg?label=latest%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.11)
 [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.12.svg?label=latest%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.12)
 [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.13.svg?label=latest%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.13)
 
 ### Scala Standard Parser Combinator Library
 
-This library is now community-maintained. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
-
-As of Scala 2.11, this library is a separate jar that can be omitted from Scala projects that do not use Parser Combinators.
+This library is community-maintained. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
 
 ## Documentation
 
@@ -27,9 +24,9 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % 
 
 To support multiple Scala versions, see the example in [scala/scala-module-dependency-sample](https://github.com/scala/scala-module-dependency-sample).
 
-### Scala.js and Scala Native
+### Scala.js
 
-Scala-parser-combinators is also available for Scala.js 0.6+ and Scala Native:
+Scala-parser-combinators is also available for Scala.js:
 
 ```
 libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"

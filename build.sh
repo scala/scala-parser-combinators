@@ -27,8 +27,6 @@ isReleaseJob() {
 
 if [[ "$SCALAJS_VERSION" != "" ]]; then
   projectPrefix="parserCombinatorsJS/"
-elif [[ "$SCALANATIVE_VERSION" != "" ]]; then
-  projectPrefix="parserCombinatorsNative/"
 else
   projectPrefix="parserCombinatorsJVM/"
 fi
