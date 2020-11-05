@@ -32,10 +32,6 @@ import scala.collection.mutable
  *  Usually this component is used to break character-based input into
  *  bigger tokens, which are then passed to a token-parser (see
  *  [[scala.util.parsing.combinator.syntactical.TokenParsers]].)
- *
- * @author Martin Odersky
- * @author Iulian Dragos
- * @author Adriaan Moors
  */
 class StdLexical extends Lexical with StdTokens {
   // see `token` in `Scanners`

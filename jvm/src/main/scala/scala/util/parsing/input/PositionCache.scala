@@ -12,9 +12,6 @@
 
 package scala.util.parsing.input
 
-/**
- * @author Tomáš Janoušek
- */
 private[input] trait PositionCache {
   private lazy val indexCacheTL =
     // not DynamicVariable as that would share the map from parent to child :-(
