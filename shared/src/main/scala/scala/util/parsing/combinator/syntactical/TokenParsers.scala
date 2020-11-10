@@ -16,9 +16,6 @@ package combinator
 package syntactical
 
 /** This is the core component for token-based parsers.
- *
- *  @author Martin Odersky
- *  @author Adriaan Moors
  */
 trait TokenParsers extends Parsers {
   /** `Tokens` is the abstract type of the `Token`s consumed by the parsers in this component. */

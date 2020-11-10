@@ -17,9 +17,6 @@ package token
 
 /** This component provides the notion of `Token`, the unit of information that is passed from lexical
  * parsers in the `Lexical` component to the parsers in the `TokenParsers` component.
- *
- * @author Martin Odersky
- * @author Adriaan Moors
  */
 trait Tokens {
   /** Objects of this type are produced by a lexical parser or ``scanner``, and consumed by a parser.

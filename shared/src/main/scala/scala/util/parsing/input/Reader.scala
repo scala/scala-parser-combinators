@@ -15,9 +15,6 @@ package util.parsing.input
 
 
 /** An interface for streams of values that have positions.
- *
- * @author Martin Odersky
- * @author Adriaan Moors
  */
 abstract class Reader[+T] {
 
