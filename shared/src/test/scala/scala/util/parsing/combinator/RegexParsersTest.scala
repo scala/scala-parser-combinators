@@ -169,7 +169,7 @@ class RegexParsersTest {
   @Test
   def ifElseTest: Unit = {
     object parser extends RegexParsers {
-      def top: Parser[List[Unit]] = ifelse*
+      def top: Parser[List[Unit]] = rep(ifelse)
       def ifelse: Parser[Unit] = "IF" ~ condition ~ "THEN" ~ "1"~ "END" ^^ { _ => }
       def condition: Parser[String] = "TRUE" | "FALSE"
     }
