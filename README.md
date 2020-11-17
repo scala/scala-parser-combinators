@@ -7,9 +7,7 @@
 
 ### Scala Standard Parser Combinator Library
 
-This library is now community-maintained. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
-
-As of Scala 2.11, this library is a separate jar that can be omitted from Scala projects that do not use Parser Combinators.
+This library was originally part of the Scala standard library, but is now community-maintained, under the guidance of the Scala team at Lightbend. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
 
 ## Documentation
 
@@ -29,7 +27,7 @@ To support multiple Scala versions, see the example in [scala/scala-module-depen
 
 ### Scala.js and Scala Native
 
-Scala-parser-combinators is also available for Scala.js 0.6+ and Scala Native:
+Scala-parser-combinators is also available for Scala.js and Scala Native:
 
 ```
 libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.1.2"
@@ -78,3 +76,7 @@ details.
  * Have a look at [existing issues](https://github.com/scala/scala-parser-combinators/issues)
  * Ask questions and discuss [on Gitter](https://gitter.im/scala/contributors)
  * Feel free to open draft pull requests with partially completed changes, to get feedback.
+
+## Alternatives
+
+A number of other parsing libraries for Scala are available; see https://github.com/lauris/awesome-scala#parsing
