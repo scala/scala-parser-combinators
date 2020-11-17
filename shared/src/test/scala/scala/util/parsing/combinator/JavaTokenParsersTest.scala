@@ -34,7 +34,7 @@ class JavaTokenParsersTest {
     def parseFailure(s: String, errorColPos: Int): Unit = {
       val parseResult = parseAll(ident, s)
       parseResult match {
-        case Failure(_, next) =>
+        case Failure(msg, next) =>
           val pos = next.pos
           assertEquals(1, pos.line)
           assertEquals(errorColPos, pos.column)
@@ -54,7 +54,7 @@ class JavaTokenParsersTest {
     parseFailure("with-s", 5)
     // we♥scala
     parseFailure("we\u2665scala", 3)
-    parseFailure("with space", 6)
+    parseFailure("with space", 5)
   }
 
   @Test
@@ -76,7 +76,7 @@ class JavaTokenParsersTest {
       case e @ Failure(message, next) =>
         assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 7)
-        assert(message.endsWith(s"end of input expected"))
+        assert(message.endsWith("string matching regex '(?i)AND' expected but 's' found"))
       case _ => sys.error(parseResult1.toString)
     }
 
@@ -100,7 +100,7 @@ class JavaTokenParsersTest {
       case Failure(message, next) =>
         assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 1)
-        assert(message.endsWith(s"end of input expected"))
+        assert(message.endsWith(s"identifier expected but '-' found"))
       case _ => sys.error(parseResult.toString)
     }
 

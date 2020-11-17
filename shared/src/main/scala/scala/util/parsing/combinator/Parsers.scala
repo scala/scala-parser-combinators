@@ -132,14 +132,22 @@ trait Parsers {
    *  @param result The parser's output
    *  @param next   The parser's remaining input
    */
-  case class Success[+T](result: T, override val next: Input) extends ParseResult[T] {
-    def map[U](f: T => U) = Success(f(result), next)
-    def mapPartial[U](f: PartialFunction[T, U], error: T => String): ParseResult[U]
-       = if(f.isDefinedAt(result)) Success(f(result), next)
-         else Failure(error(result), next)
+  abstract case class Success[+T](result: T, override val next: Input) extends ParseResult[T] {
+    val lastFailure: Option[Failure]
 
-    def flatMapWithNext[U](f: T => Input => ParseResult[U]): ParseResult[U]
-      = f(result)(next)
+    def map[U](f: T => U) = Success(f(result), next, lastFailure)
+
+    def mapPartial[U](f: PartialFunction[T, U], error: T => String): ParseResult[U] =
+      if(f.isDefinedAt(result)) Success(f(result), next, lastFailure)
+      else Failure(error(result), next)
+
+    def flatMapWithNext[U](f: T => Input => ParseResult[U]): ParseResult[U] = f(result)(next) match {
+      case s @ Success(result, rest) =>
+        val failure = selectLastFailure(this.lastFailure, s.lastFailure)
+        Success(result, rest, failure)
+      case f: Failure => selectLastFailure(Some(f), lastFailure).get
+      case e: Error => e
+    }
 
     def filterWithError(p: T => Boolean, error: T => String, position: Input): ParseResult[T] =
       if (p(result)) this
@@ -188,10 +196,16 @@ trait Parsers {
     /** The toString method of a Failure yields an error message. */
     override def toString = s"[${next.pos}] failure: $msg\n\n${next.pos.longString}"
 
-    def append[U >: Nothing](a: => ParseResult[U]): ParseResult[U] = { val alt = a; alt match {
-      case Success(_, _) => alt
-      case ns: NoSuccess => if (alt.next.pos < next.pos) this else alt
-    }}
+    def append[U >: Nothing](a: => ParseResult[U]): ParseResult[U] = {
+      val alt = a
+
+      alt match {
+        case s @ Success(result, rest) =>
+          val failure = selectLastFailure(Some(this), s.lastFailure)
+          Success(result, rest, failure)
+        case ns: NoSuccess => if (alt.next.pos < next.pos) this else alt
+      }
+    }
   }
 
   /** The fatal failure case of ParseResult: contains an error-message and
@@ -209,6 +223,19 @@ trait Parsers {
 
   def Parser[T](f: Input => ParseResult[T]): Parser[T]
     = new Parser[T]{ def apply(in: Input) = f(in) }
+
+  private[combinator] def Success[U](res: U, next: Input, failure: Option[Failure]): ParseResult[U] =
+    new Success(res, next) { override val lastFailure: Option[Failure] = failure }
+
+  private[combinator] def selectLastFailure(failure0: Option[Failure], failure1: Option[Failure]): Option[Failure] =
+    (failure0, failure1) match {
+      case (Some(f0), Some(f1)) =>
+        if(f0.next.pos < f1.next.pos) Some(f1)
+        else                          Some(f0)
+      case (Some(f0), _) => Some(f0)
+      case (_, Some(f1)) => Some(f1)
+      case _ => None
+    }
 
   def OnceParser[T](f: Input => ParseResult[T]): Parser[T] with OnceParser[T]
     = new Parser[T] with OnceParser[T] { def apply(in: Input) = f(in) }
@@ -629,7 +656,7 @@ trait Parsers {
    */
   def acceptIf(p: Elem => Boolean)(err: Elem => String): Parser[Elem] = Parser { in =>
     if (in.atEnd) Failure("end of input", in)
-    else if (p(in.first)) Success(in.first, in.rest)
+    else if (p(in.first)) Success(in.first, in.rest, None)
     else Failure(err(in.first), in)
   }
 
@@ -648,7 +675,7 @@ trait Parsers {
    */
   def acceptMatch[U](expected: String, f: PartialFunction[Elem, U]): Parser[U] = Parser{ in =>
     if (in.atEnd) Failure("end of input", in)
-    else if (f.isDefinedAt(in.first)) Success(f(in.first), in.rest)
+    else if (f.isDefinedAt(in.first)) Success(f(in.first), in.rest, None)
     else Failure(expected+" expected", in)
   }
 
@@ -683,7 +710,7 @@ trait Parsers {
    * @param v The result for the parser
    * @return A parser that always succeeds, with the given result `v`
    */
-  def success[T](v: T) = Parser{ in => Success(v, in) }
+  def success[T](v: T) = Parser{ in => Success(v, in, None) }
 
   /** A helper method that turns a `Parser` into one that will
    *  print debugging information to stdout before and after
@@ -748,19 +775,24 @@ trait Parsers {
     lazy val p = p0 // lazy argument
     val elems = new ListBuffer[T]
 
-    def continue(in: Input): ParseResult[List[T]] = {
+    def continue(in: Input, failure: Option[Failure]): ParseResult[List[T]] = {
       val p0 = p    // avoid repeatedly re-evaluating by-name parser
-      @tailrec def applyp(in0: Input): ParseResult[List[T]] = p0(in0) match {
-        case Success(x, rest) => elems += x ; applyp(rest)
+      @tailrec def applyp(in0: Input, failure: Option[Failure]): ParseResult[List[T]] = p0(in0) match {
+        case s @ Success(x, rest) =>
+          val selectedFailure = selectLastFailure(s.lastFailure, failure)
+          elems += x
+          applyp(rest, selectedFailure)
         case e @ Error(_, _)  => e  // still have to propagate error
-        case _                => Success(elems.toList, in0)
+        case f: Failure =>
+          val selectedFailure = selectLastFailure(failure, Some(f))
+          Success(elems.toList, in0, selectedFailure)
       }
 
-      applyp(in)
+      applyp(in, failure)
     }
 
     first(in) match {
-      case Success(x, rest) => elems += x ; continue(rest)
+      case s @ Success(x, rest) => elems += x ; continue(rest, s.lastFailure)
       case ns: NoSuccess    => ns
     }
   }
@@ -780,14 +812,14 @@ trait Parsers {
       val elems = new ListBuffer[T]
       val p0 = p    // avoid repeatedly re-evaluating by-name parser
 
-      @tailrec def applyp(in0: Input): ParseResult[List[T]] =
-        if (elems.length == num) Success(elems.toList, in0)
+      @tailrec def applyp(in0: Input, failure: Option[Failure]): ParseResult[List[T]] =
+        if (elems.length == num) Success(elems.toList, in0, failure)
         else p0(in0) match {
-          case Success(x, rest) => elems += x ; applyp(rest)
+          case s @ Success(x, rest) => elems += x ; applyp(rest, s.lastFailure)
           case ns: NoSuccess    => ns
         }
 
-      applyp(in)
+      applyp(in, None)
     }
 
   /** A parser generator for a specified range of repetitions interleaved by a
@@ -812,9 +844,9 @@ trait Parsers {
     def continue(in: Input): ParseResult[List[T]] = {
       val p0 = sep ~> p // avoid repeatedly re-evaluating by-name parser
       @tailrec def applyp(in0: Input): ParseResult[List[T]] = p0(in0) match {
-        case Success(x, rest) => elems += x; if (elems.length == m) Success(elems.toList, rest) else applyp(rest)
+        case Success(x, rest) => elems += x; if (elems.length == m) Success(elems.toList, rest, None) else applyp(rest)
         case e @ Error(_, _) => e // still have to propagate error
-        case _ => Success(elems.toList, in0)
+        case _ => Success(elems.toList, in0, None)
       }
 
       applyp(in)
@@ -905,7 +937,7 @@ trait Parsers {
   def not[T](p: => Parser[T]): Parser[Unit] = Parser { in =>
     p(in) match {
       case Success(_, _)  => Failure("Expected failure", in)
-      case _              => Success((), in)
+      case _              => Success((), in, None)
     }
   }
 
@@ -919,7 +951,7 @@ trait Parsers {
    */
   def guard[T](p: => Parser[T]): Parser[T] = Parser { in =>
     p(in) match{
-      case s@ Success(s1,_) => Success(s1, in)
+      case s@ Success(s1,_) => Success(s1, in, s.lastFailure)
       case e => e
     }
   }
@@ -934,7 +966,7 @@ trait Parsers {
    */
   def positioned[T <: Positional](p: => Parser[T]): Parser[T] = Parser { in =>
     p(in) match {
-      case Success(t, in1) => Success(if (t.pos == NoPosition) t setPos in.pos else t, in1)
+      case s @ Success(t, in1) => Success(if (t.pos == NoPosition) t setPos in.pos else t, in1, s.lastFailure)
       case ns: NoSuccess => ns
     }
   }
@@ -952,7 +984,10 @@ trait Parsers {
     def apply(in: Input) = p(in) match {
       case s @ Success(out, in1) =>
         if (in1.atEnd) s
-        else Failure("end of input expected", in1)
+        else s.lastFailure match {
+          case Some(failure) => failure
+          case _ => Failure("end of input expected", in1)
+        }
       case ns => ns
     }
   }
