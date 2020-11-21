@@ -132,8 +132,8 @@ trait Parsers {
    *  @param result The parser's output
    *  @param next   The parser's remaining input
    */
-  abstract case class Success[+T](result: T, override val next: Input) extends ParseResult[T] {
-    val lastFailure: Option[Failure]
+  case class Success[+T](result: T, override val next: Input) extends ParseResult[T] {
+    def lastFailure: Option[Failure] = None
 
     def map[U](f: T => U) = Success(f(result), next, lastFailure)
 
