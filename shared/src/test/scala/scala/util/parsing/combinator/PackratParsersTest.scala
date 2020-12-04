@@ -190,7 +190,8 @@ private object grammars3 extends StandardTokenParsers with PackratParsers {
    | success(Nil)
   )
 
+  @annotation.nowarn  // Some(xs) in pattern isn't exhaustive
   def repMany1[T](p: => Parser[T], q: => Parser[T]): Parser[List[T]] =
-   p~opt(repMany(p,q))~q ^^ {case x~Some(xs)~y => x::xs:::(y::Nil)}
+    p~opt(repMany(p,q))~q ^^ {case x~Some(xs)~y => x::xs:::(y::Nil)}
 
 }

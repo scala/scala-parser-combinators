@@ -211,7 +211,7 @@ to update each parser involved in the recursion.
     case LR(seed ,rule, Some(head)) =>
       if(head.getHead != p) /*not head rule, so not growing*/ seed.asInstanceOf[ParseResult[T]]
       else {
-        in.updateCacheAndGet(p, MemoEntry(Right[LR, ParseResult[T]](seed.asInstanceOf[ParseResult[T]])))
+        in.updateCacheAndGet(p, MemoEntry(Right(seed.asInstanceOf[ParseResult[T]])))
         seed match {
           case f@Failure(_,_) => f
           case e@Error(_,_) => e
