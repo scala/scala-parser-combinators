@@ -404,8 +404,10 @@ trait Parsers {
         val res1 = Parser.this(in)
         val res2 = q(in)
 
-        (res1, res2) match {
-          case (s1 @ Success(_, next1), s2 @ Success(_, next2)) => if (next2.pos < next1.pos) s1 else s2
+        // compiler thinks match isn't exhaustive; perhaps it's right, but does that mean there's a bug here?
+        // that's not clear to me, so for now let's just `@unchecked` it
+        ((res1, res2): @unchecked) match {
+          case (s1 @ Success(_, next1), s2 @ Success(_, next2)) => if (next2.pos < next1.pos || next2.pos == next1.pos) s1 else s2
           case (s1 @ Success(_, _), _) => s1
           case (_, s2 @ Success(_, _)) => s2
           case (e1 @ Error(_, _), _) => e1
