@@ -72,7 +72,6 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
   )
   .jsSettings(
-    crossScalaVersions -= "0.27.0-RC1",
     // mystified why https://github.com/scala-js/scala-js/issues/635 would be rearing its head,
     // but only on sbt 1.4 + 2.13 and only in Test config?! WEIRD
     Test / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
