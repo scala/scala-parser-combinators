@@ -11,9 +11,9 @@ scala:
   - 2.13.4
 
 env:
-  - ADOPTOPENJDK=8     SCALAJS_VERSION=       CACHE_WORKAROUND=see-PR-335
-  - ADOPTOPENJDK=8     SCALAJS_VERSION=1.4.0  CACHE_WORKAROUND=see-PR-335
-  - ADOPTOPENJDK=11    SCALAJS_VERSION=       CACHE_WORKAROUND=see-PR-335
+  - ADOPTOPENJDK=8     SCALAJS_VERSION=
+  - ADOPTOPENJDK=8     SCALAJS_VERSION=1.4.0
+  - ADOPTOPENJDK=11    SCALAJS_VERSION=
 
 matrix:
   include:
@@ -29,5 +29,4 @@ script: ./build.sh
 
 notifications:
   email:
-    - adriaan.moors@lightbend.com
     - seth.tisue@lightbend.com
