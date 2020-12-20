@@ -41,12 +41,9 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
       )
       case _ => Seq()
     }),
-    // don't run Dottydoc, it errors and isn't needed anyway
-    Compile / doc / sources := (if (isDotty.value) Seq() else (Compile / doc/ sources).value),
-    Compile / packageDoc / publishArtifact := !isDotty.value,
     Compile / doc / scalacOptions ++= {
       if (isDotty.value)
-        Seq()
+        Seq()  // TODO see what flags might be desirable to pass to Scala3doc
       else
         Seq(
           "-diagrams",
