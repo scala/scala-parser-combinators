@@ -18,9 +18,11 @@ env:
 matrix:
   include:
     - scala: 2.11.12
-      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.3.9
-    - scala: 2.11.12
-      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0-M2
+      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
+    - scala: 2.12.13
+      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
+    - scala: 2.13.4
+      env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
 
 install:
   - git fetch --tags # get all tags for sbt-dynver

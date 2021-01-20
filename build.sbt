@@ -83,10 +83,10 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   )
   .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
   .nativeSettings(
-    compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2.11"),
+    compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("3"),
     test := {},
     libraryDependencies := {
-      if (!scalaVersion.value.startsWith("2.11"))
+      if (!scalaVersion.value.startsWith("3"))
         libraryDependencies.value.filterNot(_.organization == "org.scala-native")
       else libraryDependencies.value
     }
