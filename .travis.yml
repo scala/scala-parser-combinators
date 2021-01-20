@@ -31,5 +31,4 @@ script: ./build.sh
 
 notifications:
   email:
-    - adriaan.moors@lightbend.com
     - seth.tisue@lightbend.com
