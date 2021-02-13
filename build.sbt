@@ -11,7 +11,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleMimaPreviousVersion := None,  // until we publish 1.2.0
 
-    libraryDependencies += "junit" % "junit" % "4.13.1" % Test,
+    libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
     // so we can `@nowarn` in test code, but only in test code, so the dependency
     // doesn't leak downstream
