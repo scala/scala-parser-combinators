@@ -11,7 +11,7 @@ This library was originally part of the Scala standard library, but is now commu
 
 The latest stable release is 1.1.2.
 
-Experimental milestone 1.2.x milestones are available. Since 1.2.0-M1, Scala 3 is supported.
+Experimental milestone 1.2.x milestones are available that include Scala 3 support.
 
 ## Documentation
 
