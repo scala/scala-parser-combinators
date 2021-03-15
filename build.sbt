@@ -41,10 +41,8 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
       )
       case _ => Seq()
     }),
-    Compile / doc / scalacOptions ++= {
-      if (isDotty.value)
-        Seq()  // TODO see what flags might be desirable to pass to Scala 3's Scaladoc
-      else
+    Compile / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, _)) =>
         Seq(
           "-diagrams",
           "-doc-source-url",
@@ -56,7 +54,9 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
           "-doc-version",
           version.value
         )
-    },
+      case _ =>
+        Seq()  // TODO see what flags might be desirable to pass to Scala 3's Scaladoc?
+    }),
     Compile / unmanagedSourceDirectories ++= {
       (Compile / unmanagedSourceDirectories).value.map { dir =>
         CrossVersion.partialVersion(scalaVersion.value) match {
