@@ -11,7 +11,11 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .settings(
     ScalaModulePlugin.scalaModuleSettings,
     name := "scala-parser-combinators",
-    scalaModuleMimaPreviousVersion := Some("1.2.0-M2"),
+    scalaModuleMimaPreviousVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
+      // pending resolution of https://github.com/scalacenter/sbt-version-policy/issues/62
+      case Some((3, _)) => None
+      case _            => Some("1.2.0-M2")
+    }),
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
