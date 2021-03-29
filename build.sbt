@@ -21,7 +21,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
     // so we can `@nowarn` in test code, but only in test code, so the dependency
     // doesn't leak downstream
-    libraryDependencies += "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.2" % Test,
+    libraryDependencies += "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.3" % Test,
 
     apiMappings ++= scalaInstance.value.libraryJars.collect {
       case file if file.getName.startsWith("scala-library") && file.getName.endsWith(".jar") =>
@@ -47,10 +47,10 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
       )
       case _ => Seq()
     }),
-    Compile / doc / scalacOptions ++= {
-      if (isDotty.value)
+    Compile / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) =>
         Seq()  // TODO see what flags might be desirable to pass to Scala 3's Scaladoc
-      else
+      case _ =>
         Seq(
           "-diagrams",
           "-doc-source-url",
@@ -62,7 +62,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
           "-doc-version",
           version.value
         )
-    },
+    }),
     Compile / unmanagedSourceDirectories ++= {
       (Compile / unmanagedSourceDirectories).value.map { dir =>
         CrossVersion.partialVersion(scalaVersion.value) match {

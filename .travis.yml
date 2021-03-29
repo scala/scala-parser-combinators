@@ -5,6 +5,7 @@ import: scala/scala-dev:travis/default.yml
 language: scala
 
 scala:
+  - 3.0.0-RC2
   - 3.0.0-RC1
   - 2.11.12
   - 2.12.13
