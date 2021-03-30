@@ -14,7 +14,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     scalaModuleMimaPreviousVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
       // pending resolution of https://github.com/scalacenter/sbt-version-policy/issues/62
       case Some((3, _)) => None
-      case _            => Some("1.2.0-M2")
+      case _            => Some("1.2.0-RC1")
     }),
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
