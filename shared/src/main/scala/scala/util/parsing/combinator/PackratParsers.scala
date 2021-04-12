@@ -101,7 +101,7 @@ trait PackratParsers extends Parsers {
    *  Overridden to make sure any input passed to the argument parser
    *  is wrapped in a `PackratReader`.
    */
-  override def phrase[T](p: Parser[T]) = {
+  override def phrase[T](p: Parser[T]): PackratParser[T] = {
     val q = super.phrase(p)
     new PackratParser[T] {
       def apply(in: Input) = in match {

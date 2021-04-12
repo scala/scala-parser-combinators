@@ -133,6 +133,35 @@ class PackratParsersTest {
     assertFailure("end of input", "a a a a b b b b c c c")
   }
 
+  @Test
+  def test4: Unit = {
+    import grammars4._
+    import grammars4.parser._
+
+    def extractResult(r: ParseResult[Res]): Res = r match {
+      case Success(a,_) => a
+      case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
+    }
+    def check(expected: Term, input: String, ctx: Ctx): Unit = {
+      val parseResult = phraseTerm(new lexical.Scanner(input))
+      val result = extractResult(parseResult)
+      val term = result(ctx)
+      assertEquals(expected, term)
+    }
+
+    check(Var(-1, 0), "x", Nil)
+    check(Var(0, 3), "x", List("x", "y", "z"))
+    check(Var(1, 3), "y", List("x", "y", "z"))
+    check(Var(2, 3), "z", List("x", "y", "z"))
+
+    check(App(Var(0, 2), Var(1, 2)), "x y", List("x", "y"))
+    check(App(App(Var(0, 2), Var(1, 2)), Var(0, 2)), "x y x", List("x", "y"))
+    check(App(App(Var(0, 2), Var(1, 2)), Var(0, 2)), "(x y) x", List("x", "y"))
+    check(Abs(App(App(Var(0, 1), Var(0, 1)), Var(0, 1))), """\x. x x x""", List())
+  }
+
 }
 
 private object grammars1 extends StandardTokenParsers with PackratParsers {
@@ -194,4 +223,27 @@ private object grammars3 extends StandardTokenParsers with PackratParsers {
   def repMany1[T](p: => Parser[T], q: => Parser[T]): Parser[List[T]] =
     p~opt(repMany(p,q))~q ^^ {case x~Some(xs)~y => x::xs:::(y::Nil)}
 
+}
+
+private object grammars4 {
+  // untyped lambda calculus with named vars -> de brujin indices conversion on the fly
+  // Adapted from https://github.com/ilya-klyuchnikov/tapl-scala/blob/master/src/main/scala/tapl/untyped/parser.scala
+  sealed trait Term
+  case class Var(i: Int, cl: Int) extends Term
+  case class Abs(t: Term) extends Term
+  case class App(t1: Term, t2: Term) extends Term
+
+  object parser extends StandardTokenParsers with PackratParsers {
+    lexical.delimiters ++= List("(", ")", ".", "\\")
+
+    type Res = Ctx => Term
+    type Ctx = List[String]
+
+    private val term: PackratParser[Res] = app | atom | abs
+    private val atom: PackratParser[Res] = "(" ~> term <~ ")" | id
+    private val id  : PackratParser[Res] = ident ^^ { n => (c: Ctx) => Var(c.indexOf(n), c.length) }
+    private val app : PackratParser[Res] = (app ~ atom) ^^ {case t1 ~ t2 => (c: Ctx) => App(t1(c), t2(c)) } | atom
+    private val abs : PackratParser[Res] = "\\" ~> ident ~ ("." ~> term) ^^ {case v ~ t => (c: Ctx) => Abs(t(v::c))}
+    val phraseTerm  : PackratParser[Res] = phrase(term)
+  }
 }
