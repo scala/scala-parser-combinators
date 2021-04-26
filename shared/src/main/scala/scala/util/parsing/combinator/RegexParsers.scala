@@ -36,13 +36,13 @@ import scala.language.implicitConversions
  *    def number: Parser[Double] = """\d+(\.\d*)?""".r ^^ { _.toDouble }
  *    def factor: Parser[Double] = number | "(" ~> expr <~ ")"
  *    def term  : Parser[Double] = factor ~ rep( "*" ~ factor | "/" ~ factor) ^^ {
- *      case number ~ list => (number /: list) {
+ *      case number ~ list => list.foldLeft(number) {
  *        case (x, "*" ~ y) => x * y
  *        case (x, "/" ~ y) => x / y
  *      }
  *    }
  *    def expr  : Parser[Double] = term ~ rep("+" ~ log(term)("Plus term") | "-" ~ log(term)("Minus term")) ^^ {
- *      case number ~ list => list.foldLeft(number) { // same as before, using alternate name for /:
+ *      case number ~ list => list.foldLeft(number) {
  *        case (x, "+" ~ y) => x + y
  *        case (x, "-" ~ y) => x - y
  *      }
