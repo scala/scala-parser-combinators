@@ -11,16 +11,21 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .settings(
     ScalaModulePlugin.scalaModuleSettings,
     name := "scala-parser-combinators",
+
+    // once https://github.com/lightbend/mima/issues/630 is fixed and sbt-scala-module
+    // adopts the fixed version, we'll be able to just do:
+    // scalaModuleMimaPreviousVersion := Some("2.0.0"),
+    // but for the time being we must still:
     scalaModuleMimaPreviousVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
-      // pending resolution of https://github.com/scalacenter/sbt-version-policy/issues/62
-      case Some((3, _)) => None
-      case _            => Some("1.2.0-RC1")
-    }),
+       // pending resolution of https://github.com/scalacenter/sbt-version-policy/issues/62
+       case Some((3, _)) => None
+       case _            => Some("1.2.0-RC1")
+     }),
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
     // so we can `@nowarn` in test code, but only in test code, so the dependency
-    // doesn't leak downstream
+    // doesn't leak downstream. can be dropped when we drop 2.11 from the crossbuild
     libraryDependencies += "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4" % Test,
 
     apiMappings ++= scalaInstance.value.libraryJars.collect {
