@@ -9,7 +9,7 @@ scala:
   - 3.0.0-RC3
   - 2.11.12
   - 2.12.13
-  - 2.13.5
+  - 2.13.6
 
 env:
   - ADOPTOPENJDK=8     SCALAJS_VERSION=       CACHE_WORKAROUND=see-PR-335
@@ -22,7 +22,7 @@ matrix:
       env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
     - scala: 2.12.13
       env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
-    - scala: 2.13.5
+    - scala: 2.13.6
       env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
 
 install:
