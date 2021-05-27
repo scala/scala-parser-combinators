@@ -11,6 +11,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .settings(
     ScalaModulePlugin.scalaModuleSettings,
     name := "scala-parser-combinators",
+    scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
     // once https://github.com/lightbend/mima/issues/630 is fixed and sbt-scala-module
     // adopts the fixed version, we'll be able to just do:
