@@ -20,7 +20,7 @@ matrix:
   include:
     - scala: 2.11.12
       env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
-    - scala: 2.12.13
+    - scala: 2.12.14
       env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
     - scala: 2.13.6
       env: ADOPTOPENJDK=8     SCALANATIVE_VERSION=0.4.0
