@@ -25,12 +25,12 @@ class gh56 {
       """/* an unclosed comment
         |of multiple lines
         |just to check longString/lineContents
-      """.stripMargin
+        |""".stripMargin
 
     val fail =
-      """[1.1] failure: identifier expected
+      """[4.1] failure: identifier expected
         |
-        |/* an unclosed comment
+        |
         |^""".stripMargin
 
     val parseResult = phrase(term)(new lexical.Scanner(expr))
@@ -46,10 +46,10 @@ class gh56 {
     val expr = "/* an unclosed comment without newline"
 
     val fail =
-      """[1.1] failure: identifier expected
+      """[1.39] failure: identifier expected
         |
         |/* an unclosed comment without newline
-        |^""".stripMargin
+        |                                      ^""".stripMargin
 
     val parseResult = phrase(term)(new lexical.Scanner(expr))
     assertTrue(parseResult.isInstanceOf[Failure])
