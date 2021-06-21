@@ -16,7 +16,6 @@ package util.parsing.combinator
 import scala.util.parsing.input._
 import scala.collection.mutable.ListBuffer
 import scala.annotation.tailrec
-import scala.annotation.migration
 import scala.language.implicitConversions
 
 // TODO: better error handling (labelling like parsec's <?>)
@@ -265,7 +264,6 @@ trait Parsers {
 
     // no filter yet, dealing with zero is tricky!
 
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def append[U >: T](p0: => Parser[U]): Parser[U] = { lazy val p = p0 // lazy argument
       Parser{ in => this(in) append p(in)}
     }
@@ -284,7 +282,6 @@ trait Parsers {
      *         but easier to pattern match on) that contains the result of `p` and
      *         that of `q`. The resulting parser fails if either `p` or `q` fails.
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def ~ [U](q: => Parser[U]): Parser[~[T, U]] = { lazy val p = q // lazy argument
       (for(a <- this; b <- p) yield new ~(a,b)).named("~")
     }
@@ -297,7 +294,6 @@ trait Parsers {
      *        succeeds -- evaluated at most once, and only when necessary.
      * @return a `Parser` that -- on success -- returns the result of `q`.
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def ~> [U](q: => Parser[U]): Parser[U] = { lazy val p = q // lazy argument
       (for(a <- this; b <- p) yield b).named("~>")
     }
@@ -312,7 +308,6 @@ trait Parsers {
      * @param q a parser that will be executed after `p` (this parser) succeeds -- evaluated at most once, and only when necessary
      * @return a `Parser` that -- on success -- returns the result of `p`.
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def <~ [U](q: => Parser[U]): Parser[T] = { lazy val p = q // lazy argument
       (for(a <- this; b <- p) yield a).named("<~")
     }
@@ -355,7 +350,6 @@ trait Parsers {
      * @return a `Parser` that -- on success -- reutrns the result of `q`.
      *         The resulting parser fails if either `p` or `q` fails, this failure is fatal.
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def ~>! [U](q: => Parser[U]): Parser[U] = { lazy val p = q // lazy argument
       OnceParser { (for(a <- this; b <- commit(p)) yield b).named("~>!") }
     }
@@ -369,7 +363,6 @@ trait Parsers {
      * @return a `Parser` that -- on success -- reutrns the result of `p`.
      *         The resulting parser fails if either `p` or `q` fails, this failure is fatal.
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def <~! [U](q: => Parser[U]): Parser[T] = { lazy val p = q // lazy argument
       OnceParser { (for(a <- this; b <- commit(p)) yield a).named("<~!") }
     }
@@ -396,7 +389,6 @@ trait Parsers {
      * @param q0 a parser that accepts if p consumes less characters. -- evaluated at most once, and only when necessary
      * @return a `Parser` that returns the result of the parser consuming the most characters (out of `p` and `q`).
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def ||| [U >: T](q0: => Parser[U]): Parser[U] = new Parser[U] {
       lazy val q = q0 // lazy argument
       def apply(in: Input) = {
@@ -433,7 +425,6 @@ trait Parsers {
      * @param v The new result for the parser, evaluated at most once (if `p` succeeds), not evaluated at all if `p` fails.
      * @return a parser that has the same behaviour as the current parser, but whose successful result is `v`
      */
-    @migration("The call-by-name argument is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
     def ^^^ [U](v: => U): Parser[U] =  new Parser[U] {
       lazy val v0 = v // lazy argument
       def apply(in: Input) = Parser.this(in) map (x => v0)
@@ -772,7 +763,6 @@ trait Parsers {
    * @return A parser that returns a list of results produced by first applying `f` and then
    *         repeatedly `p` to the input (it only succeeds if `f` matches).
    */
-  @migration("The `p0` call-by-name arguments is evaluated at most once per constructed Parser object, instead of on every need that arises during parsing.", "2.9.0")
   def rep1[T](first: => Parser[T], p0: => Parser[T]): Parser[List[T]] = Parser { in =>
     lazy val p = p0 // lazy argument
     val elems = new ListBuffer[T]
