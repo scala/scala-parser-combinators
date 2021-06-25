@@ -13,15 +13,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
-    // once https://github.com/lightbend/mima/issues/630 is fixed and sbt-scala-module
-    // adopts the fixed version, we'll be able to just do:
-    // scalaModuleMimaPreviousVersion := Some("2.0.0"),
-    // but for the time being we must still:
-    scalaModuleMimaPreviousVersion := (CrossVersion.partialVersion(scalaVersion.value) match {
-       // pending resolution of https://github.com/scalacenter/sbt-version-policy/issues/62
-       case Some((3, _)) => None
-       case _            => Some("1.2.0-RC1")
-     }),
+    scalaModuleMimaPreviousVersion := Some("2.0.0"),
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
