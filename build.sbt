@@ -3,7 +3,9 @@ lazy val root = project.in(file("."))
   .settings(
     publish / skip := true,
     ThisBuild / versionScheme := Some("early-semver"),
-    ThisBuild / versionPolicyIntention := Compatibility.BinaryAndSourceCompatible
+    ThisBuild / versionPolicyIntention := Compatibility.BinaryCompatible,
+    // because it doesn't declare it itself
+    ThisBuild / versionPolicyDependencySchemes += "org.scala-js" %% "scalajs-library" % "semver-spec"
   )
 
 lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
