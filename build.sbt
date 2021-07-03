@@ -87,7 +87,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     // Scala.js cannot run forked tests
     Test / fork := false
   )
-  .jsConfigure(_.enablePlugins(ScalaJSJUnitPlugin))
+  .jsEnablePlugins(ScalaJSJUnitPlugin)
   .nativeSettings(
     scalaModuleMimaPreviousVersion := None, // https://github.com/scala/scala-parser-combinators/pull/381
     compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2"),
