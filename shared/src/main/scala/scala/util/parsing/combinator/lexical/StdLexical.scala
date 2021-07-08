@@ -36,19 +36,22 @@ import scala.collection.mutable
 class StdLexical extends Lexical with StdTokens {
   // see `token` in `Scanners`
   def token: Parser[Token] =
-    ( identChar ~ rep( identChar | digit )              ^^ { case first ~ rest => processIdent(first :: rest mkString "") }
-    | digit ~ rep( digit )                              ^^ { case first ~ rest => NumericLit(first :: rest mkString "") }
-    | '\'' ~ rep( chrExcept('\'', '\n', EofCh) ) ~ '\'' ^^ { case '\'' ~ chars ~ '\'' => StringLit(chars mkString "") }
-    | '\"' ~ rep( chrExcept('\"', '\n', EofCh) ) ~ '\"' ^^ { case '\"' ~ chars ~ '\"' => StringLit(chars mkString "") }
-    | EofCh                                             ^^^ EOF
-    | '\'' ~> failure("unclosed string literal")
-    | '\"' ~> failure("unclosed string literal")
+    ( identChar ~ rep( identChar | digit ) ^^ { case first ~ rest => processIdent(first :: rest mkString "") }
+    | digit ~ rep( digit )                 ^^ { case first ~ rest => NumericLit(first :: rest mkString "") }
+    | '\'' ~> rep( chrExcept('\'', '\n') ) >> { chars => stringEnd('\'', chars) }
+    | '\"' ~> rep( chrExcept('\"', '\n') ) >> { chars => stringEnd('\"', chars) }
+    | EofCh                                ^^^ EOF
     | delim
     | failure("illegal character")
     )
 
   /** Returns the legal identifier chars, except digits. */
   def identChar = letter | elem('_')
+
+  /** Parses the final quote of a string literal or fails if it is unterminated. */
+  private def stringEnd(quoteChar: Char, chars: List[Char]): Parser[Token] = {
+    { elem(quoteChar) ^^^ StringLit(chars mkString "") } | err("unclosed string literal")
+  }
 
   // see `whitespace in `Scanners`
   def whitespace: Parser[Any] = rep[Any](
