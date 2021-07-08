@@ -6,7 +6,6 @@ import org.junit.Assert.assertEquals
 import scala.util.parsing.input.Reader
 
 import scala.collection.mutable.ListBuffer
-import java.awt.RenderingHints.Key
 
 class StdLexicalTest {
   private def lex[Lexer <: StdLexical](lexer: Lexer, input: String): List[lexer.Token] = {
@@ -121,6 +120,22 @@ class StdLexicalTest {
     assertEquals(
       List(Identifier("id1"), Identifier("id2")),
       lex(Lexer, "/* single */ id1 /* multi \n line */ id2")
+    )
+  }
+
+  @Test
+  def parseUnclosedComments: Unit = {
+    object Lexer extends StdLexical
+    import Lexer._
+
+    assertEquals(
+      List(Identifier("id"), ErrorToken("unclosed comment")),
+      lex(Lexer, "id /*")
+    )
+
+    assertEquals(
+      List(Identifier("id"), ErrorToken("unclosed comment")),
+      lex(Lexer, "id /* ")
     )
   }
 }

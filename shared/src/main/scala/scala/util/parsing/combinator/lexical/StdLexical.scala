@@ -58,7 +58,7 @@ class StdLexical extends Lexical with StdTokens {
       whitespaceChar
     | '/' ~ '*' ~ comment
     | '/' ~ '/' ~ rep( chrExcept(EofCh, '\n') )
-    | '/' ~ '*' ~ failure("unclosed comment")
+    | '/' ~ '*' ~ rep( elem("", _ => true) ) ~> err("unclosed comment")
     )
 
   protected def comment: Parser[Any] = (
