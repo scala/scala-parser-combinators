@@ -21,7 +21,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
     // so we can `@nowarn` in test code, but only in test code, so the dependency
     // doesn't leak downstream. can be dropped when we drop 2.11 from the crossbuild
-    libraryDependencies += "org.scala-lang.modules" %% "scala-collection-compat" % "2.4.4" % Test,
+    libraryDependencies += "org.scala-lang.modules" %% "scala-collection-compat" % "2.5.0" % Test,
 
     apiMappings ++= scalaInstance.value.libraryJars.collect {
       case file if file.getName.startsWith("scala-library") && file.getName.endsWith(".jar") =>
