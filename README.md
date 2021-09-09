@@ -8,8 +8,6 @@
 
 This library was originally part of the Scala standard library, but is now community-maintained, under the guidance of the Scala team at Lightbend. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
 
-The latest stable release is 2.0.0.
-
 ## Documentation
 
  * [Current API](https://javadoc.io/page/org.scala-lang.modules/scala-parser-combinators_2.13/latest/scala/util/parsing/combinator/index.html)
@@ -18,10 +16,11 @@ The latest stable release is 2.0.0.
  * "Combinator Parsing", chapter 33 of [_Programming in Scala, Third Edition_](http://www.artima.com/shop/programming_in_scala), shows how to apply this library to e.g. parsing of arithmetic expressions. The second half of the chapter examines how the library is implemented.
 
 ## Adding an sbt dependency
+
 To depend on scala-parser-combinators in sbt, add something like this to your build.sbt:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.0.0"
+libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % <version>
 ```
 
 To support multiple Scala versions, see the example in [scala/scala-module-dependency-sample](https://github.com/scala/scala-module-dependency-sample).
@@ -31,7 +30,7 @@ To support multiple Scala versions, see the example in [scala/scala-module-depen
 Scala-parser-combinators is also available for Scala.js and Scala Native:
 
 ```
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "2.0.0"
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % <version>
 ```
 
 ## Example
