@@ -22,4 +22,4 @@ jobs:
         distribution: adopt
         java-version: ${{matrix.java}}
     - name: Test
-      run: sbt ++${{matrix.scala}} test headerCheck package
+      run: sbt ++${{matrix.scala}} test headerCheck versionPolicyCheck package
