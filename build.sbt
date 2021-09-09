@@ -2,10 +2,12 @@ lazy val root = project.in(file("."))
   .aggregate(parserCombinatorsJVM, parserCombinatorsJS, parserCombinatorsNative)
   .settings(
     publish / skip := true,
+    ThisBuild / licenses += (("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))),
+    ThisBuild / startYear := Some(2004),
     ThisBuild / versionScheme := Some("early-semver"),
     ThisBuild / versionPolicyIntention := Compatibility.BinaryCompatible,
     // because it doesn't declare it itself
-    ThisBuild / versionPolicyDependencySchemes += "org.scala-js" %% "scalajs-library" % "semver-spec"
+    ThisBuild / libraryDependencySchemes += "org.scala-js" %% "scalajs-library" % "semver-spec"
   )
 
 lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -15,7 +17,8 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
-    scalaModuleMimaPreviousVersion := Some("2.0.0"),
+    crossScalaVersions := Seq("2.13.6", "2.12.14", "2.11.12", "3.0.2"),
+    scalaVersion := crossScalaVersions.value.head,
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test,
@@ -89,7 +92,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   )
   .jsEnablePlugins(ScalaJSJUnitPlugin)
   .nativeSettings(
-    scalaModuleMimaPreviousVersion := None, // https://github.com/scala/scala-parser-combinators/pull/381
+    ThisBuild / versionPolicyIntention := Compatibility.None,
     compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2"),
     test := {},
     libraryDependencies := {
