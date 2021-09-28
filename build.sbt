@@ -1,19 +1,24 @@
+ThisBuild / licenses += (("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0")))
+ThisBuild / startYear := Some(2004)
+
+// I thought we could declare these in `ThisBuild` scope but no :-/
+val commonSettings = Seq(
+  versionScheme := Some("early-semver"),
+  versionPolicyIntention := Compatibility.BinaryCompatible,
+)
+
 lazy val root = project.in(file("."))
   .aggregate(parserCombinatorsJVM, parserCombinatorsJS, parserCombinatorsNative)
   .settings(
+    commonSettings,
     publish / skip := true,
-    ThisBuild / licenses += (("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))),
-    ThisBuild / startYear := Some(2004),
-    ThisBuild / versionScheme := Some("early-semver"),
-    ThisBuild / versionPolicyIntention := Compatibility.BinaryCompatible,
-    // because it doesn't declare it itself
-    ThisBuild / libraryDependencySchemes += "org.scala-js" %% "scalajs-library" % "semver-spec"
   )
 
 lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatform)
   .in(file("."))
   .settings(
     ScalaModulePlugin.scalaModuleSettings,
+    commonSettings,
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
@@ -92,7 +97,8 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   )
   .jsEnablePlugins(ScalaJSJUnitPlugin)
   .nativeSettings(
-    ThisBuild / versionPolicyIntention := Compatibility.None,
+    versionPolicyCheck / skip := true,
+    versionCheck       / skip := true,
     compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2"),
     test := {},
     libraryDependencies := {
