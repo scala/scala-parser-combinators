@@ -4,7 +4,7 @@ ThisBuild / startYear := Some(2004)
 // I thought we could declare these in `ThisBuild` scope but no :-/
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
-  versionPolicyIntention := Compatibility.BinaryCompatible,
+  versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
 )
 
 lazy val root = project.in(file("."))
