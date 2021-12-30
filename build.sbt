@@ -26,7 +26,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     scalaVersion := crossScalaVersions.value.head,
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
-    libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.2" % Test,
+    libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
     // so we can `@nowarn` in test code, but only in test code, so the dependency
     // doesn't leak downstream. can be dropped when we drop 2.11 from the crossbuild
     libraryDependencies += "org.scala-lang.modules" %% "scala-collection-compat" % "2.6.0" % Test,
