@@ -66,7 +66,7 @@ For a detailed unpacking of this example see
 
  * See the [Scala Developer Guidelines](https://github.com/scala/scala/blob/2.13.x/CONTRIBUTING.md) for general contributing guidelines
  * Have a look at [existing issues](https://github.com/scala/scala-parser-combinators/issues)
- * Ask questions and discuss [on Gitter](https://gitter.im/scala/contributors)
+ * Ask questions and discuss [in GitHub Discussions](https://github.com/scala/scala-parser-combinators/discussions)
  * Feel free to open draft pull requests with partially completed changes, to get feedback.
 
 ## Alternatives
