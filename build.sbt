@@ -22,7 +22,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
-    crossScalaVersions := Seq("2.13.7", "2.12.15", "2.11.12", "3.0.2"),
+    crossScalaVersions := Seq("2.13.8", "2.12.15", "2.11.12", "3.0.2"),
     scalaVersion := crossScalaVersions.value.head,
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
