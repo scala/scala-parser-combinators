@@ -4,7 +4,12 @@ ThisBuild / startYear := Some(2004)
 // I thought we could declare these in `ThisBuild` scope but no :-/
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
-  versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
+  versionPolicyIntention := {
+    if (scalaVersion.value.startsWith("3"))
+      Compatibility.None
+    else
+      Compatibility.BinaryAndSourceCompatible
+    }
 )
 
 lazy val root = project.in(file("."))
@@ -22,7 +27,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
-    crossScalaVersions := Seq("2.13.8", "2.12.15", "2.11.12", "3.0.2"),
+    crossScalaVersions := Seq("2.13.8", "2.12.15", "2.11.12", "3.1.1"),
     scalaVersion := crossScalaVersions.value.head,
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
