@@ -104,7 +104,6 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .nativeSettings(
     versionPolicyCheck / skip := true,
     versionCheck       / skip := true,
-    compile / skip := System.getProperty("java.version").startsWith("1.6"),
     test := {}
   )
 
