@@ -4,7 +4,12 @@ ThisBuild / startYear := Some(2004)
 // I thought we could declare these in `ThisBuild` scope but no :-/
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
-  versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
+  versionPolicyIntention := {
+    if (scalaVersion.value.startsWith("3"))
+      Compatibility.None
+    else
+      Compatibility.BinaryAndSourceCompatible
+    }
 )
 
 lazy val root = project.in(file("."))
@@ -22,7 +27,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
 
-    crossScalaVersions := Seq("2.13.8", "2.12.15", "2.11.12", "3.0.2"),
+    crossScalaVersions := Seq("2.13.8", "2.12.15", "2.11.12", "3.1.1"),
     scalaVersion := crossScalaVersions.value.head,
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
@@ -99,13 +104,10 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
   .nativeSettings(
     versionPolicyCheck / skip := true,
     versionCheck       / skip := true,
-    compile / skip := System.getProperty("java.version").startsWith("1.6") || !scalaVersion.value.startsWith("2"),
-    test := {},
-    libraryDependencies := {
-      if (!scalaVersion.value.startsWith("2"))
-        libraryDependencies.value.filterNot(_.organization == "org.scala-native")
-      else libraryDependencies.value
-    }
+    Test / fork := false,
+    libraryDependencies :=
+        libraryDependencies.value.filterNot(_.organization == "junit") :+ "org.scala-native" %%% "junit-runtime" % "0.4.3",
+    addCompilerPlugin("org.scala-native" % "junit-plugin" % "0.4.3" cross CrossVersion.full)
   )
 
 lazy val parserCombinatorsJVM    = parserCombinators.jvm
