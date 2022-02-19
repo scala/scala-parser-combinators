@@ -8,7 +8,7 @@ val commonSettings = Seq(
     if (scalaVersion.value.startsWith("3"))
       Compatibility.None
     else
-      Compatibility.BinaryAndSourceCompatible
+      Compatibility.BinaryCompatible
     }
 )
 
