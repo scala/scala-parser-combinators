@@ -71,4 +71,4 @@ For a detailed unpacking of this example see
 
 ## Alternatives
 
-A number of other parsing libraries for Scala are available; see https://github.com/lauris/awesome-scala#parsing
+A number of other parsing libraries for Scala are available; see https://index.scala-lang.org/awesome/parsing?sort=stars
