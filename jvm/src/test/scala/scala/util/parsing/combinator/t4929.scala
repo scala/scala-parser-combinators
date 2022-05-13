@@ -16,6 +16,7 @@ import collection.JavaConverters._
 
 import org.junit.Test
 
+@deprecated("", "")
 class t4929 {
 
   val LIMIT = 2000

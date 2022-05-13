@@ -16,6 +16,7 @@ import scala.collection.immutable.TreeMap
 import org.junit.Test
 import org.junit.Assert.{assertEquals, assertTrue}
 
+@deprecated("", "")
 class JsonTest {
   /* This method converts parsed JSON back into real JSON notation with objects in
    * sorted-key order. Not required by the spec, but it allows us to do a stable
@@ -43,23 +44,23 @@ class JsonTest {
   }
 
   // For this one, just parsing should be considered a pass
-  def printJSON(given : String) : Unit =
-    assertTrue("Parse failed for \"%s\"".format(given), (JSON parseRaw given).isDefined)
+  def printJSON(`given` : String) : Unit =
+    assertTrue("Parse failed for \"%s\"".format(`given`), (JSON parseRaw `given`).isDefined)
    
   // For this usage, do a raw parse (to JSONObject/JSONArray)
-  def printJSON(given : String, expected : JSONType): Unit = {
-    printJSON(given, JSON.parseRaw, expected)
+  def printJSON(`given` : String, expected : JSONType): Unit = {
+    printJSON(`given`, JSON.parseRaw, expected)
   }
 
   // For this usage, do a raw parse (to JSONType and subclasses)
-  def printJSONFull(given : String, expected : Any): Unit = {
-    printJSON(given, JSON.parseFull, expected)
+  def printJSONFull(`given` : String, expected : Any): Unit = {
+    printJSON(`given`, JSON.parseFull, expected)
   }
 
   // For this usage, do configurable parsing so that you can do raw if desired
-  def printJSON[T](given : String, parser : String => T, expected : Any): Unit = {
-    parser(given) match {
-      case None => assertTrue("Parse failed for \"%s\"".format(given), false)
+  def printJSON[T](`given` : String, parser : String => T, expected : Any): Unit = {
+    parser(`given`) match {
+      case None => assertTrue("Parse failed for \"%s\"".format(`given`), false)
       case Some(parsed) => if (parsed != expected) {
         val eStr = sortJSON(expected).toString
         val pStr = sortJSON(parsed).toString
