@@ -1,13 +1,7 @@
-val scalaJSVersion =
-  Option(System.getenv("SCALAJS_VERSION")).filter(_.nonEmpty).getOrElse("0.6.32")
+addSbtPlugin("org.scala-lang.modules" % "sbt-scala-module" % "3.0.1")
 
-val scalaNativeVersion =
-  Option(System.getenv("SCALANATIVE_VERSION")).filter(_.nonEmpty).getOrElse("0.3.9")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.2.0")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.10.0")
 
-addSbtPlugin("org.scala-lang.modules" % "sbt-scala-module" % "2.1.3")
-
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.0.0")
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
-
-addSbtPlugin("org.portable-scala" % "sbt-scala-native-crossproject" % "1.0.0")
-addSbtPlugin("org.scala-native" % "sbt-scala-native" % scalaNativeVersion)
+addSbtPlugin("org.portable-scala" % "sbt-scala-native-crossproject" % "1.2.0")
+addSbtPlugin("org.scala-native" % "sbt-scala-native" % "0.4.4")

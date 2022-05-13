@@ -33,6 +33,12 @@ build.properties
 /.idea
 /.settings
 
+# vscode, metals
+.bloop/
+/.metals/
+/.vscode/
+/project/**/metals.sbt
+
 # bak files produced by ./cleanup-commit
 *.bak
 
@@ -42,4 +48,6 @@ qbin
 # Mac specific, but that is common enough a dev platform to warrant inclusion.
 .DS_Store
 
+# sbt
 target/
+/.bsp/

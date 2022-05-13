@@ -105,7 +105,6 @@ import PagedSeq._
  *
  *  @tparam T     the type of the elements contained in this paged sequence, with an `ClassTag` context bound.
  *
- *  @author Martin Odersky
  *  @define Coll `PagedSeq`
  *  @define coll paged sequence
  *  @define mayNotTerminateInf

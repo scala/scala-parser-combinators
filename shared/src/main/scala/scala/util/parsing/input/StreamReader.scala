@@ -14,8 +14,6 @@ package scala
 package util.parsing.input
 
 /** An object to create a `StreamReader` from a `java.io.Reader`.
- *
- * @author Miles Sabin
  */
 object StreamReader {
   final val EofCh = '\u001a'
@@ -42,9 +40,6 @@ object StreamReader {
  *
  *  If you need to match regexes spanning several lines you should consider
  *  class `PagedSeqReader` instead.
- *
- *  @author Miles Sabin
- *  @author Martin Odersky
  */
 sealed class StreamReader private (seq: PagedSeq[Char], off: Int, lnum: Int, nextEol0: Int) extends PagedSeqReader(seq, off) {
   def this(seq: PagedSeq[Char], off: Int, lnum: Int) = this(seq, off, lnum, -1)

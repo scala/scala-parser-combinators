@@ -51,8 +51,6 @@ import scala.language.implicitConversions
  * @see Alessandro Warth, James R. Douglass, Todd Millstein: "Packrat Parsers Can Support Left Recursion." PEPM'08
  *
  * @since 2.8
- * @author Manohar Jonnalagedda
- * @author Tiark Rompf
  */
 
 trait PackratParsers extends Parsers {
@@ -70,11 +68,11 @@ trait PackratParsers extends Parsers {
      */
     private[PackratParsers] val cache = mutable.HashMap.empty[(Parser[_], Position), MemoEntry[_]]
 
-    private[PackratParsers] def getFromCache[T](p: Parser[T]): Option[MemoEntry[T]] = {
-      cache.get((p, pos)).asInstanceOf[Option[MemoEntry[T]]]
+    private[PackratParsers] def getFromCache[T2](p: Parser[T2]): Option[MemoEntry[T2]] = {
+      cache.get((p, pos)).asInstanceOf[Option[MemoEntry[T2]]]
     }
 
-    private[PackratParsers] def updateCacheAndGet[T](p: Parser[T], w: MemoEntry[T]): MemoEntry[T] = {
+    private[PackratParsers] def updateCacheAndGet[T2](p: Parser[T2], w: MemoEntry[T2]): MemoEntry[T2] = {
       cache.put((p, pos),w)
       w
     }

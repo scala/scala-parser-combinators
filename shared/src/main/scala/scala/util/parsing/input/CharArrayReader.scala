@@ -14,9 +14,6 @@ package scala
 package util.parsing.input
 
 /** An object encapsulating basic character constants.
- *
- * @author Martin Odersky
- * @author Adriaan Moors
  */
 object CharArrayReader {
   final val EofCh = '\u001a'
@@ -27,12 +24,7 @@ object CharArrayReader {
  *
  * @param chars  an array of characters
  * @param index  starting offset into the array; the first element returned will be `source(index)`
- *
- * @author Martin Odersky
- * @author Adriaan Moors
  */
-class CharArrayReader(chars: Array[Char], index: Int) extends CharSequenceReader(chars, index) {
-
+class CharArrayReader(chars: Array[Char], index: Int) extends CharSequenceReader(java.nio.CharBuffer.wrap(chars), index) {
   def this(chars: Array[Char]) = this(chars, 0)
-
 }

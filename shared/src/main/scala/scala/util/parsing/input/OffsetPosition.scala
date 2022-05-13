@@ -20,8 +20,6 @@ import scala.collection.mutable.ArrayBuffer
  *
  *   @param source   The source document
  *   @param offset   The offset indicating the position
- *
- * @author Martin Odersky
  */
 case class OffsetPosition(source: CharSequence, offset: Int) extends Position {
 

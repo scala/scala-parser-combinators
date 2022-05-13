@@ -23,8 +23,6 @@ import input.CharArrayReader.EofCh
  *
  *  Refer to [[scala.util.parsing.combinator.lexical.StdLexical]]
  *  for a concrete implementation for a simple, Scala-like language.
- *
- * @author Martin Odersky, Adriaan Moors
  */
 abstract class Lexical extends Scanners with Tokens {
 

@@ -29,8 +29,6 @@ package util.parsing.json
  * // Per-thread override
  * JSON.perThreadNumberParser = myConversionFunc
  * }}}
- *
- * @author Derek Chen-Becker <"java"+@+"chen-becker"+"."+"org">
  */
 @deprecated("Use The Scala Library Index to find alternatives: https://index.scala-lang.org/", "1.0.6")
 object JSON extends Parser {

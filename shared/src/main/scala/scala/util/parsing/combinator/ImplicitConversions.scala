@@ -27,10 +27,6 @@ import scala.language.implicitConversions
  * The `headOptionTailToFunList` converts a function that takes a `List[A]` to a function that
  * accepts a `~[A, Option[List[A]]]` (this happens when parsing something of the following
  * shape: `p ~ opt("." ~ repsep(p, "."))` -- where `p` is a parser that yields an `A`).
- *
- * @author Martin Odersky
- * @author Iulian Dragos
- * @author Adriaan Moors
  */
 trait ImplicitConversions { self: Parsers =>
   implicit def flatten2[A, B, C]         (f: (A, B) => C) =

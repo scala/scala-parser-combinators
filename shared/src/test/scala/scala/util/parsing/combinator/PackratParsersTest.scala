@@ -1,9 +1,22 @@
+/*
+ * Scala (https://www.scala-lang.org)
+ *
+ * Copyright EPFL and Lightbend, Inc.
+ *
+ * Licensed under Apache License 2.0
+ * (http://www.apache.org/licenses/LICENSE-2.0).
+ *
+ * See the NOTICE file distributed with this work for
+ * additional information regarding copyright ownership.
+ */
+
 package scala.util.parsing.combinator
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
+import scala.language.implicitConversions
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 class PackratParsersTest {
@@ -16,6 +29,8 @@ class PackratParsersTest {
     def extractResult(r : ParseResult[Int]): Int = r match {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
     }
     def check(expected: Int, expr: String): Unit = {
       val parseResult = head(new lexical.Scanner(expr))
@@ -70,6 +85,8 @@ class PackratParsersTest {
     def extractResult(r : ParseResult[Int]): Int = r match {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
     }
     def check(expected: Int, expr: String): Unit = {
       val parseResult = head(new lexical.Scanner(expr))
@@ -93,6 +110,8 @@ class PackratParsersTest {
     def extractResult(r: ParseResult[AnBnCnResult]): AnBnCnResult = r match {
       case Success(a,_) => a
       case NoSuccess(a,_) => sys.error(a)
+      case Failure(a, _) => sys.error(a)
+      case Error(a, _) => sys.error(a)
     }
     def threeLists(as: List[Symbol], bs: List[Symbol], cs: List[Symbol]): AnBnCnResult = {
       val as1 = as.map(_.name)
@@ -108,11 +127,11 @@ class PackratParsersTest {
       assertEquals(expected, result)
     }
 
-    assertSuccess(List('a, 'b), List('a), List('b, 'c), "a b c")
-    assertSuccess(List('a, 'a, 'b, 'b), List('a, 'a), List('b, 'b, 'c, 'c), "a a b b c c")
-    assertSuccess(List('a, 'a, 'a, 'b, 'b, 'b), List('a, 'a, 'a), List('b, 'b, 'b, 'c, 'c, 'c),
+    assertSuccess(List(Symbol("a"), Symbol("b")), List(Symbol("a")), List(Symbol("b"), Symbol("c")), "a b c")
+    assertSuccess(List(Symbol("a"), Symbol("a"), Symbol("b"), Symbol("b")), List(Symbol("a"), Symbol("a")), List(Symbol("b"), Symbol("b"), Symbol("c"), Symbol("c")), "a a b b c c")
+    assertSuccess(List(Symbol("a"), Symbol("a"), Symbol("a"), Symbol("b"), Symbol("b"), Symbol("b")), List(Symbol("a"), Symbol("a"), Symbol("a")), List(Symbol("b"), Symbol("b"), Symbol("b"), Symbol("c"), Symbol("c"), Symbol("c")),
       "a a a b b b c c c")
-    assertSuccess(List('a, 'a, 'a, 'a, 'b, 'b, 'b, 'b), List('a, 'a, 'a, 'a), List('b, 'b, 'b, 'b, 'c, 'c, 'c, 'c),
+    assertSuccess(List(Symbol("a"), Symbol("a"), Symbol("a"), Symbol("a"), Symbol("b"), Symbol("b"), Symbol("b"), Symbol("b")), List(Symbol("a"), Symbol("a"), Symbol("a"), Symbol("a")), List(Symbol("b"), Symbol("b"), Symbol("b"), Symbol("b"), Symbol("c"), Symbol("c"), Symbol("c"), Symbol("c")),
       "a a a a b b b b c c c c")
 
     def assertFailure(expectedFailureMsg: String, input: String): Unit = {
@@ -139,14 +158,14 @@ private object grammars1 extends StandardTokenParsers with PackratParsers {
    */
 
 
- val term: PackratParser[Int] = (term~("+"~>fact) ^^ {case x~y => x+y}
-           |term~("-"~>fact) ^^ {case x~y => x-y}
-           |fact)
+   val term: PackratParser[Int] = (term~("+"~>fact) ^^ {case x~y => x+y}
+             |term~("-"~>fact) ^^ {case x~y => x-y}
+             |fact)
 
- val fact: PackratParser[Int] = (fact~("*"~>numericLit) ^^ {case x~y => x*y.toInt}
-           |fact~("/"~>numericLit) ^^ {case x~y => x/y.toInt}
-           |"("~>term<~")"
-           |numericLit ^^ {_.toInt})
+   val fact: PackratParser[Int] = (fact~("*"~>numericLit) ^^ {case x~y => x*y.toInt}
+             |fact~("/"~>numericLit) ^^ {case x~y => x/y.toInt}
+             |"("~>term<~")"
+             |numericLit ^^ {_.toInt})
 }
 
 private object grammars2 extends StandardTokenParsers with PackratParsers {
@@ -183,7 +202,8 @@ private object grammars3 extends StandardTokenParsers with PackratParsers {
    | success(Nil)
   )
 
+  @annotation.nowarn  // Some(xs) in pattern isn't exhaustive
   def repMany1[T](p: => Parser[T], q: => Parser[T]): Parser[List[T]] =
-   p~opt(repMany(p,q))~q ^^ {case x~Some(xs)~y => x::xs:::(y::Nil)}
+    p~opt(repMany(p,q))~q ^^ {case x~Some(xs)~y => x::xs:::(y::Nil)}
 
 }

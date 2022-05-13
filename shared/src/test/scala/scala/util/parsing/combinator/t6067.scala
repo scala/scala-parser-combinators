@@ -1,7 +1,20 @@
+/*
+ * Scala (https://www.scala-lang.org)
+ *
+ * Copyright EPFL and Lightbend, Inc.
+ *
+ * Licensed under Apache License 2.0
+ * (http://www.apache.org/licenses/LICENSE-2.0).
+ *
+ * See the NOTICE file distributed with this work for
+ * additional information regarding copyright ownership.
+ */
+
 import scala.util.parsing.combinator._
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
+import scala.language.implicitConversions
 
 class t6067 extends RegexParsers {
   object TestParser extends RegexParsers {
