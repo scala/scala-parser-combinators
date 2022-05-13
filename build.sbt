@@ -12,7 +12,7 @@ val commonSettings = Seq(
     if (scalaVersion.value.startsWith("3"))
       Compatibility.None
     else
-      Compatibility.BinaryCompatible
+      Compatibility.BinaryAndSourceCompatible
     }
 )
 
@@ -92,9 +92,23 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     mimaBinaryIssueFilters ++= {
       import com.typesafe.tools.mima.core._, ProblemFilters._
       Seq(
-        // these are safe to exclude because they're `private[combinator]`
+        // these are safe to exclude because they're `private[parsing]`
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.combinator.Parsers.Success"),
         exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.Parsers.Success"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.combinator.lexical.Lexical.Success"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.lexical.Lexical.Success"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.combinator.Parsers.selectLastFailure"),
         exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.Parsers.selectLastFailure"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.combinator.lexical.Lexical.selectLastFailure"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.lexical.Lexical.selectLastFailure"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.combinator.syntactical.StandardTokenParsers.Success"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.syntactical.StandardTokenParsers.Success"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.combinator.syntactical.StandardTokenParsers.selectLastFailure"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.combinator.syntactical.StandardTokenParsers.selectLastFailure"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.json.Parser.Success"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.json.Parser.Success"),
+        exclude[DirectMissingMethodProblem  ]("scala.util.parsing.json.Parser.selectLastFailure"),
+        exclude[ReversedMissingMethodProblem]("scala.util.parsing.json.Parser.selectLastFailure"),
       )
     },
   )

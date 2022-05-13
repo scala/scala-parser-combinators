@@ -11,7 +11,8 @@
  */
 
 package scala
-package util.parsing.combinator
+package util.parsing
+package combinator
 
 import scala.util.parsing.input._
 import scala.collection.mutable.ListBuffer
@@ -132,7 +133,7 @@ trait Parsers {
    *  @param next   The parser's remaining input
    */
   case class Success[+T](result: T, override val next: Input) extends ParseResult[T] {
-    def lastFailure: Option[Failure] = None
+    private[parsing] def lastFailure: Option[Failure] = None
 
     def map[U](f: T => U) = Success(f(result), next, lastFailure)
 
@@ -223,10 +224,10 @@ trait Parsers {
   def Parser[T](f: Input => ParseResult[T]): Parser[T]
     = new Parser[T]{ def apply(in: Input) = f(in) }
 
-  private[combinator] def Success[U](res: U, next: Input, failure: Option[Failure]): Success[U] =
+  private[parsing] def Success[U](res: U, next: Input, failure: Option[Failure]): Success[U] =
     new Success(res, next) { override val lastFailure: Option[Failure] = failure }
 
-  private[combinator] def selectLastFailure(failure0: Option[Failure], failure1: Option[Failure]): Option[Failure] =
+  private[parsing] def selectLastFailure(failure0: Option[Failure], failure1: Option[Failure]): Option[Failure] =
     (failure0, failure1) match {
       case (Some(f0), Some(f1)) =>
         if(f0.next.pos < f1.next.pos) Some(f1)
