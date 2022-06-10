@@ -48,7 +48,7 @@ import scala.language.implicitConversions
  *      }
  *    }
  *
- *    def apply(input: String): Double = parseAll(expr, input) match {
+ *    def parse(input: String): Double = parseAll(expr, input) match {
  *      case Success(result, _) => result
  *      case failure : NoSuccess => scala.sys.error(failure.msg)
  *    }
@@ -83,7 +83,7 @@ trait RegexParsers extends Parsers {
 
   /** A parser that matches a literal string */
   implicit def literal(s: String): Parser[String] = new Parser[String] {
-    def apply(in: Input) = {
+    def parse(in: Input) = {
       val source = in.source
       val offset = in.offset
       val start = handleWhiteSpace(source, offset)
@@ -104,7 +104,7 @@ trait RegexParsers extends Parsers {
 
   /** A parser that matches a regex string */
   implicit def regex(r: Regex): Parser[String] = new Parser[String] {
-    def apply(in: Input) = {
+    def parse(in: Input) = {
       val source = in.source
       val offset = in.offset
       val start = handleWhiteSpace(source, offset)
@@ -131,7 +131,7 @@ trait RegexParsers extends Parsers {
   override def positioned[T <: Positional](p: => Parser[T]): Parser[T] = {
     val pp = super.positioned(p)
     new Parser[T] {
-      def apply(in: Input) = {
+      def parse(in: Input) = {
         val offset = in.offset
         val start = handleWhiteSpace(in.source, offset)
         pp(in.drop (start - offset))
@@ -141,7 +141,7 @@ trait RegexParsers extends Parsers {
 
   // we might want to make it public/protected in a future version
   private def ws[T](p: Parser[T]): Parser[T] = new Parser[T] {
-    def apply(in: Input) = {
+    def parse(in: Input) = {
       val offset = in.offset
       val start = handleWhiteSpace(in.source, offset)
       p(in.drop (start - offset))
