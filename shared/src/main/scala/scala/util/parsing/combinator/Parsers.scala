@@ -20,6 +20,12 @@ import scala.language.implicitConversions
 
 // TODO: better error handling (labelling like parsec's <?>)
 
+object Associativity extends Enumeration {
+  type Associativity = Value
+
+  val Left, Right, Non = Value
+}
+
 /** `Parsers` is a component that ''provides'' generic parser combinators.
  *
  *  There are two abstract members that must be defined in order to
@@ -1036,5 +1042,68 @@ trait Parsers {
 
     override def <~ [U](p: => Parser[U]): Parser[T]
       = OnceParser{ (for(a <- this; _ <- commit(p)) yield a).named("<~") }
+  }
+
+  import Associativity._
+
+  class PrecedenceParser[Exp,Op](primary: Parser[Exp],
+                                 binop: Parser[Op],
+                                 precedence: Op => Int,
+                                 associativity: Op => Associativity,
+                                 makeBinop: (Exp, Op, Exp) => Exp) extends Parser[Exp] {
+    class PrecedenceSuffixParser(lhs: Exp, minLevel: Int) extends Parser[Exp] {
+      val opPrimary = binop ~ primary;
+      def parse(input: Input): ParseResult[Exp] = {
+        opPrimary(input) match {
+          case Success(op ~ rhs, next) if precedence(op) >= minLevel => {
+            new PrecedenceRhsSuffixParser(rhs, precedence(op), minLevel)(next) match {
+              case Success(r, nextInput) => new PrecedenceSuffixParser(makeBinop(lhs, op, r), minLevel)(nextInput);
+              case ns => ns // dead code
+            }
+          }
+          case _ => {
+            Success(lhs, input);
+          }
+        }
+      }
+    }
+
+    class PrecedenceRhsSuffixParser(rhs: Exp, currentLevel: Int, minLevel: Int) extends Parser[Exp] {
+      private def nextLevel(nextBinop: Op): Option[Int] = {
+        if (precedence(nextBinop) > currentLevel) {
+          Some(minLevel + 1)
+        } else if (precedence(nextBinop) == currentLevel && associativity(nextBinop) == Associativity.Right) {
+          Some(minLevel)
+        } else {
+          None
+        }
+      }
+      def parse(input: Input): ParseResult[Exp] = {
+        def done: ParseResult[Exp] = Success(rhs, input)
+        binop(input) match {
+          case Success(nextBinop,_) => {
+            nextLevel(nextBinop) match {
+              case Some(level) => {
+                new PrecedenceSuffixParser(rhs, level)(input) match {
+                  case Success(r, next) => new PrecedenceRhsSuffixParser(r, currentLevel, minLevel)(next)
+                  case ns => ns // dead code
+                }
+              }
+              case None => done
+            }
+          }
+          case _ => done
+        }
+      }
+    }
+
+    def parse(input: Input): ParseResult[Exp] = {
+      primary(input) match {
+        case Success(lhs, next) => {
+          new PrecedenceSuffixParser(lhs,0)(next)
+        }
+        case noSuccess => noSuccess
+      }
+    }
   }
 }
