@@ -20,6 +20,9 @@ import scala.language.implicitConversions
 
 // TODO: better error handling (labelling like parsec's <?>)
 
+/** An enumeration of operator associativity values: `Left`, `Right`, and
+ *  `Non`.
+ */
 object Associativity extends Enumeration {
   type Associativity = Value
 
@@ -1046,18 +1049,34 @@ trait Parsers {
 
   import Associativity._
 
-  class PrecedenceParser[Exp,Op](primary: Parser[Exp],
-                                 binop: Parser[Op],
-                                 precedence: Op => Int,
-                                 associativity: Op => Associativity,
-                                 makeBinop: (Exp, Op, Exp) => Exp) extends Parser[Exp] {
-    class PrecedenceSuffixParser(lhs: Exp, minLevel: Int) extends Parser[Exp] {
+  /** A parser that respects operator the precedence and associativity
+   *  conventions specified in its constructor.
+   *
+   *  @param primary a parser that matches atomic expressions (the atomicity is
+   *                 from the perspective of binary operators). May include
+   *                 unary operators or parentheses.
+   *  @param binop a parser that matches binary operators.
+   *  @param precedence a function from operators to their precedence levels.
+   *                    Operators with higher precedence values bind more
+   *                    tightly than those with lower values.
+   * @param associativity a function from operators to their associativity.
+   * @param makeBinop a function that combines two operands and an operator
+   *                  into a new expression. The result must have the same type
+   *                  as the operands because intermediate results become
+   *                  operands to other operators.
+   */
+  class PrecedenceParser[Exp,Op,E <: Exp](primary: Parser[E],
+                                          binop: Parser[Op],
+                                          precedence: Op => Int,
+                                          associativity: Op => Associativity,
+                                          makeBinop: (Exp, Op, Exp) => Exp) extends Parser[Exp] {
+    private class ExpandLeftParser(lhs: Exp, minLevel: Int) extends Parser[Exp] {
       val opPrimary = binop ~ primary;
-      def parse(input: Input): ParseResult[Exp] = {
+      def apply(input: Input): ParseResult[Exp] = {
         opPrimary(input) match {
           case Success(op ~ rhs, next) if precedence(op) >= minLevel => {
-            new PrecedenceRhsSuffixParser(rhs, precedence(op), minLevel)(next) match {
-              case Success(r, nextInput) => new PrecedenceSuffixParser(makeBinop(lhs, op, r), minLevel)(nextInput);
+            new ExpandRightParser(rhs, precedence(op), minLevel)(next) match {
+              case Success(r, nextInput) => new ExpandLeftParser(makeBinop(lhs, op, r), minLevel)(nextInput);
               case ns => ns // dead code
             }
           }
@@ -1068,7 +1087,7 @@ trait Parsers {
       }
     }
 
-    class PrecedenceRhsSuffixParser(rhs: Exp, currentLevel: Int, minLevel: Int) extends Parser[Exp] {
+    private class ExpandRightParser(rhs: Exp, currentLevel: Int, minLevel: Int) extends Parser[Exp] {
       private def nextLevel(nextBinop: Op): Option[Int] = {
         if (precedence(nextBinop) > currentLevel) {
           Some(minLevel + 1)
@@ -1078,14 +1097,14 @@ trait Parsers {
           None
         }
       }
-      def parse(input: Input): ParseResult[Exp] = {
+      def apply(input: Input): ParseResult[Exp] = {
         def done: ParseResult[Exp] = Success(rhs, input)
         binop(input) match {
           case Success(nextBinop,_) => {
             nextLevel(nextBinop) match {
               case Some(level) => {
-                new PrecedenceSuffixParser(rhs, level)(input) match {
-                  case Success(r, next) => new PrecedenceRhsSuffixParser(r, currentLevel, minLevel)(next)
+                new ExpandLeftParser(rhs, level)(input) match {
+                  case Success(r, next) => new ExpandRightParser(r, currentLevel, minLevel)(next)
                   case ns => ns // dead code
                 }
               }
@@ -1097,10 +1116,12 @@ trait Parsers {
       }
     }
 
-    def parse(input: Input): ParseResult[Exp] = {
+    /** Parse an expression.
+     */
+    def apply(input: Input): ParseResult[Exp] = {
       primary(input) match {
         case Success(lhs, next) => {
-          new PrecedenceSuffixParser(lhs,0)(next)
+          new ExpandLeftParser(lhs,0)(next)
         }
         case noSuccess => noSuccess
       }
