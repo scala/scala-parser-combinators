@@ -57,7 +57,7 @@ trait Scanners extends Parsers {
     override def source: java.lang.CharSequence = in.source
     override def offset: Int = in.offset
     def first = tok
-    def rest = new Scanner(rest2)
+    def rest: Scanner = new Scanner(rest2)
     def pos = rest1.pos
     def atEnd = in.atEnd || (whitespace(in) match { case Success(_, in1) => in1.atEnd case _ => false })
   }
