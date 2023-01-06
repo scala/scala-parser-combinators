@@ -104,7 +104,7 @@ trait PackratParsers extends Parsers {
   override def phrase[T](p: Parser[T]): PackratParser[T] = {
     val q = super.phrase(p)
     new PackratParser[T] {
-      def apply(in: Input) = in match {
+      def parse(in: Input) = in match {
         case in: PackratReader[_] => q(in)
         case in => q(new PackratReader(in))
       }
@@ -231,7 +231,7 @@ to update each parser involved in the recursion.
    */
   def memo[T](p: super.Parser[T]): PackratParser[T] = {
     new PackratParser[T] {
-      def apply(in: Input) = {
+      def parse(in: Input) = {
         /*
          * transformed reader
          */

@@ -13,6 +13,7 @@
 package scala
 package util.parsing.combinator
 
+import scala.util.DynamicVariable
 import scala.util.parsing.input._
 import scala.collection.mutable.ListBuffer
 import scala.annotation.tailrec
@@ -221,7 +222,7 @@ trait Parsers {
   }
 
   def Parser[T](f: Input => ParseResult[T]): Parser[T]
-    = new Parser[T]{ def apply(in: Input) = f(in) }
+    = new Parser[T]{ def parse(in: Input) = f(in) }
 
   private[combinator] def Success[U](res: U, next: Input, failure: Option[Failure]): ParseResult[U] =
     new Success(res, next) { override val lastFailure: Option[Failure] = failure }
@@ -236,8 +237,27 @@ trait Parsers {
       case _ => None
     }
 
+  val skipParser: DynamicVariable[Option[Parser[Any]]] = new DynamicVariable(None);
+
+  final def skip(in: Input): Input = {
+    skipParser.value match {
+      case None => in
+      case Some(parser) => {
+        skipParser.withValue(None) {
+          parser(in) match {
+            case Success(_,next) => {
+              next
+            }
+            // A parser whose purpose is to skip shouldn't fail; it should just not skip stuff
+            case _ => in
+          }
+        }
+      }
+    }
+  }
+
   def OnceParser[T](f: Input => ParseResult[T]): Parser[T] with OnceParser[T]
-    = new Parser[T] with OnceParser[T] { def apply(in: Input) = f(in) }
+    = new Parser[T] with OnceParser[T] { def parse(in: Input) = f(in) }
 
   /** The root class of parsers.
    *  Parsers are functions from the Input type to ParseResult.
@@ -248,7 +268,10 @@ trait Parsers {
     override def toString = s"Parser ($name)"
 
     /** An unspecified method that defines the behaviour of this parser. */
-    def apply(in: Input): ParseResult[T]
+    def parse(in: Input): ParseResult[T]
+    def apply(in: Input): ParseResult[T] = {
+      parse(skip(in))
+    }
 
     def flatMap[U](f: T => Parser[U]): Parser[U]
       = Parser{ in => this(in) flatMapWithNext(f)}
@@ -266,6 +289,20 @@ trait Parsers {
 
     def append[U >: T](p0: => Parser[U]): Parser[U] = { lazy val p = p0 // lazy argument
       Parser{ in => this(in) append p(in)}
+    }
+
+    /** A parser combinator that changes skipping behavior
+     */
+    def << (toSkip: => Option[Parser[Any]]): Parser[T] = {
+      val originalParse: Input => ParseResult[T] = parse
+      new Parser[T] {
+        override def apply(in: Input): ParseResult[T] = {
+          skipParser.withValue(toSkip) {
+            parse(skip(in))
+          }
+        }
+        def parse(in: Input): ParseResult[T] = originalParse(in)
+      }.named(name)
     }
 
     // the operator formerly known as +++, ++, &, but now, behold the venerable ~
@@ -324,7 +361,7 @@ trait Parsers {
 
      /* not really useful: V cannot be inferred because Parser is covariant in first type parameter (V is always trivially Nothing)
     def ~~ [U, V](q: => Parser[U])(implicit combine: (T, U) => V): Parser[V] = new Parser[V] {
-      def apply(in: Input) = seq(Parser.this, q)((x, y) => combine(x,y))(in)
+      def parse(in: Input) = seq(Parser.this, q)((x, y) => combine(x,y))(in)
     }  */
 
     /** A parser combinator for non-back-tracking sequential composition.
@@ -391,7 +428,7 @@ trait Parsers {
      */
     def ||| [U >: T](q0: => Parser[U]): Parser[U] = new Parser[U] {
       lazy val q = q0 // lazy argument
-      def apply(in: Input) = {
+      def parse(in: Input) = {
         val res1 = Parser.this(in)
         val res2 = q(in)
 
@@ -427,7 +464,7 @@ trait Parsers {
      */
     def ^^^ [U](v: => U): Parser[U] =  new Parser[U] {
       lazy val v0 = v // lazy argument
-      def apply(in: Input) = Parser.this(in) map (x => v0)
+      def parse(in: Input) = Parser.this(in) map (x => v0)
     }.named(toString+"^^^")
 
     /** A parser combinator for partial function application.
@@ -769,18 +806,18 @@ trait Parsers {
 
     def continue(in: Input, failure: Option[Failure]): ParseResult[List[T]] = {
       val p0 = p    // avoid repeatedly re-evaluating by-name parser
-      @tailrec def applyp(in0: Input, failure: Option[Failure]): ParseResult[List[T]] = p0(in0) match {
+      @tailrec def parsep(in0: Input, failure: Option[Failure]): ParseResult[List[T]] = p0(in0) match {
         case s @ Success(x, rest) =>
           val selectedFailure = selectLastFailure(s.lastFailure, failure)
           elems += x
-          applyp(rest, selectedFailure)
+          parsep(rest, selectedFailure)
         case e @ Error(_, _)  => e  // still have to propagate error
         case f: Failure =>
           val selectedFailure = selectLastFailure(failure, Some(f))
           Success(elems.toList, in0, selectedFailure)
       }
 
-      applyp(in, failure)
+      parsep(in, failure)
     }
 
     first(in) match {
@@ -804,14 +841,14 @@ trait Parsers {
       val elems = new ListBuffer[T]
       val p0 = p    // avoid repeatedly re-evaluating by-name parser
 
-      @tailrec def applyp(in0: Input, failure: Option[Failure]): ParseResult[List[T]] =
+      @tailrec def parsep(in0: Input, failure: Option[Failure]): ParseResult[List[T]] =
         if (elems.length == num) Success(elems.toList, in0, failure)
         else p0(in0) match {
-          case s @ Success(x, rest) => elems += x ; applyp(rest, s.lastFailure)
+          case s @ Success(x, rest) => elems += x ; parsep(rest, s.lastFailure)
           case ns: NoSuccess    => ns
         }
 
-      applyp(in, None)
+      parsep(in, None)
     }
 
   /** A parser generator for a specified range of repetitions interleaved by a
@@ -835,13 +872,13 @@ trait Parsers {
 
     def continue(in: Input): ParseResult[List[T]] = {
       val p0 = sep ~> p // avoid repeatedly re-evaluating by-name parser
-      @tailrec def applyp(in0: Input): ParseResult[List[T]] = p0(in0) match {
-        case Success(x, rest) => elems += x; if (elems.length == m) Success(elems.toList, rest, None) else applyp(rest)
+      @tailrec def parsep(in0: Input): ParseResult[List[T]] = p0(in0) match {
+        case Success(x, rest) => elems += x; if (elems.length == m) Success(elems.toList, rest, None) else parsep(rest)
         case e @ Error(_, _) => e // still have to propagate error
         case _ => Success(elems.toList, in0, None)
       }
 
-      applyp(in)
+      parsep(in)
     }
 
     mandatory(in) match {
@@ -973,7 +1010,7 @@ trait Parsers {
    *           if `p` consumed all the input.
    */
   def phrase[T](p: Parser[T]) = new Parser[T] {
-    def apply(in: Input) = p(in) match {
+    def parse(in: Input) = p(in) match {
       case s @ Success(out, in1) =>
         if (in1.atEnd) s
         else s.lastFailure match {
