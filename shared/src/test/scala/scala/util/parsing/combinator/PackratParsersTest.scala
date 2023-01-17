@@ -28,9 +28,7 @@ class PackratParsersTest {
 
     def extractResult(r : ParseResult[Int]): Int = r match {
       case Success(a,_) => a
-      case NoSuccess(a,_) => sys.error(a)
-      case Failure(a, _) => sys.error(a)
-      case Error(a, _) => sys.error(a)
+      case NoSuccess.I(a,_) => sys.error(a)
     }
     def check(expected: Int, expr: String): Unit = {
       val parseResult = head(new lexical.Scanner(expr))
@@ -84,9 +82,7 @@ class PackratParsersTest {
 
     def extractResult(r : ParseResult[Int]): Int = r match {
       case Success(a,_) => a
-      case NoSuccess(a,_) => sys.error(a)
-      case Failure(a, _) => sys.error(a)
-      case Error(a, _) => sys.error(a)
+      case NoSuccess.I(a,_) => sys.error(a)
     }
     def check(expected: Int, expr: String): Unit = {
       val parseResult = head(new lexical.Scanner(expr))
@@ -109,9 +105,7 @@ class PackratParsersTest {
     val head = phrase(AnBnCn)
     def extractResult(r: ParseResult[AnBnCnResult]): AnBnCnResult = r match {
       case Success(a,_) => a
-      case NoSuccess(a,_) => sys.error(a)
-      case Failure(a, _) => sys.error(a)
-      case Error(a, _) => sys.error(a)
+      case NoSuccess.I(a,_) => sys.error(a)
     }
     def threeLists(as: List[Symbol], bs: List[Symbol], cs: List[Symbol]): AnBnCnResult = {
       val as1 = as.map(_.name)
@@ -152,9 +146,7 @@ class PackratParsersTest {
 
     def extractResult(r: ParseResult[Res]): Res = r match {
       case Success(a,_) => a
-      case NoSuccess(a,_) => sys.error(a)
-      case Failure(a, _) => sys.error(a)
-      case Error(a, _) => sys.error(a)
+      case NoSuccess.I(a,_) => sys.error(a)
     }
     def check(expected: Term, input: String, ctx: Ctx): Unit = {
       val parseResult = phraseTerm(new lexical.Scanner(input))
