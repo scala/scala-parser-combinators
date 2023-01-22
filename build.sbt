@@ -101,13 +101,11 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     Test / fork := false
   )
   .jsEnablePlugins(ScalaJSJUnitPlugin)
+  .nativeEnablePlugins(ScalaNativeJUnitPlugin)
   .nativeSettings(
     versionPolicyCheck / skip := true,
     versionCheck       / skip := true,
     Test / fork := false,
-    libraryDependencies :=
-        libraryDependencies.value.filterNot(_.organization == "junit") :+ "org.scala-native" %%% "junit-runtime" % "0.4.9",
-    addCompilerPlugin("org.scala-native" % "junit-plugin" % "0.4.9" cross CrossVersion.full)
   )
 
 lazy val parserCombinatorsJVM    = parserCombinators.jvm
