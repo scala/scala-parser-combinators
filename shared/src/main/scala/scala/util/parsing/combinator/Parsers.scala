@@ -176,12 +176,33 @@ trait Parsers {
 
     def get: Nothing = scala.sys.error("No result when parsing failed")
   }
-  /** An extractor so `NoSuccess(msg, next)` can be used in matches. */
+  /**
+   * An extractor so `case NoSuccess(msg, next)` can be used in matches.
+   *
+   * Note: On Scala 2.13, using this extractor leads to an exhaustivity warning:
+   *
+   * {{{
+   *   def m(r: ParseResult[Int]) = r match {
+   *     case Success(i) => ...
+   *     case NoSuccess(msg, _) => ... // "warning: match may not be exhaustive"
+   * }}}
+   *
+   * To eliminate this warning, use the irrefutable `NoSuccess.I` extractor.
+   * Due to binary compatibility, `NoSuccess` itself cannot be changed.
+   */
   object NoSuccess {
     def unapply[T](x: ParseResult[T]) = x match {
       case Failure(msg, next)   => Some((msg, next))
       case Error(msg, next)     => Some((msg, next))
       case _                    => None
+    }
+
+    /** An irrefutable version of the `NoSuccess` extractor, used as `case NoSuccess.I(msg, next)`. */
+    object I {
+      def unapply(x: NoSuccess): Some[(String, Input)] = x match {
+        case Failure(msg, next) => Some((msg, next))
+        case Error(msg, next) => Some((msg, next))
+      }
     }
   }
 
