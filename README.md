@@ -13,6 +13,7 @@ This library's main strengths are:
 * Stability. It's been around and in wide use for more than a decade.
 * The codebase is modest in size and its internals are fairly simple.
 * It's plain vanilla Scala. No macros, code generation, or other magic is involved.
+* All versions of Scala (2.11, 2.12, 2.13, 3) are supported on all back ends (JVM, JS, Native).
 
 Its main weaknesses are:
 
