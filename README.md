@@ -16,8 +16,9 @@ This library's main strengths are:
 
 Its main weaknesses are:
 
-* Minimal feature set.
 * Performance. If you are ingesting large amounts of data, you may want something faster.
+* Minimal feature set.
+* Inflexible, unstructured error reporting.
 
 A number of other parsing libraries for Scala are available -- [see list on Scaladex](https://index.scala-lang.org/awesome/parsing?sort=stars).
 
