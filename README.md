@@ -10,12 +10,13 @@ This was originally part of the Scala standard library, but is now community-mai
 
 This library's main strengths are:
 
-* It's been around and in wide use for more than a decade.
+* Stability. It's been around and in wide use for more than a decade.
 * The codebase is modest in size and its internals are fairly simple.
 * It's plain vanilla Scala. No macros, code generation, or other magic is involved.
 
 Its main weaknesses are:
 
+* Minimal feature set.
 * Performance. If you are ingesting large amounts of data, you may want something faster.
 
 A number of other parsing libraries for Scala are available -- [see list on Scaladex](https://index.scala-lang.org/awesome/parsing?sort=stars).
