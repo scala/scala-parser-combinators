@@ -4,9 +4,24 @@
 [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.13.svg?label=latest%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.13)
 [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_3.svg?label=latest%20release%20for%203"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_3)
 
-### Scala Standard Parser Combinator Library
+This was originally part of the Scala standard library, but is now community-maintained, under the guidance of the Scala team at Lightbend. If you are interested in joining the maintainers team, please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
 
-This library was originally part of the Scala standard library, but is now community-maintained, under the guidance of the Scala team at Lightbend. If you are interested in helping please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
+## Choosing a parsing library
+
+This library's main strengths are:
+
+* Stability. It's been around and in wide use for more than a decade.
+* The codebase is modest in size and its internals are fairly simple.
+* It's plain vanilla Scala. No macros, code generation, or other magic is involved.
+* All versions of Scala (2.11, 2.12, 2.13, 3) are supported on all back ends (JVM, JS, Native).
+
+Its main weaknesses are:
+
+* Performance. If you are ingesting large amounts of data, you may want something faster.
+* Minimal feature set.
+* Inflexible, unstructured error reporting.
+
+A number of other parsing libraries for Scala are available -- [see list on Scaladex](https://index.scala-lang.org/awesome/parsing?sort=stars).
 
 ## Documentation
 
@@ -68,7 +83,3 @@ For a detailed unpacking of this example see
  * Have a look at [existing issues](https://github.com/scala/scala-parser-combinators/issues)
  * Ask questions and discuss [in GitHub Discussions](https://github.com/scala/scala-parser-combinators/discussions)
  * Feel free to open draft pull requests with partially completed changes, to get feedback.
-
-## Alternatives
-
-A number of other parsing libraries for Scala are available; see https://index.scala-lang.org/awesome/parsing?sort=stars
