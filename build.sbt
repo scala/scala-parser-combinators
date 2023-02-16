@@ -4,7 +4,10 @@ ThisBuild / startYear := Some(2004)
 // I thought we could declare these in `ThisBuild` scope but no :-/
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
-  versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
+  // next version will bump minor (because we dropped Scala 2.11 and upgraded
+  // Scala.js and Scala Native); we could go back to BinaryAndSourceCompatible
+  // once that's done
+  versionPolicyIntention := Compatibility.BinaryCompatible,
 )
 
 lazy val root = project.in(file("."))
