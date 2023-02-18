@@ -208,14 +208,14 @@ to update each parser involved in the recursion.
 
   private def lrAnswer[T](p: Parser[T], in: PackratReader[Elem], growable: LR): ParseResult[T] = growable match {
     //growable will always be having a head, we can't enter lrAnswer otherwise
-    case LR(seed ,rule, Some(head)) =>
+    case LR(seed, _, Some(head)) =>
       if(head.getHead != p) /*not head rule, so not growing*/ seed.asInstanceOf[ParseResult[T]]
       else {
         in.updateCacheAndGet(p, MemoEntry(Right(seed.asInstanceOf[ParseResult[T]])))
         seed match {
           case f@Failure(_,_) => f
           case e@Error(_,_) => e
-          case s@Success(_,_) => /*growing*/ grow(p, in, head)
+          case Success(_,_) => /*growing*/ grow(p, in, head)
         }
       }
     case _=> throw new Exception("lrAnswer with no head !!")
@@ -256,7 +256,7 @@ to update each parser involved in the recursion.
                 /*simple result*/
                 inMem.updateCacheAndGet(p,MemoEntry(Right(tempRes)))
                 tempRes
-              case s@Some(_) =>
+              case Some(_) =>
                 /*non simple result*/
                 base.seed = tempRes
                 //the base variable has passed equality tests with the cache
@@ -303,7 +303,7 @@ to update each parser involved in the recursion.
             case _ => throw new Exception("impossible match")
           }
         }
-      case f =>
+      case _ =>
         rest.recursionHeads -= rest.pos
         /*rest.updateCacheAndGet(p, MemoEntry(Right(f)));*/oldRes
     }

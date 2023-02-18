@@ -16,7 +16,6 @@ import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
-import scala.language.implicitConversions
 import scala.util.parsing.combinator.syntactical.StandardTokenParsers
 
 class PackratParsersTest {

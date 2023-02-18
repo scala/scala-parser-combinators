@@ -14,7 +14,6 @@ import scala.util.parsing.combinator.RegexParsers
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
-import scala.language.implicitConversions
 
 class t1229 extends RegexParsers {
   val number = """0|[1-9]\d*""".r ^^ { _.toInt }

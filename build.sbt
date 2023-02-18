@@ -38,7 +38,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
 
     // go nearly warning-free, but only on 2.13, it's too hard across all versions
     Compile / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 13)) => Seq("-Werror",
+      case Some((2, 13)) => Seq("-Werror", "-Wunused",
         // ideally we'd do something about this. `^?` is the responsible method
         "-Wconf:site=scala.util.parsing.combinator.Parsers.*&cat=lint-multiarg-infix:i",
         // not sure what resolving this would look like? didn't think about it too hard

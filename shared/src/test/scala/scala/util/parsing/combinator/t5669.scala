@@ -12,7 +12,6 @@
 
 package scala.util.parsing.combinator
 
-import scala.language.implicitConversions
 import scala.util.parsing.input.OffsetPosition
 
 import org.junit.Test
