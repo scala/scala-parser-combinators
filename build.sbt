@@ -1,13 +1,14 @@
 ThisBuild / licenses += (("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0")))
 ThisBuild / startYear := Some(2004)
 
-// I thought we could declare these in `ThisBuild` scope but no :-/
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
   // next version will bump minor (because we dropped Scala 2.11 and upgraded
   // Scala.js and Scala Native); we could go back to BinaryAndSourceCompatible
   // once that's done
   versionPolicyIntention := Compatibility.BinaryCompatible,
+  crossScalaVersions := Seq("2.13.10", "2.12.17", "3.2.2"),
+  scalaVersion := crossScalaVersions.value.head,
 )
 
 lazy val root = project.in(file("."))
@@ -24,9 +25,6 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     commonSettings,
     name := "scala-parser-combinators",
     scalaModuleAutomaticModuleName := Some("scala.util.parsing"),
-
-    crossScalaVersions := Seq("2.13.10", "2.12.17", "3.2.2"),
-    scalaVersion := crossScalaVersions.value.head,
 
     libraryDependencies += "junit" % "junit" % "4.13.2" % Test,
     libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.3" % Test,
