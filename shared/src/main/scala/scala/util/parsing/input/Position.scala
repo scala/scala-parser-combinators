@@ -60,4 +60,11 @@ trait Position {
     this.line < that.line ||
     this.line == that.line && this.column < that.column
   }
+
+  /** Compare this position to another, checking for equality.
+   *
+   * @param `that` a `Position` to compare to this `Position`
+   * @return true if the line numbers and column numbers are equal.
+   */
+  def ==(that: Position) = this.line == that.line && this.column == that.column
 }
