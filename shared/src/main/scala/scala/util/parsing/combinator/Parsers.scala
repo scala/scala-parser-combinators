@@ -1056,10 +1056,10 @@ trait Parsers {
    *                 from the perspective of binary operators). May include
    *                 unary operators or parentheses.
    *  @param binop a parser that matches binary operators.
-   *  @param precedence a function from operators to their precedence levels.
-   *                    Operators with higher precedence values bind more
-   *                    tightly than those with lower values.
-   * @param associativity a function from operators to their associativity.
+   *  @param prec_table a list of tuples, each of which encodes a level of
+   *                    precedence. Precedence is encoded highest to lowest.
+   *                    Each precedence level contains an Associativity value
+   *                    and a list of operators.
    * @param makeBinop a function that combines two operands and an operator
    *                  into a new expression. The result must have the same type
    *                  as the operands because intermediate results become
@@ -1067,13 +1067,23 @@ trait Parsers {
    */
   class PrecedenceParser[Exp,Op,E <: Exp](primary: Parser[E],
                                           binop: Parser[Op],
-                                          precedence: Op => Int,
-                                          associativity: Op => Associativity,
+                                          prec_table: List[(Associativity, List[Op])],
                                           makeBinop: (Exp, Op, Exp) => Exp) extends Parser[Exp] {
+    private def decodePrecedence: (Map[Op, Int], Map[Op, Associativity]) = {
+      var precedence = Map.empty[Op, Int]
+      var associativity = Map.empty[Op, Associativity]
+      var level = prec_table.length
+      for ((assoc, ops) <- prec_table) {
+        precedence = precedence ++ (for (op <- ops) yield (op, level))
+        associativity = associativity ++ (for (op <- ops) yield (op, assoc))
+        level -= 1
+      }
+      (precedence, associativity)
+    }
+    val (precedence, associativity) = decodePrecedence
     private class ExpandLeftParser(lhs: Exp, minLevel: Int) extends Parser[Exp] {
-      val opPrimary = binop ~ primary;
       def apply(input: Input): ParseResult[Exp] = {
-        opPrimary(input) match {
+        (binop ~ primary)(input) match {
           case Success(op ~ rhs, next) if precedence(op) >= minLevel => {
             new ExpandRightParser(rhs, precedence(op), minLevel)(next) match {
               case Success(r, nextInput) => new ExpandLeftParser(makeBinop(lhs, op, r), minLevel)(nextInput);
