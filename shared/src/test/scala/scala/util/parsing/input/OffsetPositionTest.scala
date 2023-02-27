@@ -14,7 +14,6 @@ package scala.util.parsing.input
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
-import scala.language.implicitConversions
 
 class OffsetPositionTest {
   @Test

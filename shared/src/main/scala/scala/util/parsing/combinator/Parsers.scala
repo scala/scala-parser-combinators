@@ -223,7 +223,7 @@ trait Parsers {
         case s @ Success(result, rest) =>
           val failure = selectLastFailure(Some(this), s.lastFailure)
           Success(result, rest, failure)
-        case ns: NoSuccess => if (alt.next.pos < next.pos) this else alt
+        case _: NoSuccess => if (alt.next.pos < next.pos) this else alt
       }
     }
   }
@@ -316,7 +316,7 @@ trait Parsers {
      * @return a `Parser` that -- on success -- returns the result of `q`.
      */
     def ~> [U](q: => Parser[U]): Parser[U] = { lazy val p = q // lazy argument
-      (for(a <- this; b <- p) yield b).named("~>")
+      (for(_ <- this; b <- p) yield b).named("~>")
     }
 
     /** A parser combinator for sequential composition which keeps only the left result.
@@ -330,7 +330,7 @@ trait Parsers {
      * @return a `Parser` that -- on success -- returns the result of `p`.
      */
     def <~ [U](q: => Parser[U]): Parser[T] = { lazy val p = q // lazy argument
-      (for(a <- this; b <- p) yield a).named("<~")
+      (for(a <- this; _ <- p) yield a).named("<~")
     }
 
     /**
@@ -372,7 +372,7 @@ trait Parsers {
      *         The resulting parser fails if either `p` or `q` fails, this failure is fatal.
      */
     def ~>! [U](q: => Parser[U]): Parser[U] = { lazy val p = q // lazy argument
-      OnceParser { (for(a <- this; b <- commit(p)) yield b).named("~>!") }
+      OnceParser { (for(_ <- this; b <- commit(p)) yield b).named("~>!") }
     }
 
     /** A parser combinator for non-back-tracking sequential composition which only keeps the left result.
@@ -385,7 +385,7 @@ trait Parsers {
      *         The resulting parser fails if either `p` or `q` fails, this failure is fatal.
      */
     def <~! [U](q: => Parser[U]): Parser[T] = { lazy val p = q // lazy argument
-      OnceParser { (for(a <- this; b <- commit(p)) yield a).named("<~!") }
+      OnceParser { (for(a <- this; _ <- commit(p)) yield a).named("<~!") }
     }
 
 
@@ -448,7 +448,7 @@ trait Parsers {
      */
     def ^^^ [U](v: => U): Parser[U] =  new Parser[U] {
       lazy val v0 = v // lazy argument
-      def apply(in: Input) = Parser.this(in) map (x => v0)
+      def apply(in: Input) = Parser.this(in) map (_ => v0)
     }.named(toString+"^^^")
 
     /** A parser combinator for partial function application.
@@ -601,7 +601,7 @@ trait Parsers {
     p(in) match{
       case s @ Success(_, _) => s
       case e @ Error(_, _) => e
-      case f @ Failure(msg, next) => Error(msg, next)
+      case Failure(msg, next) => Error(msg, next)
     }
   }
 
@@ -613,7 +613,7 @@ trait Parsers {
    *  @param  p      A predicate that determines which elements match.
    *  @return
    */
-  def elem(kind: String, p: Elem => Boolean) = acceptIf(p)(inEl => kind+" expected")
+  def elem(kind: String, p: Elem => Boolean) = acceptIf(p)(_ => kind + " expected")
 
   /** A parser that matches only the given element `e`.
    *
@@ -995,7 +995,7 @@ trait Parsers {
    */
   def phrase[T](p: Parser[T]) = new Parser[T] {
     def apply(in: Input) = p(in) match {
-      case s @ Success(out, in1) =>
+      case s @ Success(_, in1) =>
         if (in1.atEnd) s
         else s.lastFailure match {
           case Some(failure) => failure
@@ -1032,9 +1032,9 @@ trait Parsers {
       = OnceParser{ (for(a <- this; b <- commit(p)) yield new ~(a,b)).named("~") }
 
     override def ~> [U](p: => Parser[U]): Parser[U]
-      = OnceParser{ (for(a <- this; b <- commit(p)) yield b).named("~>") }
+      = OnceParser{ (for(_ <- this; b <- commit(p)) yield b).named("~>") }
 
     override def <~ [U](p: => Parser[U]): Parser[T]
-      = OnceParser{ (for(a <- this; b <- commit(p)) yield a).named("<~") }
+      = OnceParser{ (for(a <- this; _ <- commit(p)) yield a).named("<~") }
   }
 }

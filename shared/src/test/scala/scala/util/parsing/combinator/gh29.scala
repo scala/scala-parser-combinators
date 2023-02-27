@@ -14,7 +14,6 @@ package scala.util.parsing.combinator
 
 import org.junit.Test
 import org.junit.Assert.assertEquals
-import scala.language.implicitConversions
 
 class gh29 {
   object Foo extends JavaTokenParsers {

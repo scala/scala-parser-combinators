@@ -10,9 +10,8 @@
  * additional information regarding copyright ownership.
  */
 
-import java.io.{File,StringReader}
+import java.io.StringReader
 
-import scala.language.implicitConversions
 import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.{CharArrayReader, StreamReader}
 

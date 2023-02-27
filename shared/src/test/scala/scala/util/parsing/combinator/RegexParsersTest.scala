@@ -12,8 +12,6 @@
 
 package scala.util.parsing.combinator
 
-import scala.language.implicitConversions
-
 import org.junit.Test
 import org.junit.Assert.{ assertEquals, assertTrue }
 
@@ -63,10 +61,10 @@ class RegexParsersTest {
       def halfQuoted = quote ~ string ^^ { case q ~ s => q + s }
     }
     import parser._
-    val failureLq = parseAll(p, "\"asdf").asInstanceOf[Failure]
-    val failureRq = parseAll(p, "asdf\"").asInstanceOf[Failure]
-    val failureQBacktrackL = parseAll(q | quote, "\"").asInstanceOf[Error]
-    val failureQBacktrackR = parseAll(q | halfQuoted, "\"asdf").asInstanceOf[Error]
+    assertTrue(parseAll(p, "\"asdf").isInstanceOf[Failure])
+    assertTrue(parseAll(p, "asdf\"").isInstanceOf[Failure])
+    assertTrue(parseAll(q | quote, "\"").isInstanceOf[Error])
+    assertTrue(parseAll(q | halfQuoted, "\"asdf").isInstanceOf[Error])
 
     val successP = parseAll(p, "\"asdf\"").get
     assertEquals(successP, "asdf")

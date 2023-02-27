@@ -12,7 +12,6 @@
 
 package scala.util.parsing.combinator
 
-import scala.language.implicitConversions
 import scala.util.parsing.input.CharArrayReader
 
 import org.junit.Test
@@ -46,7 +45,7 @@ class JavaTokenParsersTest {
     def parseFailure(s: String, errorColPos: Int): Unit = {
       val parseResult = parseAll(ident, s)
       parseResult match {
-        case Failure(msg, next) =>
+        case Failure(_, next) =>
           val pos = next.pos
           assertEquals(1, pos.line)
           assertEquals(errorColPos, pos.column)
@@ -85,7 +84,7 @@ class JavaTokenParsersTest {
 
     val parseResult1 = parseAll(p, "start start")
     parseResult1 match {
-      case e @ Failure(message, next) =>
+      case Failure(message, next) =>
         assertEquals(next.pos.line, 1)
         assertEquals(next.pos.column, 7)
         assert(message.endsWith("string matching regex '(?i)AND' expected but 's' found"))
