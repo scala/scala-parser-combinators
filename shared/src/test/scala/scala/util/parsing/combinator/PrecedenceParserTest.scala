@@ -39,7 +39,7 @@ class PrecedenceParsersTest {
       (Associativity.Left, List(Mult, Divide)),
       (Associativity.Left, List(Plus, Minus)),
       (Associativity.Right, List(Equals)))
-    def integer: Parser[Leaf] = "[0-9]+".r ^^ { s: String => Leaf(s.toInt) }
+    def integer: Parser[Leaf] = "[0-9]+".r ^^ { (s: String) => Leaf(s.toInt) }
     def binop: Parser[Op] = "+" ^^^ Plus | "-" ^^^ Minus | "*" ^^^ Mult | "/" ^^^ Divide | "=" ^^^ Equals
     def expression = new PrecedenceParser(integer, binop, prec, Binop.apply)
   }
