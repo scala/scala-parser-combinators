@@ -364,7 +364,7 @@ trait Parsers {
 
     /** A parser combinator for non-back-tracking sequential composition which only keeps the right result.
      *
-     * `p ~>! q` succeeds if `p` succeds and `q` succeds on the input left over by `p`.
+     * `p ~>! q` succeeds if `p` succeeds and `q` succeeds on the input left over by `p`.
      * In case of failure, no back-tracking is performed (in an earlier parser produced by the `|` combinator).
      *
      * @param q a parser that will be executed after `p` (this parser) succeeds -- evaluated at most once, and only when necessary
@@ -377,7 +377,7 @@ trait Parsers {
 
     /** A parser combinator for non-back-tracking sequential composition which only keeps the left result.
      *
-     * `p <~! q` succeeds if `p` succeds and `q` succeds on the input left over by `p`.
+     * `p <~! q` succeeds if `p` succeeds and `q` succeeds on the input left over by `p`.
      * In case of failure, no back-tracking is performed (in an earlier parser produced by the `|` combinator).
      *
      * @param q a parser that will be executed after `p` (this parser) succeeds -- evaluated at most once, and only when necessary
