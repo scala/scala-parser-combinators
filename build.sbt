@@ -3,10 +3,7 @@ ThisBuild / startYear := Some(2004)
 
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
-  // next version will bump minor (because we dropped Scala 2.11 and upgraded
-  // Scala.js and Scala Native); we could go back to BinaryAndSourceCompatible
-  // once that's done
-  versionPolicyIntention := Compatibility.BinaryCompatible,
+  versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
   crossScalaVersions := Seq("2.13.10", "2.12.17", "3.2.2"),
   scalaVersion := crossScalaVersions.value.head,
 )
