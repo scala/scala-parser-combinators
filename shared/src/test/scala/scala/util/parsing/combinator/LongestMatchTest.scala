@@ -2,7 +2,6 @@ package scala.util.parsing.combinator
 
 import java.io.StringReader
 
-import scala.util.parsing.combinator.Parsers
 import scala.util.parsing.input.StreamReader
 
 import org.junit.Test

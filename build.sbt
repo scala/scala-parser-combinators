@@ -4,7 +4,7 @@ ThisBuild / startYear := Some(2004)
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
   versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
-  crossScalaVersions := Seq("2.13.10", "2.12.17", "3.2.2"),
+  crossScalaVersions := Seq("2.13.10", "2.12.17", "3.3.0"),
   scalaVersion := crossScalaVersions.value.head,
 )
 
@@ -39,6 +39,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
         // not sure what resolving this would look like? didn't think about it too hard
         "-Wconf:site=scala.util.parsing.combinator.lexical.StdLexical.*&cat=other-match-analysis:i",
       )
+      case Some((3, _)) => Seq("Wunused:all")
       case _ => Seq()
     }),
     Compile / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
