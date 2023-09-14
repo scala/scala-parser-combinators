@@ -6,7 +6,7 @@ val commonSettings = Seq(
   // change back to BinaryAndSourceCompatible after next minor release;
   // the Scala 3.2 -> 3.3 upgrade requires a minor version bump
   versionPolicyIntention := Compatibility.BinaryCompatible,
-  crossScalaVersions := Seq("2.13.12", "2.12.18", "3.3.0"),
+  crossScalaVersions := Seq("2.13.12", "2.12.18", "3.3.1"),
   scalaVersion := crossScalaVersions.value.head,
 )
 
