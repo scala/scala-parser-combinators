@@ -63,7 +63,7 @@ trait PackratParsers extends Parsers {
     /*
      * caching of intermediate parse results and information about recursion
      */
-    private[PackratParsers] val cache = mutable.HashMap.empty[(Parser[_], Position), MemoEntry[_]]
+    private[PackratParsers] val cache = mutable.HashMap.empty[(Parser[?], Position), MemoEntry[?]]
 
     private[PackratParsers] def getFromCache[T2](p: Parser[T2]): Option[MemoEntry[T2]] = {
       cache.get((p, pos)).asInstanceOf[Option[MemoEntry[T2]]]
@@ -105,28 +105,28 @@ trait PackratParsers extends Parsers {
     val q = super.phrase(p)
     new PackratParser[T] {
       def apply(in: Input) = in match {
-        case in: PackratReader[_] => q(in)
+        case in: PackratReader[?] => q(in)
         case in => q(new PackratReader(in))
       }
     }
   }
 
-  private def getPosFromResult(r: ParseResult[_]): Position = r.next.pos
+  private def getPosFromResult(r: ParseResult[?]): Position = r.next.pos
 
   // auxiliary data structures
 
-  private case class MemoEntry[+T](var r: Either[LR,ParseResult[_]]){
+  private case class MemoEntry[+T](var r: Either[LR,ParseResult[?]]){
     def getResult: ParseResult[T] = r match {
       case Left(LR(res,_,_)) => res.asInstanceOf[ParseResult[T]]
       case Right(res) => res.asInstanceOf[ParseResult[T]]
     }
   }
 
-  private case class LR(var seed: ParseResult[_], var rule: Parser[_], var head: Option[Head]){
+  private case class LR(var seed: ParseResult[?], var rule: Parser[?], var head: Option[Head]){
     def getPos: Position = getPosFromResult(seed)
   }
 
-  private case class Head(var headParser: Parser[_], var involvedSet: List[Parser[_]], var evalSet: List[Parser[_]]){
+  private case class Head(var headParser: Parser[?], var involvedSet: List[Parser[?]], var evalSet: List[Parser[?]]){
     def getHead = headParser
   }
 
@@ -152,7 +152,7 @@ trait PackratParsers extends Parsers {
    * In the former case, it makes sure that rules involved in the recursion are evaluated.
    * It also prevents non-involved rules from getting evaluated further
    */
-  private def recall(p: super.Parser[_], in: PackratReader[Elem]): Option[MemoEntry[_]] = {
+  private def recall(p: super.Parser[?], in: PackratReader[Elem]): Option[MemoEntry[?]] = {
     val cached = in.getFromCache(p)
     val head = in.recursionHeads.get(in.pos)
 
@@ -170,7 +170,7 @@ trait PackratParsers extends Parsers {
           h.evalSet = h.evalSet.filterNot(_==p)
           val tempRes = p(in)
           //we know that cached has an entry here
-          val tempEntry: MemoEntry[_] = cached.get // match {case Some(x: MemoEntry[_]) => x}
+          val tempEntry: MemoEntry[?] = cached.get // match {case Some(x: MemoEntry[_]) => x}
           //cache is modified
           tempEntry.r = Right(tempRes)
         }
@@ -184,7 +184,7 @@ trait PackratParsers extends Parsers {
    * we modify the involvedSets of all LRs in the stack, till we see
    * the current parser again
    */
-  private def setupLR(p: Parser[_], in: PackratReader[_], recDetect: LR): Unit = {
+  private def setupLR(p: Parser[?], in: PackratReader[?], recDetect: LR): Unit = {
     if(recDetect.head.isEmpty) recDetect.head = Some(Head(p, Nil, Nil))
 
     in.lrStack.takeWhile(_.rule != p).foreach {x =>
@@ -272,7 +272,7 @@ to update each parser involved in the recursion.
                 //all setupLR does is change the heads of the recursions, so the seed will stay the same
                 recDetect match {case LR(seed, _, _) => seed.asInstanceOf[ParseResult[T]]}
               }
-              case MemoEntry(Right(res: ParseResult[_])) => res.asInstanceOf[ParseResult[T]]
+              case MemoEntry(Right(res: ParseResult[?])) => res.asInstanceOf[ParseResult[T]]
             }
           }
         }
@@ -299,7 +299,7 @@ to update each parser involved in the recursion.
           //we're done with growing, we can remove data from recursion head
           rest.recursionHeads -= rest.pos
           rest.getFromCache(p).get match {
-            case MemoEntry(Right(x: ParseResult[_])) => x.asInstanceOf[ParseResult[T]]
+            case MemoEntry(Right(x: ParseResult[?])) => x.asInstanceOf[ParseResult[T]]
             case _ => throw new Exception("impossible match")
           }
         }
