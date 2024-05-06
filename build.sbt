@@ -4,7 +4,7 @@ ThisBuild / startYear := Some(2004)
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
   versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
-  crossScalaVersions := Seq("2.13.13", "2.12.19", "3.3.3"),
+  crossScalaVersions := Seq("2.13.14", "2.12.19", "3.3.3"),
   scalaVersion := crossScalaVersions.value.head,
 )
 
