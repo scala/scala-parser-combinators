@@ -3,7 +3,9 @@ ThisBuild / startYear := Some(2004)
 
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
-  versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
+  // change back to BinaryAndSourceCompatible after next minor release;
+  // the Scala 2.13.13 -> 2.13.14 upgrade requires a minor version bump
+  versionPolicyIntention := Compatibility.BinaryCompatible,
   crossScalaVersions := Seq("2.13.14", "2.12.19", "3.3.3"),
   scalaVersion := crossScalaVersions.value.head,
 )
