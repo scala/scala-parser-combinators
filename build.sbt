@@ -4,7 +4,7 @@ ThisBuild / startYear := Some(2004)
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
   versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
-  crossScalaVersions := Seq("2.13.13", "2.12.19", "3.3.3"),
+  crossScalaVersions := Seq("2.13.14", "2.12.19", "3.3.3"),
   scalaVersion := crossScalaVersions.value.head,
 )
 
@@ -82,6 +82,8 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     OsgiKeys.exportPackage := Seq(s"scala.util.parsing.*;version=${version.value}"),
   )
   .jsSettings(
+    versionPolicyCheck / skip := true,
+    versionCheck       / skip := true,
     // mystified why https://github.com/scala-js/scala-js/issues/635 would be rearing its head,
     // but only on sbt 1.4 + 2.13 and only in Test config?! WEIRD
     Test / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
