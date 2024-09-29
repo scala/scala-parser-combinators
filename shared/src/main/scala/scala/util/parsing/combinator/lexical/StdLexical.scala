@@ -17,6 +17,7 @@ package lexical
 
 import token._
 import input.CharArrayReader.EofCh
+import scala.annotation.nowarn
 import scala.collection.mutable
 
 /** This component provides a standard lexical parser for a simple,
@@ -54,6 +55,7 @@ class StdLexical extends Lexical with StdTokens {
   }
 
   // see `whitespace in `Scanners`
+  @nowarn("cat=lint-infer-any")
   def whitespace: Parser[Any] = rep[Any](
       whitespaceChar
     | '/' ~ '*' ~ comment
