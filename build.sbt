@@ -93,6 +93,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
     // Scala.js cannot run forked tests
     Test / fork := false
   )
+  .jvmEnablePlugins(SbtOsgi)
   .jsEnablePlugins(ScalaJSJUnitPlugin)
   .nativeEnablePlugins(ScalaNativeJUnitPlugin)
   .nativeSettings(
