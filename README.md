@@ -5,7 +5,7 @@
 [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_2.13.svg?label=latest%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_2.13)
 [<img src="https://img.shields.io/maven-central/v/org.scala-lang.modules/scala-parser-combinators_3.svg?label=latest%20release%20for%203"/>](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.scala-lang.modules%20a%3Ascala-parser-combinators_3)
 
-This was originally part of the Scala standard library, but is now community-maintained, under the guidance of the Scala team at Lightbend. If you are interested in joining the maintainers team, please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
+This was originally part of the Scala standard library, but is now community-maintained, under the guidance of the Scala team at Akka (formerly Lightbend). If you are interested in joining the maintainers team, please contact [@Philippus](https://github.com/philippus) or [@SethTisue](https://github.com/SethTisue).
 
 ## Choosing a parsing library
 
