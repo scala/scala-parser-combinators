@@ -23,4 +23,4 @@ jobs:
         java-version: ${{matrix.java}}
     - uses: sbt/setup-sbt@v1
     - name: Test
-      run: sbt ++${{matrix.scala}} test headerCheck versionPolicyCheck package
+      run: sbt ++${{matrix.scala}} test doc headerCheck versionPolicyCheck package
