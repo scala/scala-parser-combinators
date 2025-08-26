@@ -13,11 +13,11 @@ jobs:
         scala: [2.12.x, 2.13.x, 3.x]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - uses: coursier/cache-action@v6
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-java@v5
       with:
         distribution: temurin
         java-version: ${{matrix.java}}
