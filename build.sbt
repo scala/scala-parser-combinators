@@ -1,10 +1,12 @@
+import com.typesafe.tools.mima.core._
+
 ThisBuild / licenses += (("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0")))
 ThisBuild / startYear := Some(2004)
 
 val commonSettings = Seq(
   versionScheme := Some("early-semver"),
   versionPolicyIntention := Compatibility.BinaryAndSourceCompatible,
-  crossScalaVersions := Seq("2.13.16", "2.12.20", "3.3.7"),
+  crossScalaVersions := Seq("2.13.17", "2.12.20", "3.3.7"),
   scalaVersion := crossScalaVersions.value.head,
 )
 
@@ -73,7 +75,14 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
           case _             => file(dir.getPath ++ "-2.13-")
         }
       }
-    }
+    },
+
+    mimaBinaryIssueFilters ++= {
+      Seq(
+        // scala/scala-parser-combinators#605
+        ProblemFilters.exclude[IncompatibleSignatureProblem]("scala.util.parsing.input.PagedSeq.sliding"),
+      )
+    },
   )
   .jvmSettings(
     ScalaModulePlugin.scalaModuleOsgiSettings,
