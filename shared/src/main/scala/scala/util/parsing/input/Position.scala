@@ -52,7 +52,7 @@ trait Position {
   /** Compare this position to another, by first comparing their line numbers,
    * and then -- if necessary -- using the columns to break a tie.
    *
-   * @param `that` a `Position` to compare to this `Position`
+   * @param that a `Position` to compare to this `Position`
    * @return true if this position's line number or (in case of equal line numbers)
    *         column is smaller than the corresponding components of `that`
    */
@@ -63,7 +63,7 @@ trait Position {
 
   /** Compare this position to another, checking for equality.
    *
-   * @param `that` a `Position` to compare to this `Position`
+   * @param other a `Position` to compare to this `Position`
    * @return true if the line numbers and column numbers are equal.
    */
   override def equals(other: Any) = {
