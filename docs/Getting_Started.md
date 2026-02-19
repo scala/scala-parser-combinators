@@ -20,7 +20,7 @@ The package [scala.util.parsing.combinator](https://javadoc.io/static/org.scala-
 So how do we use this parser? Well, if we want to extract a word from string, we can call
 
 
-    SimpleParser.parse(SimpleParser.word(myString))
+    SimpleParser.parse(SimpleParser.word, myString)
 
 Here’s a little program to do this.
 
