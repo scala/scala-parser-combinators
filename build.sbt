@@ -39,7 +39,7 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
         // not sure what resolving this would look like? didn't think about it too hard
         "-Wconf:site=scala.util.parsing.combinator.lexical.StdLexical.*&cat=other-match-analysis:i",
       )
-      case Some((3, _)) => Seq("Wunused:all")
+      case Some((3, _)) => Seq("-Wunused:all")
       case _ => Seq()
     }),
     Compile / doc / scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
