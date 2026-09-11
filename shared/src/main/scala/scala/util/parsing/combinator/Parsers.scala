@@ -20,6 +20,15 @@ import scala.language.implicitConversions
 
 // TODO: better error handling (labelling like parsec's <?>)
 
+/** An enumeration of operator associativity values: `Left`, `Right`, and
+ *  `Non`.
+ */
+object Associativity extends Enumeration {
+  type Associativity = Value
+
+  val Left, Right, Non = Value
+}
+
 /** `Parsers` is a component that ''provides'' generic parser combinators.
  *
  *  There are two abstract members that must be defined in order to
@@ -1036,5 +1045,96 @@ trait Parsers {
 
     override def <~ [U](p: => Parser[U]): Parser[T]
       = OnceParser{ (for(a <- this; _ <- commit(p)) yield a).named("<~") }
+  }
+
+  import Associativity._
+
+  /** A parser that respects operator the precedence and associativity
+   *  conventions specified in its constructor.
+   *
+   *  @param primary a parser that matches atomic expressions (the atomicity is
+   *                 from the perspective of binary operators). May include
+   *                 unary operators or parentheses.
+   *  @param binop a parser that matches binary operators.
+   *  @param prec_table a list of tuples, each of which encodes a level of
+   *                    precedence. Precedence is encoded highest to lowest.
+   *                    Each precedence level contains an Associativity value
+   *                    and a list of operators.
+   * @param makeBinop a function that combines two operands and an operator
+   *                  into a new expression. The result must have the same type
+   *                  as the operands because intermediate results become
+   *                  operands to other operators.
+   */
+  class PrecedenceParser[Exp,Op,E <: Exp](primary: Parser[E],
+                                          binop: Parser[Op],
+                                          prec_table: List[(Associativity, List[Op])],
+                                          makeBinop: (Exp, Op, Exp) => Exp) extends Parser[Exp] {
+    private def decodePrecedence: (Map[Op, Int], Map[Op, Associativity]) = {
+      var precedence = Map.empty[Op, Int]
+      var associativity = Map.empty[Op, Associativity]
+      var level = prec_table.length
+      for ((assoc, ops) <- prec_table) {
+        precedence = precedence ++ (for (op <- ops) yield (op, level))
+        associativity = associativity ++ (for (op <- ops) yield (op, assoc))
+        level -= 1
+      }
+      (precedence, associativity)
+    }
+    val (precedence, associativity) = decodePrecedence
+    private class ExpandLeftParser(lhs: Exp, minLevel: Int) extends Parser[Exp] {
+      def apply(input: Input): ParseResult[Exp] = {
+        (binop ~ primary)(input) match {
+          case Success(op ~ rhs, next) if precedence(op) >= minLevel => {
+            new ExpandRightParser(rhs, precedence(op), minLevel)(next) match {
+              case Success(r, nextInput) => new ExpandLeftParser(makeBinop(lhs, op, r), minLevel)(nextInput);
+              case ns => ns // dead code
+            }
+          }
+          case _ => {
+            Success(lhs, input);
+          }
+        }
+      }
+    }
+
+    private class ExpandRightParser(rhs: Exp, currentLevel: Int, minLevel: Int) extends Parser[Exp] {
+      private def nextLevel(nextBinop: Op): Option[Int] = {
+        if (precedence(nextBinop) > currentLevel) {
+          Some(minLevel + 1)
+        } else if (precedence(nextBinop) == currentLevel && associativity(nextBinop) == Associativity.Right) {
+          Some(minLevel)
+        } else {
+          None
+        }
+      }
+      def apply(input: Input): ParseResult[Exp] = {
+        def done: ParseResult[Exp] = Success(rhs, input)
+        binop(input) match {
+          case Success(nextBinop,_) => {
+            nextLevel(nextBinop) match {
+              case Some(level) => {
+                new ExpandLeftParser(rhs, level)(input) match {
+                  case Success(r, next) => new ExpandRightParser(r, currentLevel, minLevel)(next)
+                  case ns => ns // dead code
+                }
+              }
+              case None => done
+            }
+          }
+          case _ => done
+        }
+      }
+    }
+
+    /** Parse an expression.
+     */
+    def apply(input: Input): ParseResult[Exp] = {
+      primary(input) match {
+        case Success(lhs, next) => {
+          new ExpandLeftParser(lhs,0)(next)
+        }
+        case noSuccess => noSuccess
+      }
+    }
   }
 }
