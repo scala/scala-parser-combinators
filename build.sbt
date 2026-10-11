@@ -67,20 +67,16 @@ lazy val parserCombinators = crossProject(JVMPlatform, JSPlatform, NativePlatfor
           version.value
         )
     }),
-    Compile / unmanagedSourceDirectories ++= {
-      (Compile / unmanagedSourceDirectories).value.map { dir =>
-        CrossVersion.partialVersion(scalaVersion.value) match {
-          case Some((2, 13)) => file(dir.getPath ++ "-2.13+")
-          case Some((3, _))  => file(dir.getPath ++ "-2.13+")
-          case _             => file(dir.getPath ++ "-2.13-")
-        }
-      }
-    },
 
     mimaBinaryIssueFilters ++= {
       Seq(
         // scala/scala-parser-combinators#605
         ProblemFilters.exclude[IncompatibleSignatureProblem]("scala.util.parsing.input.PagedSeq.sliding"),
+        // scala/scala-parser-combinators#646
+        ProblemFilters.exclude[DirectMissingMethodProblem]("scala.util.parsing.combinator.Parsers#~.given_CanEqual_~_~"),
+        // -Yfuture-lazy-vals turns the module's <clinit> from public to private, which is not an
+        // incompatibility. Drop once the fix for scala-garden/mima#794 is released.
+        ProblemFilters.exclude[DirectMissingMethodProblem]("scala.util.parsing.input.OffsetPosition.<clinit>"),
       )
     },
   )
