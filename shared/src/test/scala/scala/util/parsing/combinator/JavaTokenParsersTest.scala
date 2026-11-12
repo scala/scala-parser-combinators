@@ -131,5 +131,14 @@ class JavaTokenParsersTest {
     }
   }
 
+  @Test
+  def parseLongStringLiteral: Unit = {
+    object TestTokenParser extends JavaTokenParsers
+    import TestTokenParser._
+    // used to overflow the stack on the JVM (#371)
+    val s = "\"" + "x" * 100000 + "\\n" + "x" * 100000 + "\""
+    assertEquals(s, parseAll(stringLiteral, s).get)
+  }
+
 
 }
