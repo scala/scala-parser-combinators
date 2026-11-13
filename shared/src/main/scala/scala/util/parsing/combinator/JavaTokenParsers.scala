@@ -54,9 +54,7 @@ trait JavaTokenParsers extends RegexParsers {
    *  - `\` followed by `u` followed by four hexadecimal digits
    */
   def stringLiteral: Parser[String] =
-    // runs of plain characters are matched without looping per character,
-    // which overflowed the stack on the JVM for long literals (#371)
-    ("\""+"""[^"\x00-\x1F\x7F\\]*((\\[\\'"bfnrt]|\\u[a-fA-F0-9]{4})[^"\x00-\x1F\x7F\\]*)*"""+"\"").r
+    Platform.stringLiteralPattern.r
 
   /** A number following the rules of `decimalNumber`, with the following
    *  optional additions:
