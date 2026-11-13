@@ -131,5 +131,16 @@ class JavaTokenParsersTest {
     }
   }
 
+  @Test
+  def parseLongStringLiteral: Unit = {
+    // used to overflow the stack on the JVM (#371)
+    val plain = "\"" + "x" * 100000 + "\\n" + "x" * 100000 + "\""
+    val escapes = "\"" + "a\\n" * 100000 + "\""
+    object TestTokenParser extends JavaTokenParsers
+    import TestTokenParser._
+    assertEquals(plain, parseAll(stringLiteral, plain).get)
+    assertEquals(escapes, parseAll(stringLiteral, escapes).get)
+  }
+
 
 }
